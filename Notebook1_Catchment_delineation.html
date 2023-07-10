@@ -400,7 +400,12 @@ document.write(`
 <p>The credentials obtained by ee.Authenticate() will be written to a persistent token stored on the local machine. ee.Initialize() will automatically use the persistent credentials, if they exist. To use service account credentials</p>
 <p>Source: <a class="reference external" href="https://developers.google.com/earth-engine/apidocs/ee-authenticate">https://developers.google.com/earth-engine/apidocs/ee-authenticate</a></p>
 </div></blockquote>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ee</span>
 
@@ -413,6 +418,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
@@ -439,7 +445,12 @@ document.write(`
 <li><p>chosen <strong>DEM</strong> from GEE data catalog</p></li>
 <li><p><strong>show/hide GEE map</strong> in notebooks</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
@@ -465,6 +476,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Used DEM: MERIT 30m
 Coordinates of discharge point: Lat 42.300264, Lon 78.091444
@@ -475,7 +487,12 @@ Coordinates of discharge point: Lat 42.300264, Lon 78.091444
 <section id="start-gee-and-download-dem">
 <h2>Start GEE and download DEM<a class="headerlink" href="#start-gee-and-download-dem" title="Permalink to this heading">#</a></h2>
 <p>Once we are set up, we can start working with the data. Let’s start with the <strong>base map</strong> if enabled in <code class="docutils literal notranslate"><span class="pre">config.ini</span></code>. The individual steps can be traced using the map since more and more layers will be added through the course of the notebook. <a id="map"></a></p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">geemap</span>
 
@@ -487,11 +504,17 @@ Coordinates of discharge point: Lat 42.300264, Lon 78.091444
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <script type="application/vnd.jupyter.widget-view+json">{"model_id": "9fe48406fa854e1cb8e18925986cd287", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>Now we can add the DEM from the GEE catalog and add it as a new layer to the map.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">dem_config</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Image&#39;</span><span class="p">:</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
@@ -509,10 +532,16 @@ Coordinates of discharge point: Lat 42.300264, Lon 78.091444
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Next, we add the configured discharge point to the map and generate a <strong>40km</strong> buffer box.</p>
 <p><strong>Note:</strong> Please check whether the default box covers your research area. Alternatively, you can adjust the box manually. <strong>The catchment area will be cropped if the selected box is too small.</strong></p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
 <span class="n">box</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">40000</span><span class="p">)</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
@@ -524,10 +553,16 @@ Coordinates of discharge point: Lat 42.300264, Lon 78.091444
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>The discharge point (marker) and box (polygon/rectangle) can also be added manually to the map above. If features have been drawn, they will overrule the configured discharge point and automatically created box.</p>
 <p><a id="rp01"><strong>Restart Point #1</strong></a></p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">Map</span><span class="o">.</span><span class="n">draw_features</span><span class="p">:</span>
@@ -541,14 +576,21 @@ Coordinates of discharge point: Lat 42.300264, Lon 78.091444
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Now we can export the DEM as a <code class="docutils literal notranslate"><span class="pre">.tif</span></code> file for the selected extent to the output folder. Unfortunately there is a file size limit for GEE downloads. If your selected box is too big, please adjust the extent and try again.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">geemap</span><span class="o">.</span><span class="n">ee_export_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="n">box</span><span class="p">,</span> <span class="n">file_per_band</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Generating URL ...
 Downloading data from https://earthengine.googleapis.com/v1alpha/projects/earthengine-legacy/thumbnails/5916c44f21baf333e1d07827e1be2489-5ac878a88bfb5e11c84360560a0b5c27:getPixels
@@ -564,7 +606,12 @@ Data downloaded to /home/phillip/Seafile/EBA-CA/Repositories/matilda_edu/output/
 <p>Based on the downloaded DEM file, we can calculate a catchment area using the <code>pysheds</code> library. The result will be a raster and displayed at the end of this section.</p>
 <p>The full documentation of the <code>pysheds</code> module can be found <a class="reference external" href="https://mattbartos.com/pysheds/">here</a>.</p>
 <p><strong>Note:</strong> The catchment delineation involves several steps with large array operations and can take a moment.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
@@ -580,6 +627,7 @@ Data downloaded to /home/phillip/Seafile/EBA-CA/Repositories/matilda_edu/output/
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEM loaded.
 CPU times: user 3.06 s, sys: 187 ms, total: 3.25 s
@@ -588,7 +636,12 @@ Wall time: 3.66 s
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
@@ -622,6 +675,7 @@ Wall time: 3.66 s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fill depressions in DEM...
 Resolve flats in DEM...
@@ -637,7 +691,12 @@ Wall time: 8.36 s
 </div>
 </div>
 <p>Now let’s have a look at the catchment area.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -655,12 +714,18 @@ Wall time: 8.36 s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <img alt="_images/2fa9307df1e554178fd7ddd85c2e902e28d6e0c19c11355661a723d154dd5cca.png" src="_images/2fa9307df1e554178fd7ddd85c2e902e28d6e0c19c11355661a723d154dd5cca.png" />
 </div>
 </div>
 <p>For the following steps we need the catchment outline as a polygon. Thus, we convert the <strong>raster to a polygon</strong> and save both in a <strong>geopackage</strong> to the output folder. From these files, we can already calculate important <strong>catchment statistics</strong> needed for the glacio-hydrological model in Notebook 4.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span>
 <span class="kn">import</span> <span class="nn">pyproj</span>
@@ -702,6 +767,7 @@ Wall time: 8.36 s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Layer &#39;catchment_orig&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
 
@@ -712,7 +778,12 @@ Mean catchment elevation is 3297.17 m.a.s.l.
 </div>
 </div>
 <p>We can also add the catchment polygon to the interactive map. This sends it to GEE and allows us to use a GEE function to calculate its area. Please scroll up to see the results on the map.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">catchment</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">catchment_shape</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])</span>
 <span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
@@ -723,6 +794,7 @@ Mean catchment elevation is 3297.17 m.a.s.l.
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Catchment area is 295.91 km²
 </pre></div>
@@ -755,7 +827,12 @@ Mean catchment elevation is 3297.17 m.a.s.l.
 <blockquote>
 <div><p>Source: <a class="reference external" href="https://doi.org/10.7265/4m1f-gd79">RGI Consortium (2017)</a></p>
 </div></blockquote>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
 
@@ -766,6 +843,7 @@ Mean catchment elevation is 3297.17 m.a.s.l.
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -944,7 +1022,12 @@ Mean catchment elevation is 3297.17 m.a.s.l.
 </div></div></div>
 </div>
 <p>For spatial calculations it is crucial to use the correct projection. To avoid inaccuracies due to unit conversions we will project the data to UTM whenever we calculate spatial statistics. The relevant UTM zone and band for the catchment area are determined from the coordinates of the pouring point.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">utm</span>
 <span class="kn">from</span> <span class="nn">pyproj</span> <span class="kn">import</span> <span class="n">CRS</span>
@@ -960,6 +1043,7 @@ Mean catchment elevation is 3297.17 m.a.s.l.
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UTM zone &#39;44&#39;, band &#39;T&#39;
 Catchment area (projected) is 296.53 km²
@@ -968,7 +1052,12 @@ Catchment area (projected) is 296.53 km²
 </div>
 </div>
 <p>Now we can perform a spatial join between the catchment outline and the RGI regions. If the catchment contains any glaciers, the corresponding RGI region is determined in this step.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_regions</span> <span class="o">=</span> <span class="n">df_regions</span><span class="o">.</span><span class="n">set_crs</span><span class="p">(</span><span class="s1">&#39;EPSG:4326&#39;</span><span class="p">,</span> <span class="n">allow_override</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">catchment</span> <span class="o">=</span> <span class="n">catchment</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="s1">&#39;EPSG:4326&#39;</span><span class="p">)</span>
@@ -987,6 +1076,7 @@ Catchment area (projected) is 296.53 km²
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Catchment belongs to RGI region 13 (Asia, Central)
 </pre></div>
@@ -995,7 +1085,12 @@ Catchment area (projected) is 296.53 km²
 </div>
 <p>In the next step, the glacier inventory outlines for the determined RGI region will be downloaded. A spatial join is performed to determine all glacier outlines that intersect with the catchment area.</p>
 <p><strong>Note</strong>: Depending on the region and bandwidth, this might take 1 min or longer.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
@@ -1037,6 +1132,7 @@ Catchment area (projected) is 296.53 km²
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reading Randolph Glacier Inventory 6.0 in GLIMS database...
 Locating glacier outlines in RGI Region 13 (CentralAsia)...
@@ -1051,7 +1147,12 @@ Wall time: 1min 23s
 </div>
 </div>
 <p>Some glaciers are not actually in the catchment, but intersect its outline. We will first determine their fractional overlap with the target catchment.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># intersects selects too many. calculate percentage of glacier area that is within catchment</span>
 <span class="n">rgi_catchment</span><span class="p">[</span><span class="s1">&#39;rgi_area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rgi_catchment</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">crs</span><span class="p">)</span><span class="o">.</span><span class="n">area</span>    
@@ -1068,6 +1169,7 @@ Wall time: 1min 23s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1361,7 +1463,12 @@ Wall time: 1min 23s
 <li><p><strong>≥50%</strong> of the area are in the catchment → <strong>include</strong> and extend catchment area by full glacier outlines (if needed)</p></li>
 <li><p><strong>&lt;50%</strong> of the area are in the catchment → <strong>exclude</strong> and reduce catchment area by glacier outlines (if needed)</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rgi_catchment_merge</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">rgi_catchment</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;RGIId&quot;</span><span class="p">)</span>
 <span class="n">rgi_in_catchment</span> <span class="o">=</span> <span class="n">rgi_catchment_merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rgi_catchment_merge</span><span class="p">[</span><span class="s1">&#39;share_of_area&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">50</span><span class="p">]</span>
@@ -1376,6 +1483,7 @@ Wall time: 1min 23s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of determined glacier outlines: 51
 Number of included glacier outlines (overlap &gt;= 50%): 38
@@ -1385,7 +1493,12 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
 </div>
 </div>
 <p>The RGI-IDs of the remaining glaciers are stored in <code class="docutils literal notranslate"><span class="pre">Glaciers_in_catchment.csv</span></code>.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="n">Path</span><span class="p">(</span><span class="n">output_folder</span> <span class="o">+</span> <span class="s1">&#39;RGI&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1397,6 +1510,7 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -2358,7 +2472,12 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
 </div></div></div>
 </div>
 <p>With an updated glacier outline we can now determine the <strong>final area of the catchment</strong> and the <strong>part covered by glaciers</strong>.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">catchment_new</span><span class="p">[</span><span class="s1">&#39;area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">catchment_new</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">crs</span><span class="p">)[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">area</span>
 <span class="n">area_glac</span> <span class="o">=</span> <span class="n">rgi_in_catchment</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">crs</span><span class="p">)[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">area</span>
@@ -2373,6 +2492,7 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>New catchment area is 295.67 km²
 Glacierized catchment area is 31.83 km²
@@ -2381,7 +2501,12 @@ Glacierized catchment area is 31.83 km²
 </div>
 </div>
 <p>The files just created are added to the existing geopackage…</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rgi_in_catchment</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span><span class="n">output_gpkg</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;rgi_in&#39;</span><span class="p">,</span> <span class="n">driver</span><span class="o">=</span><span class="s1">&#39;GPKG&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Layer &#39;rgi_in&#39; added to GeoPackage &#39;</span><span class="si">{</span><span class="n">output_gpkg</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
@@ -2394,6 +2519,7 @@ Glacierized catchment area is 31.83 km²
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Layer &#39;rgi_in&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
 Layer &#39;rgi_out&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
@@ -2403,7 +2529,12 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 </div>
 </div>
 <p>…and can also be added to the interactive map…</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c_new</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">geopandas_to_ee</span><span class="p">(</span><span class="n">catchment_new</span><span class="p">)</span>
 <span class="n">rgi</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">geopandas_to_ee</span><span class="p">(</span><span class="n">rgi_in_catchment</span><span class="p">)</span>
@@ -2415,6 +2546,7 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>New layers added.
 </pre></div>
@@ -2423,7 +2555,12 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 </div>
 <p>→ <span class="xref myst">Jump to map</span> to see the results.</p>
 <p>…or combined in a simple plot.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">catchment_new</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;tan&#39;</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
@@ -2434,12 +2571,18 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <img alt="_images/44a9d26a8eb5eeada85b99bde1a35efcea5abd9630ea4b8edebe034d23b56768.png" src="_images/44a9d26a8eb5eeada85b99bde1a35efcea5abd9630ea4b8edebe034d23b56768.png" />
 </div>
 </div>
 <p>After adding the new catchment area to GEE, we can easily calculate the mean catchment elevation in meters above sea level.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ele_cat</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">reduceRegion</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Reducer</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
                           <span class="n">geometry</span><span class="o">=</span><span class="n">c_new</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()[</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> 
@@ -2447,6 +2590,7 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean catchment elevation (adjusted) is 3293.49 m a.s.l.
 </pre></div>
@@ -2479,7 +2623,12 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 <p>The <strong>ice thickness rasters (a)</strong> and <strong>aligned DEMs (c)</strong> are the perfect input data for our glacier profile. The files are selected and downloaded by their <strong>RGI IDs</strong> and stored in the output folder.</p>
 <p>Since the original files hosted by ETH Zurich are stored in large archives, we cut the dataset into smaller slices and reupload them according to the respective <a class="reference external" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">license</a> to make them searchable, improve performance, and limit traffic.</p>
 <p>First, we identify the relevant archives for our set of glacier IDs.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">getArchiveNames</span><span class="p">(</span><span class="n">row</span><span class="p">):</span>
     <span class="n">region</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;RGIId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -2498,6 +2647,7 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Thickness archives:	[&#39;ice_thickness_RGI60-13_7&#39;, &#39;ice_thickness_RGI60-13_8&#39;]
 DEM archives:		[&#39;dem_surface_DEM_RGI60-13_7&#39;, &#39;dem_surface_DEM_RGI60-13_8&#39;]
@@ -2506,7 +2656,12 @@ DEM archives:		[&#39;dem_surface_DEM_RGI60-13_7&#39;, &#39;dem_surface_DEM_RGI60
 </div>
 </div>
 <p>The archives are stored on a file server at the Humboldt University of Berlin, which provides limited read access to this notebook. The corresponding credentials and API key are defined in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file. The next step is to identify the corresponding resource references for the previously identified archives.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">resourcespace</span> <span class="kn">import</span> <span class="n">ResourceSpace</span>
 
@@ -2532,6 +2687,7 @@ DEM archives:		[&#39;dem_surface_DEM_RGI60-13_7&#39;, &#39;dem_surface_DEM_RGI60
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Thickness archive references:
 </pre></div>
@@ -2630,7 +2786,12 @@ DEM archives:		[&#39;dem_surface_DEM_RGI60-13_7&#39;, &#39;dem_surface_DEM_RGI60
 </div></div></div>
 </div>
 <p>Again, depending on the number of files and bandwidth, this may take a moment. Let’s start with the <strong>ice thickness</strong>…</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
@@ -2658,6 +2819,7 @@ DEM archives:		[&#39;dem_surface_DEM_RGI60-13_7&#39;, &#39;dem_surface_DEM_RGI60
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38 files have been extracted (ice thickness)
 CPU times: user 347 ms, sys: 46.3 ms, total: 393 ms
@@ -2667,7 +2829,12 @@ Wall time: 3.43 s
 </div>
 </div>
 <p>…and continue with the matching <strong>DEMs</strong>.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
@@ -2691,6 +2858,7 @@ Wall time: 3.43 s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38 files have been extracted (DEM)
 CPU times: user 559 ms, sys: 75.8 ms, total: 634 ms
@@ -2700,7 +2868,12 @@ Wall time: 13.4 s
 </div>
 </div>
 <p><strong>Note:</strong> Please check whether all files have been extracted to the output folder without error messages and <strong>the number of files matches the number of glaciers</strong>.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rgi_in_catchment</span><span class="p">)</span> <span class="o">==</span> <span class="n">cnt_thickness</span> <span class="o">==</span> <span class="n">cnt_dem</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Number of files matches the number of glaciers within catchment: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rgi_in_catchment</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -2712,6 +2885,7 @@ Wall time: 13.4 s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of files matches the number of glaciers within catchment: 38
 </pre></div>
@@ -2723,7 +2897,12 @@ Wall time: 13.4 s
 <h2>Glacier profile creation<a class="headerlink" href="#glacier-profile-creation" title="Permalink to this heading">#</a></h2>
 <p>The <strong>glacier profile</strong> is used to pass the distribution of ice mass in the catchment to the glacio-hydrological model in <strong>Notebook 4</strong>, following the approach of <a class="reference external" href="https://doi.org/10.5194/hess-22-2211-2018">Seibert et.al.2018</a>. The model then calculates the annual mass balance and redistributes the ice mass accordingly.</p>
 <p>To derive the profile from spatially distributed data, we first stack the ice thickness and corresponding DEM rasters for each glacier and create tuples of ice thickness and elevation values.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">osgeo</span> <span class="kn">import</span> <span class="n">gdal</span>
 
@@ -2762,6 +2941,7 @@ Wall time: 13.4 s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ice thickness and elevations rasters stacked
 Value pairs created
@@ -2771,7 +2951,12 @@ Value pairs created
 </div>
 <p>Now we can remove all data points with zero ice thickness and aggregate all data points into 10m <strong>elevation zones</strong>. The next step is to calculate the <strong>water equivalent</strong> (WE) from the average ice thickness in each elevation zone.</p>
 <p>The result is exported to the output folder as <code class="docutils literal notranslate"><span class="pre">glacier_profile.csv</span></code>.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_all</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
     <span class="n">df_all</span> <span class="o">=</span> <span class="n">df_all</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_all</span><span class="p">[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
@@ -2804,6 +2989,7 @@ Value pairs created
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Glacier profile for catchment created!
 </pre></div>
@@ -2916,7 +3102,12 @@ Value pairs created
 </div></div></div>
 </div>
 <p>Let’s visualize the glacier profile. First we aggregate the ice mass in larger elevation zones for better visibility. The level of aggregation can be adjusted using the variable <code class="docutils literal notranslate"><span class="pre">steps</span></code> (default is 20m).</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># aggregation level for plot -&gt; feel free to adjust</span>
 <span class="n">steps</span> <span class="o">=</span> <span class="mi">20</span>
@@ -2938,6 +3129,7 @@ Value pairs created
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -3015,7 +3207,12 @@ Value pairs created
 </div></div></div>
 </div>
 <p>Now, we can plot the estimated <strong>glacier mass (in Mt) for each elevation zone.</strong></p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.ticker</span> <span class="k">as</span> <span class="nn">ticker</span>
 
@@ -3031,18 +3228,25 @@ Value pairs created
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <img alt="_images/683df7cfb00279259d0610a9ca504415104b8caed25fd49040eef3469260588b.png" src="_images/683df7cfb00279259d0610a9ca504415104b8caed25fd49040eef3469260588b.png" />
 </div>
 </div>
 <p>Finally, we need the average glacier elevation Calculate average glacier elevation in meters above sea level.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ele_glac</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">df_all</span><span class="o">.</span><span class="n">altitude</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Average glacier elevation in the catchment: </span><span class="si">{</span><span class="n">ele_glac</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> m a.s.l.&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average glacier elevation in the catchment: 4001.88 m a.s.l.
 </pre></div>
@@ -3061,7 +3265,12 @@ Value pairs created
 <li><p><strong>ele_glac</strong>: average elevation of glaciers in m.a.s.l.</p></li>
 <li><p><strong>lat</strong>: latitude of catchment centroid</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yaml</span>
 
@@ -3079,6 +3288,7 @@ Value pairs created
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Settings saved to file.
 </pre></div>
@@ -3133,12 +3343,18 @@ Value pairs created
 </table>
 </div></div></div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">reset</span> -f
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 </section>
 
