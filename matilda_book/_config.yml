@@ -9,7 +9,6 @@ logo: https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg
 # See https://jupyterbook.org/content/execute.html
 execute:
   execute_notebooks: off
-  hide_input: true
 
 # Define the name of the latex output file for PDF builds
 latex:
