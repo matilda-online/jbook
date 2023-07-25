@@ -389,6 +389,7 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signing-up-for-google-earth-engine">Signing up for Google Earth Engine</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorize-access-for-google-earth-engine">Authorize access for Google Earth Engine</a></li>
 </ul>
             </nav>
         </div>
@@ -404,7 +405,7 @@ document.write(`
 <h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h1>
 <p>Welcome to <strong>MATILDA</strong>, the Python workflow for Modeling Water Resources in Glacierized Catchments! In the following series of notebooks you will go all the way from data acquisition to the analysis of climate change impacts on your catchment. Every notebook tackles an individual step in the modeling workflow.</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="Notebook1_Catchment_delineation.html"><span class="doc std std-doc">Notebook 1 - Catchment Delineation</span></a> delineates your catchment and downloads all types of static data such as the digital elevation model, glacier outlines, and ice thickness.</p></li>
+<li><p><span class="xref myst">Notebook 1 - Catchment Delineation</span> delineates your catchment and downloads all types of static data such as the digital elevation model, glacier outlines, and ice thickness.</p></li>
 <li><p><a class="reference internal" href="Notebook2_Forcing_data.html"><span class="doc std std-doc">Notebook 2 - Forcing data</span></a> downloads and processes ERA5-Land reanalysis data to calibrate the glacio-hydrological model.</p></li>
 <li><p><a class="reference internal" href="Notebook3_CMIP6.html"><span class="doc std std-doc">Notebook 3 - CMIP6</span></a> downloads and processes CMIP6 climate model data for a historical period and two emission pathways until 2100.</p></li>
 <li><p><a class="reference internal" href="Notebook4_MATILDA.html"><span class="doc std std-doc">Notebook 4 - MATILDA</span></a> runs a glacio-hydrological model for your catchment with default parameters and guides you through the calibration process.</p></li>
@@ -446,6 +447,30 @@ Click on <em>Cloud Terms of Services</em>. You will be redirected to your Google
 <ol class="arabic simple" start="8">
 <li><p>Confirm your Cloud Project information by clicking on <em>CONFIRM AND CONTINUE</em>.
 <img alt="enter image description here" src="https://i.postimg.cc/L8n8dDnL/confirm.png" /></p></li>
+</ol>
+</section>
+<hr class="docutils" />
+<section id="authorize-access-for-google-earth-engine">
+<h2>Authorize access for Google Earth Engine<a class="headerlink" href="#authorize-access-for-google-earth-engine" title="Permalink to this heading">#</a></h2>
+<div class="alert alert-block alert-info">
+<b>Note:</b>
+The token is requested when initializing the GEE at the start of the next notebooks. You will be requested to click on an URL, follow the instructions and copy-paste the generated token into an input prompt.</div> <ol class="arabic simple">
+<li><p>Choose account and project and then click on <em>GENERATE TOKEN.</em>  <img alt="enter image description here" src="_images/nb0_gee_token_1.png" /></p></li>
+</ol>
+<ol class="arabic simple" start="2">
+<li><p>After that, you will need to sign into your Google Account. You’ll get a notification saying that Google hasn’t verified this app. Click <em>continue</em>.
+<img alt="enter image description here" src="https://i.postimg.cc/8PzQmGk8/continue.png" /></p></li>
+</ol>
+<ol class="arabic simple" start="3">
+<li><p>Next, choose what Earth Engine Notebook Client can access. Click <em>continue</em>.
+<img alt="enter image description here" src="_images/nb0_gee_token_3.png" /></p></li>
+</ol>
+<ol class="arabic simple" start="4">
+<li><p>Copy the authorisation code and paste it on the Earth Engine Notebook.<img alt="enter image description here" src="_images/nb0_gee_token_4.png" />
+<img alt="enter image description here" src="https://i.postimg.cc/ZnfQM9bG/enter-code.png" /></p></li>
+</ol>
+<ol class="arabic simple" start="5">
+<li><p>You should get a message saying <em>Successfully saved authorization token.</em></p></li>
 </ol>
 </section>
 <div class="toctree-wrapper compound">
@@ -511,6 +536,7 @@ Click on <em>Cloud Terms of Services</em>. You will be redirected to your Google
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signing-up-for-google-earth-engine">Signing up for Google Earth Engine</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorize-access-for-google-earth-engine">Authorize access for Google Earth Engine</a></li>
 </ul>
   </nav></div>
 
