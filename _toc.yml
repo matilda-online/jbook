@@ -8,4 +8,6 @@ chapters:
 - file: Notebook2_Forcing_data
 - file: Notebook3_CMIP6
 - file: Notebook4_MATILDA
-- file: bibliography
+- file: Notebook5_MATILDA_scenarios
+- file: Notebook6_Analysis
+- file: Notebook7_Climate_Change_Impact
