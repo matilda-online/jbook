@@ -3,6 +3,7 @@
 
 title: MATILDA
 author: Phillip Schuster
+copyright: 2023    
 logo: https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg
 
 # Force re-execution of notebooks on each build.
