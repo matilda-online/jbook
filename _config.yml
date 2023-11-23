@@ -2,8 +2,8 @@
 # Learn more at https://jupyterbook.org/customize/config.html
 
 title: MATILDA
-author: Phillip Schuster (test)
-copyright: 2099
+author: Phillip Schuster
+copyright: 2023
 logo: https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg
 
 # Force re-execution of notebooks on each build.
