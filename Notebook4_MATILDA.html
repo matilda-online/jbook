@@ -420,7 +420,12 @@ document.write(`
 </ol>
 <p>We will use the glacio-hydrological modeling library [MATILDA] (<a class="github reference external" href="https://github.com/cryotools/matilda">cryotools/matilda</a>), which has been developed for use in this workflow. It is based on the widely used <a class="reference external" href="https://www.cabdirect.org/cabdirect/abstract/19961904773">HBV hydrological model</a>, extended by a simple temperature-index melt model based roughly on the code of <a class="reference external" href="https://zenodo.org/record/3467639">Seguinot (2019)</a>. Glacier evolution over time is modeled using the Δ<em>h</em> approach following <a class="reference external" href="https://doi.org/10.5194/hess-22-2211-2018">Seibert et. al. (2018)</a>.</p>
 <p>Let’s start by importing some helper functions to work with <code class="docutils literal notranslate"><span class="pre">yaml</span></code> and <code class="docutils literal notranslate"><span class="pre">pickle</span></code> files and read required data from the config file.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">update_yaml</span><span class="p">,</span> <span class="n">read_yaml</span><span class="p">,</span> <span class="n">write_yaml</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
@@ -439,6 +444,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MATILDA will be calibrated on the period 1998-01-01 to 2020-12-31
 </pre></div>
@@ -446,7 +452,12 @@ document.write(`
 </div>
 </div>
 <p>The model requires a minimum setup period of one year. By default, the first two years are considered setup. We derive the respective dates from  the defined time period accordingly.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -464,6 +475,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>set_up_start: 1998-01-01
 set_up_end: 1999-12-31
@@ -475,7 +487,12 @@ sim_end: 2020-12-31
 </div>
 <p>Many MATILDA parameters have been calculated in previous notebooks and stored in <code class="docutils literal notranslate"><span class="pre">settings.yaml</span></code>. We can easily add the modeling periods using a helper function. The calculated glacier profile from Notebook 1 can be imported as a <code class="docutils literal notranslate"><span class="pre">pandas</span> <span class="pre">DataFrame</span></code> and added to the settings dictionary as well.</p>
 <p>Finally, we will also add some optional settings that control the aggregation frequency of the outputs, the choice of graphical outputs, and more.</p>
-<div class="cell tag_output_scroll docutils container">
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">update_yaml</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;settings.yml&#39;</span><span class="p">,</span> <span class="n">dates</span><span class="p">)</span>
 
@@ -495,6 +512,7 @@ sim_end: 2020-12-31
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MATILDA settings:
 
@@ -535,7 +553,12 @@ glacier_profile:      Elevation      Area          WE  EleZone
 <section id="run-matilda-with-default-parameters">
 <h2>Run MATILDA with default parameters<a class="headerlink" href="#run-matilda-with-default-parameters" title="Permalink to this heading">#</a></h2>
 <p>We will force MATILDA with the pre-processed ERA5-Land data from Notebook 2. Although MATILDA can run without calibration on observations, the results would have extreme uncertainties. Therefore, we recommend to use at least runoff observations for your selected point to evaluate the simulations against. Here, we load runoff observations for your example catchment from 1982 to 2020 (with gaps).</p>
-<div class="cell tag_output_scroll docutils container">
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">era5</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;ERA5L.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="s1">&#39;temp&#39;</span><span class="p">,</span> <span class="s1">&#39;prec&#39;</span><span class="p">])</span>
 <span class="n">era5</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;TIMESTAMP&#39;</span><span class="p">,</span> <span class="s1">&#39;T2&#39;</span><span class="p">,</span> <span class="s1">&#39;RRR&#39;</span><span class="p">]</span>
@@ -554,6 +577,7 @@ glacier_profile:      Elevation      Area          WE  EleZone
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ERA5 Data:
 </pre></div>
@@ -738,7 +762,12 @@ glacier_profile:      Elevation      Area          WE  EleZone
 </div></div></div>
 </div>
 <p>First, we run MATILDA with default parameters.</p>
-<div class="cell tag_output_scroll docutils container">
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.core</span> <span class="kn">import</span> <span class="n">matilda_simulation</span>
 
@@ -746,6 +775,7 @@ glacier_profile:      Elevation      Area          WE  EleZone
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>---
 MATILDA framework
@@ -918,7 +948,12 @@ End of the MATILDA simulation
 <h3>Add glacier mass balance data<a class="headerlink" href="#add-glacier-mass-balance-data" title="Permalink to this heading">#</a></h3>
 <p>In addition to runoff we will use glacier mass balance as second calibration variable. <a class="reference external" href="https://doi.org/10.3389/feart.2019.00363">Shean et. al. 2020 </a> calculated robust geodetic mass balances for all glaciers in High Mountain Asia from 2000 to 2018. For this example (and all other catchments in HMA), we can use their data set so derive a target average annual mass balance in the calibration period. If your catchment is located outside HMA, you need to consult other sources.</p>
 <p>We pick all individual mass balances that match the glacier IDs in our catchment and calculate the mean. In addition, we use the uncertainty measures listed in the dataset to derive an uncertainty range.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
@@ -935,6 +970,7 @@ End of the MATILDA simulation
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Target glacier mass balance for calibration: -155.474 +-50.3mm w.e.
 </pre></div>
@@ -942,7 +978,12 @@ End of the MATILDA simulation
 </div>
 </div>
 <p>The MATILDA framework provides an interface to <a class="reference external" href="https://github.com/thouska/spotpy/">SPOTPY</a>. Here we will use the <code class="docutils literal notranslate"><span class="pre">psample()</span></code> function to run MATILDA with the same settings as before. To do this, we will remove redundant <code class="docutils literal notranslate"><span class="pre">settings</span></code> and add some new ones specific to the function. Be sure to choose the number of repetitions carefully.</p>
-<div class="cell tag_output_scroll docutils container">
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">drop_keys</span>
 
@@ -967,6 +1008,7 @@ End of the MATILDA simulation
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Settings for calibration runs:
 
@@ -1011,7 +1053,12 @@ parallel: False
 </div>
 </div>
 <p>With these settings we can start the <code class="docutils literal notranslate"><span class="pre">psample()</span></code> to run our model with various parameter combinations. The default parameter boundaries can be found in the MATILDA <a class="reference external" href="https://github.com/cryotools/matilda/blob/master/Parameters">parameter documentation</a>. If you want to narrow down the parameter space you can do that using the following syntax. Here, we define custom ranges for the temperature lapse rate and the precipitation correction factor.</p>
-<div class="cell tag_output_scroll docutils container">
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.mspot_glacier</span> <span class="kn">import</span> <span class="n">psample</span>
 
@@ -1021,6 +1068,7 @@ parallel: False
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing the  Latin Hypercube Sampling (LHS)  with  10  repetitions
 The objective function will be maximized
@@ -1081,7 +1129,12 @@ Run number 8 has the highest objectivefunction with: 0.4883
 <h2>Run MATILDA with calibrated parameters<a class="headerlink" href="#run-matilda-with-calibrated-parameters" title="Permalink to this heading">#</a></h2>
 <p>The following parameter set was computed using an updated version of the Differential Evolution Markov Chain (DE-MCz) algorithm with 55k iterations on an HPC cluster. The parameters were optimized for runoff using the <a class="reference external" href="https://doi.org/10.1016/j.jhydrol.2012.01.011">Kling-Gupta model efficiency coefficient</a> and the results were filtered to match the target mass balance range.
 <a id="param"></a></p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lr_temp&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.006472598</span><span class="p">,</span>
          <span class="s1">&#39;lr_prec&#39;</span><span class="p">:</span> <span class="mf">0.00010296448</span><span class="p">,</span>
@@ -1110,6 +1163,7 @@ Run number 8 has the highest objectivefunction with: 0.4883
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Calibrated parameter set:
 
@@ -1139,12 +1193,18 @@ RFS: 0.21825151
 </div>
 </div>
 </div>
-<div class="cell tag_output_scroll docutils container">
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_matilda</span> <span class="o">=</span> <span class="n">matilda_simulation</span><span class="p">(</span><span class="n">era5</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">,</span> <span class="n">parameter_set</span><span class="o">=</span><span class="n">param</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>---
 MATILDA framework
@@ -1304,12 +1364,18 @@ End of the MATILDA simulation
 </div>
 </div>
 <p>In addition to the standard plots we can explore the results interactive <code class="docutils literal notranslate"><span class="pre">ploty</span></code> plots. Go ahead and zoom as you like or select/deselect individual curves.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_matilda</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">        <script type="text/javascript">
         window.PlotlyConfig = {MathJaxConfig: 'local'};
@@ -1358,12 +1424,18 @@ if (outputEl) {{
                         })                };                });            </script>        </div></div></div>
 </div>
 <p>The same works for the long-term seasonal cycle.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_matilda</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>                            <div id="80d1f292-139a-42be-bb37-19dd3c3bba2c" class="plotly-graph-div" style="height:525px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("80d1f292-139a-42be-bb37-19dd3c3bba2c")) {                    Plotly.newPlot(                        "80d1f292-139a-42be-bb37-19dd3c3bba2c",                        [{"fillcolor":"#5893D4","legendgroup":"runoff","legendgrouptitle":{"text":"Runoff comparison"},"mode":"none","name":"MATILDA catchment runoff","stackgroup":"one","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[21.957054634171072,17.81783670947405,16.785324322186998,15.33002010607562,42.076636563704625,118.36832765240247,94.78699682444768,87.36341252865303,78.42124219393003,68.34601133149351,42.29188506689848,28.107321008426126],"type":"scatter","xaxis":"x","yaxis":"y","marker":{"opacity":0}},{"fillcolor":"#CC79A7","legendgroup":"runoff","mode":"none","name":"MATILDA glacial runoff (stacked)","stackgroup":"one","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[2.2590275664682573e-193,7.845996363241105e-256,4.17517318739e-312,0.12562732386293604,2.8927474628012235,18.042411935973245,37.04946013589294,43.9053757088305,11.69356490888631,0.22022145547949373,9.524104385428136e-62,7.617511395221698e-129],"type":"scatter","xaxis":"x","yaxis":"y","marker":{"opacity":0}},{"legendgroup":"runoff","line":{"color":"#E69F00"},"name":"Observations","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[19.750440719051397,16.460986593348114,18.875179283257992,26.905968131982537,63.933560973346864,111.8210653426244,146.60346124147264,149.10714656780203,75.74018174256422,40.45935865450396,29.303755452191762,24.512397798607843],"type":"scatter","xaxis":"x","yaxis":"y","marker":{"opacity":0}},{"legendgroup":"runoff","line":{"color":"black"},"name":"MATILDA total runoff","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[21.957054634171072,17.81783670947405,16.785324322186998,15.455647429938557,44.96938402650585,136.4107395883757,131.83645696034066,131.2687882374835,90.11480710281633,68.566232786973,42.29188506689848,28.107321008426126],"type":"scatter","xaxis":"x","yaxis":"y","marker":{"opacity":0}},{"fill":"tozeroy","fillcolor":"#adb5bd","legendgroup":"refreeze","legendgrouptitle":{"text":"Refreezing"},"mode":"none","name":"MATILDA snow refreezing","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[0.0,0.0,0.0,0.004696699080805201,0.11361157088045147,1.9635799651663537,5.6299243868249045,1.5556791003821022,0.16249295503393676,0.002378276099429165,0.0,0.0],"type":"scatter","xaxis":"x","yaxis":"y","marker":{"opacity":0}},{"fill":"tozeroy","fillcolor":"#6c757d","legendgroup":"refreeze","mode":"none","name":"MATILDA ice refreezing","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[0.0,0.0,0.0,0.0,0.0,0.0,0.014745017342736857,0.2217439417184285,0.05093385823990612,0.0008172139823749804,0.0,0.0],"type":"scatter","xaxis":"x","yaxis":"y","marker":{"opacity":0}},{"fillcolor":"#33193f","legendgroup":"runoff2","legendgrouptitle":{"text":"Runoff contributions"},"mode":"none","name":"Melt off glacier","stackgroup":"one","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[4.761904761904762e-06,0.0,1.6699624300291989,42.32936626724887,190.1160067218345,47.36457695207734,0.0,0.0,3.39255112850182,4.541077201720482,0.21854831254948912,0.0],"type":"scatter","xaxis":"x2","yaxis":"y2","marker":{"opacity":0}},{"fillcolor":"#6c1e58","legendgroup":"runoff2","mode":"none","name":"Melt on glacier","stackgroup":"one","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[0.0,0.0,0.0,0.021519663624802416,0.5205534242601643,8.996867720027932,27.2700821947475,29.302313242744592,5.8379073855318655,0.09261834964658185,0.0,0.0],"type":"scatter","xaxis":"x2","yaxis":"y2","marker":{"opacity":0}},{"fillcolor":"#a6135a","legendgroup":"runoff2","mode":"none","name":"Precipitation off glacier","stackgroup":"one","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[26.975907578742465,33.47724837775628,39.64997182806099,63.36173574851242,101.56327728611863,124.08794421991233,144.3538130802328,155.99307218542424,111.28102311198244,73.53891447972069,44.020228567924875,29.618533094275193],"type":"scatter","xaxis":"x2","yaxis":"y2","marker":{"opacity":0}},{"fillcolor":"#d72f41","legendgroup":"runoff2","mode":"none","name":"Precipitation on glacier","stackgroup":"one","x":["2000-01-31T00:00:00","2000-02-29T00:00:00","2000-03-31T00:00:00","2000-04-30T00:00:00","2000-05-31T00:00:00","2000-06-30T00:00:00","2000-07-31T00:00:00","2000-08-31T00:00:00","2000-09-30T00:00:00","2000-10-31T00:00:00","2000-11-30T00:00:00","2000-12-31T00:00:00"],"y":[3.072782396830863,3.7486439701785255,4.404234280855685,6.699790549383403,10.113024560979909,13.128170565091061,15.548148198476486,16.735969675895145,11.393820964769416,7.658401018947733,4.857484425335172,3.3454833497438248],"type":"scatter","xaxis":"x2","yaxis":"y2","marker":{"opacity":0}}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"xaxis":{"anchor":"y","domain":[0.0,1.0],"matches":"x2","showticklabels":true,"ticks":"outside","ticklabelmode":"period","dtick":"M1","tickformat":"%b","hoverformat":"%d\n%b"},"yaxis":{"anchor":"x","domain":[0.575,1.0],"ticksuffix":" mm"},"xaxis2":{"anchor":"y2","domain":[0.0,1.0],"ticks":"outside","ticklabelmode":"period","dtick":"M1","tickformat":"%b","hoverformat":"%d\n%b"},"yaxis2":{"anchor":"x2","domain":[0.0,0.425],"ticksuffix":" mm"},"annotations":[{"font":{"size":16},"showarrow":false,"text":"<b> Simulated vs observed runoff </b>","x":0.5,"xanchor":"center","xref":"paper","y":1.0,"yanchor":"bottom","yref":"paper"},{"font":{"size":16},"showarrow":false,"text":"<b> Runoff contributions </b>","x":0.5,"xanchor":"center","xref":"paper","y":0.425,"yanchor":"bottom","yref":"paper"},{"showarrow":false,"text":"<b>KGE coeff 0.86</b>","x":0.99,"xanchor":"right","xref":"x domain","y":0.95,"yref":"y domain"}],"legend":{"groupclick":"toggleitem","tracegroupgap":20},"title":{"font":{"size":30},"text":"Annual mean MATILDA Results (2000-2020)","x":0.5,"xanchor":"center"},"plot_bgcolor":"white","hovermode":"x"},                        {"responsive": true}                    ).then(function(){
                             
@@ -1396,7 +1468,12 @@ if (outputEl) {{
 <h2>Reducing the parameter space - Sensitivity analysis with FAST<a class="headerlink" href="#reducing-the-parameter-space-sensitivity-analysis-with-fast" title="Permalink to this heading">#</a></h2>
 <p>To reduce the computation time of the calibration procedure, we need to reduce the number of parameters to be optimized. Therefore, we will perform a global sensitivity analysis to identify the most important parameters and set the others to default values. The algorithm of choice will be the <a class="reference external" href="https://www.tandfonline.com/doi/abs/10.1080/00401706.1999.10485594">Fourier Amplitude Sensitivity Test (FAST)</a> available through the <a class="reference external" href="https://github.com/thouska/spotpy/blob/master/src/spotpy/algorithms/fast.py">SPOTPY</a> library. As before, we will show the general procedure with a few iterations, but display results from extensive runs on a HPC. You can use the results as a guide for your parameter choices, but keep in mind that they are highly correlated with your catchment properties, such as elevation range and glacier coverage.</p>
 <p>First, we calculate the required number of iterations using a formula from <a class="reference external" href="https://www.informs-sim.org/wsc12papers/includes/files/con308.pdf">Henkel et. al. 2012</a>. We choose the SPOTPY default frequency step of 2 and set the interference factor to a maximum of 4, since we assume a high intercorrelation of the model parameters. The total number of parameters in MATILDA is 21.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fast_iter</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">interf</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">freqst</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1420,6 +1497,7 @@ if (outputEl) {{
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Needed number of iterations for FAST: 52437
 </pre></div>
@@ -1428,7 +1506,12 @@ if (outputEl) {{
 </div>
 <p>That is a lot of iterations! Running this routine on a single core would take about two days, but can be sped up significantly with each additional core. The setup would look exactly like the parameter optimization before.</p>
 <p><strong>Note:</strong> No matter what number of iterations you define, SPOTPY will run <span class="math notranslate nohighlight">\(N*k\)</span> times, where <span class="math notranslate nohighlight">\(k\)</span> is the number of model parameters. So even if we set <code class="docutils literal notranslate"><span class="pre">rep=10</span></code>, the algorithm will run at least 21 times.</p>
-<div class="cell tag_output_scroll docutils container">
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.mspot_glacier</span> <span class="kn">import</span> <span class="n">psample</span>
 
@@ -1448,6 +1531,7 @@ if (outputEl) {{
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Settings for FAST:
 
@@ -1492,7 +1576,12 @@ parallel: False
 </div>
 </div>
 <p>We ran <em>FAST</em>s for the example catchment with the full number of iterations required. The results are saved in <em>CSV</em> files. We can use the <code class="docutils literal notranslate"><span class="pre">spotpy.analyser</span></code> library to create easy-to-read data frames from the databases. The summary shows the first (<code class="docutils literal notranslate"><span class="pre">S1</span></code>) and the total order sensitivity index (<code class="docutils literal notranslate"><span class="pre">ST</span></code>) for each parameter. <code class="docutils literal notranslate"><span class="pre">S1</span></code> refers to the variance of the model output explained by the parameter, holding all other parameters constant. The <code class="docutils literal notranslate"><span class="pre">ST</span></code> takes into account the interaction of the parameters and is therefore a good measure of the impact of individual parameters on the model output.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spotpy</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -1533,6 +1622,7 @@ parallel: False
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>
 <style scoped>
@@ -1672,16 +1762,27 @@ parallel: False
 </div></div></div>
 </div>
 <p>If you have additional information on certain parameters, limiting their bounds can have a large impact on sensitivity. For our example catchment, field observations showed that the temperature lapse rate and precipitation correction were unlikely to exceed a certain range, so we limited the parameter space for both and ran a <em>FAST</em> again.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lim_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lr_temp_lo&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.007</span><span class="p">,</span> <span class="s1">&#39;lr_temp_up&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.005</span><span class="p">,</span> <span class="s1">&#39;PCORR_lo&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;PCORR_up&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">}</span>
 <span class="c1"># fast_results = psample(df=era5, obs=obs, **psample_settings, **lim_dict)</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>To see the effect of parameter restrictions on sensitivity, we can plot the indices of both runs. Feel free to explore further by adding more <em>FAST</em> outputs to the plot function.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.graph_objs</span> <span class="k">as</span> <span class="nn">go</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -1738,6 +1839,7 @@ parallel: False
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html"><div>                            <div id="61f22632-86c5-4d3f-a06a-8d5283c5d808" class="plotly-graph-div" style="height:700px; width:100%;"></div>            <script type="text/javascript">                require(["plotly"], function(Plotly) {                    window.PLOTLYENV=window.PLOTLYENV || {};                                    if (document.getElementById("61f22632-86c5-4d3f-a06a-8d5283c5d808")) {                    Plotly.newPlot(                        "61f22632-86c5-4d3f-a06a-8d5283c5d808",                        [{"marker":{"color":"darkblue"},"name":"No Limits","orientation":"h","width":0.3,"x":[0.028119406343063647,0.020322854743746288,0.04487989449566632,0.06176663683393746,0.07042650344279511,0.05653375579213327,0.09655977255738457,0.07353831698978741,0.08717574693401564,0.04511993162342964,0.0510023164333161,0.056397697707704975,0.8570745860808442,0.08725109615414472,0.0644077210266839,0.12189727470603418,0.08339165454116104,0.13747705640322472,0.06350321380501212,0.1165030254251136,0.09891432188275195],"y":["lr_temp","lr_prec","BETA","CET","FC","K0","K1","K2","LP","MAXBAS","PERC","UZL","PCORR","TT_snow","TT_diff","CFMAX_ice","CFMAX_rel","SFCF","CWH","AG","RFS"],"type":"bar"},{"marker":{"color":"orange"},"name":"lr_temp and PCORR limited","orientation":"h","width":0.3,"x":[0.012872988765448623,0.044216563229004024,0.07682778314853544,0.0679170452483826,0.06697772733610896,0.05860686688157235,0.15422173466458644,0.11539069102690447,0.10521232190356877,0.06336707455429091,0.06678526832525278,0.09801538632796825,0.6660033095931,0.1262735941108062,0.051398107969522044,0.14684121258405447,0.09795960502888923,0.22137708955494206,0.06478840792524632,0.07145424085228447,0.08318271564150981],"y":["lr_temp","lr_prec","BETA","CET","FC","K0","K1","K2","LP","MAXBAS","PERC","UZL","PCORR","TT_snow","TT_diff","CFMAX_ice","CFMAX_rel","SFCF","CWH","AG","RFS"],"type":"bar"}],                        {"bargap":0.6,"height":700,"title":{"font":{"size":24},"text":"<b>Total Sensitivity Index for MATILDA Parameters<b>"},"xaxis":{"title":{"text":"Total Sensitivity Index"}},"yaxis":{"automargin":true,"title":{"text":"Parameter"}},"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}}},                        {"responsive": true}                    ).then(function(){
                             
@@ -1766,7 +1868,12 @@ if (outputEl) {{
                         })                };                });            </script>        </div></div></div>
 </div>
 <p>From this figure, we can easily identify the most important parameters. Depending on your desired accuracy and computational resources, you can choose a sensitivity threshold. Let’s say we want to fix all parameters with a sensitivity index below 0.1. For our example, this will reduce the calibration parameters to 7.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">si_df</span> <span class="o">=</span> <span class="n">get_si</span><span class="p">(</span><span class="n">step2</span><span class="p">)</span>
 <span class="n">sensitive</span> <span class="o">=</span> <span class="n">si_df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">si_df</span><span class="p">[</span><span class="s1">&#39;ST&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.10</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
@@ -1776,6 +1883,7 @@ if (outputEl) {{
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parameters with a sensitivity index &gt; 0.1:
 K1
@@ -1790,13 +1898,19 @@ SFCF
 </div>
 </div>
 <p>To give you an idea how much this procedure can reduce calibration time, we run the <code class="docutils literal notranslate"><span class="pre">fast_iter()</span></code> function again.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Needed number of iterations for FAST with all parameters: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fast_iter</span><span class="p">(</span><span class="mi">21</span><span class="p">)))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Needed number of iterations for FAST with the 7 most sensitive parameters: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fast_iter</span><span class="p">(</span><span class="mi">7</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Needed number of iterations for FAST with all parameters: 52437
 Needed number of iterations for FAST with the 7 most sensitive parameters: 4935
@@ -1806,7 +1920,12 @@ Needed number of iterations for FAST with the 7 most sensitive parameters: 4935
 </div>
 <p>For a single core this would roughly translate into a reduction from 44h to 4h.</p>
 <p>To run the calibration with the reduced parameter space, we simply need to define values for the fixed parameters and use a helper function to translate them into boundary arguments. Here we simply use the values from our last <em>SPOTPY</em> run (<code class="docutils literal notranslate"><span class="pre">param</span></code>).</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.mspot_glacier</span> <span class="kn">import</span> <span class="n">dict2bounds</span>
 
@@ -1818,6 +1937,7 @@ Needed number of iterations for FAST with the 7 most sensitive parameters: 4935
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fixed bounds:
 
@@ -1854,7 +1974,12 @@ RFS_up: 0.21825151
 </div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">psample()</span></code> setup is then as simple as before.</p>
-<div class="cell tag_output_scroll docutils container">
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_settings</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rep&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>                             <span class="c1"># Number of model runs. For advice check the documentation of the algorithms.</span>
                 <span class="s1">&#39;glacier_only&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>                 <span class="c1"># True when calibrating a entirely glacierized catchment</span>
@@ -1874,6 +1999,7 @@ RFS_up: 0.21825151
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initializing the  Latin Hypercube Sampling (LHS)  with  10  repetitions
 The objective function will be maximized
@@ -1931,21 +2057,33 @@ Run number 4 has the highest objectivefunction with: 0.3391
 <div class="alert alert-block alert-info">
 <b>Note:</b> The number of iterations required depends on the selected algorithm and the number of free parameters. To choose the correct setting, consult the <a href='https://spotpy.readthedocs.io/en/latest/Algorithm_guide/'>SPOTPY documentation</a> and the original literature for each algorithm.</div><p>Now, we save the best parameter set for use in the next notebook. The set is stored in the <code class="docutils literal notranslate"><span class="pre">best_summary</span></code> variable.</p>
 <p><strong>Note:</strong> In our example we will skip this step and use the <span class="xref myst">result from the calibration on an HPC cluster</span>.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># param = best_summary[&#39;best_param&#39;]</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>Finally, we store the parameter set in a <code class="docutils literal notranslate"><span class="pre">.yml</span></code> file.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">write_yaml</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;parameters.yml&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameter set stored in &#39;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">parameters.yml&#39;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parameter set stored in &#39;output/parameters.yml&#39;
 </pre></div>
