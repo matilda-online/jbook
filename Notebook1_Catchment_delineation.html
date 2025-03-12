@@ -421,7 +421,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="catchment-delineation">
+  <section id="catchment-delineation">
 <h1>Catchment delineation<a class="headerlink" href="#catchment-delineation" title="Link to this heading">#</a></h1>
 <p>We start our workflow by downloading all the static data we need. In this notebook we will</p>
 <ol class="arabic simple">
@@ -430,7 +430,7 @@
 <li><p>…identify all glaciers within the catchment and download the <strong>glacier outlines and ice thicknesses</strong>,</p></li>
 <li><p>…create a glacier profile based on elevation zones.</p></li>
 </ol>
-<p>The DEM will be downloaded from Google Earth Engine (GEE). The default is the [MERIT DEM] (<a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog/MERIT_DEM_v1_0_3">https://developers.google.com/earth-engine/datasets/catalog/MERIT_DEM_v1_0_3</a>), but you can use any DEM available in the <em>Google Earth Engine Data Catalog</em> (<a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog">https://developers.google.com/earth-engine/datasets/catalog</a>) by specifying it in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file.</p>
+<p>The DEM will be downloaded from Google Earth Engine (GEE). The default is the [MERIT DEM] (https://developers.google.com/earth-engine/datasets/catalog/MERIT_DEM_v1_0_3), but you can use any DEM available in the <em>Google Earth Engine Data Catalog</em> (https://developers.google.com/earth-engine/datasets/catalog) by specifying it in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file.</p>
 <p>Let’s start by importing the necessary packages and defining functions/constants.</p>
 <p>First of all, the Google Earth Engine (GEE) access must be initialized. If this is the first time you run the notebook on this machine, you need to authenticate. When using <code>mybinder.org</code> you need to authenticate every time a new session has been launched. Follow the instructions on screen or see the guide in → <a class="reference internal" href="Notebook0_Introduction.html#Authorize-access-for-Google-Earth-Engine"><span class="std std-ref">Notebook 0</span></a>.</p>
 <div class="cell tag_hide-input docutils container">
@@ -1064,7 +1064,7 @@ Mean catchment elevation is 3274.68 m.a.s.l.
 <p>To acquire outlines of all glaciers in the catchment we will rely on latest Randolph Glacier Inventory (RGI 6.0).</p>
 <blockquote>
 <div><p>The <em>Randolph Glacier Inventory (RGI 6.0)</em> is a global inventory of glacier outlines. It is supplemental to the Global Land Ice Measurements from Space initiative (GLIMS). Production of the RGI was motivated by the Fifth Assessment Report of the Intergovernmental Panel on Climate Change (IPCC AR5). Future updates will be made to the RGI and the GLIMS Glacier Database in parallel during a transition period. As all these data are incorporated into the GLIMS Glacier Database and as download tools are developed to obtain GLIMS data in the RGI data format, the RGI will evolve into a downloadable subset of GLIMS, offering complete one-time coverage, version control, and a standard set of attributes.</p>
-<p>Source: <a class="reference external" href="https://www.glims.org/RGI/">https://www.glims.org/RGI/</a></p>
+<p>Source: https://www.glims.org/RGI/</p>
 </div></blockquote>
 <p>The RGI dataset is divided into 19 so called <em>first-order regions</em>.</p>
 <blockquote>
@@ -3139,7 +3139,7 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 (b) global grids at various resolutions with <strong>summary-information about glacier number, area, and volume</strong>, and<br/>
 (c) the <strong>digital elevation models</strong> of the glacier surfaces used to produce the estimates.</p>
 <p>Nomenclature for glaciers and regions follows the Randolph Glacier Inventory (RGI) version 6.0.</p>
-<p>Source: Farinotti <a class="reference external" href="http://et.al">et.al</a>. 2019 - <a class="reference external" href="https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/315707/README.txt">README</a></p>
+<p>Source: Farinotti et.al. 2019 - <a class="reference external" href="https://www.research-collection.ethz.ch/bitstream/handle/20.500.11850/315707/README.txt">README</a></p>
 </div></blockquote>
 <p>The <strong>ice thickness rasters (a)</strong> and <strong>aligned DEMs (c)</strong> are the perfect input data for our glacier profile. The files are selected and downloaded by their <strong>RGI IDs</strong> and stored in the output folder.</p>
 <p>Since the original files hosted by ETH Zurich are stored in large archives, we cut the dataset into smaller slices and reupload them according to the respective <a class="reference external" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">license</a> to make them searchable, improve performance, and limit traffic.</p>
@@ -4128,6 +4128,7 @@ Value pairs created
 <b>Note:</b>
  The output folder is zipped at the end of each notebook and can be downloaded (file <code>output_download.zip</code>). This is especially useful if you want to use the binder environment again, but don't want to start over from Notebook 1.</div>
 <p><img alt="Example out_download.zip" src="_images/download_output.png" /></p>
+<a class="reference internal image-reference" href="_images/download_output.png"><img alt="Example out_download.zip" src="_images/download_output.png" style="width: 300px;" /></a>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -4144,29 +4145,10 @@ Value pairs created
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div></div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output folder can be download now (file output_download.zip)
+</pre></div>
+</div>
+</div>
 </div>
 <p>Now reset the variables and clear buffer.</p>
 <div class="cell tag_hide-input docutils container">
