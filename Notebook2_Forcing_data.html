@@ -16,33 +16,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b76e3c8a" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
-  <!-- So that users can add custom icons -->
-  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
@@ -68,7 +65,6 @@
     <link rel="prev" title="Catchment delineation" href="Notebook1_Catchment_delineation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -84,8 +80,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -93,6 +100,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search this book..."
          aria-label="Search this book..."
          autocomplete="off"
@@ -100,8 +108,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -117,8 +125,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -148,17 +155,21 @@
     
     
     <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-light" alt="MATILDA - Home"/>
-    <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark pst-js-only" alt="MATILDA - Home"/>
+    <script>document.write(`<img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
   
   
 </a></div>
         <div class="sidebar-primary-item">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button></div>
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
@@ -175,8 +186,7 @@
 <li class="toctree-l1"><a class="reference internal" href="Notebook3_CMIP6.html">Climate scenario data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Notebook4_MATILDA.html">Calibrating the MATILDA framework</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Notebook5_MATILDA_scenarios.html">MATILDA Scenarios</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Notebook6_Analysis.html">Model Output Analysis</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Notebook7_Climate_Change_Impact.html">Climate Change Impact Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook6_Analysis.html">Model Output Analysis and Climate Change Impact Analysis</a></li>
 </ul>
 
     </div>
@@ -185,14 +195,9 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -367,16 +372,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -415,11 +428,11 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="climate-forcing-data">
+  <section class="tex2jax_ignore mathjax_ignore" id="climate-forcing-data">
 <h1>Climate forcing data<a class="headerlink" href="#climate-forcing-data" title="Link to this heading">#</a></h1>
 <p>Now that we have all the static data, we can focus on the <strong>climate variables</strong>. In this notebook we will…</p>
 <ol class="arabic simple">
-<li><p>…download <strong>ERA5 land reanalysis data</strong> aggregated to our catchment area,</p></li>
+<li><p>…download <strong>ERA5 land reanalysis data</strong> aggregated to our catchment,</p></li>
 <li><p>…and determine the <strong>reference altitude</strong> of the data from the geopotential height.</p></li>
 </ol>
 <p>For data preprocessing and download we will again use the <strong>Google Earth Engine</strong> (GEE) to offload as much as possible to external servers. ERA5-Land is the latest reanalysis dataset from the European Center for Medium-Range Weather Forecast (<a class="reference external" href="https://www.ecmwf.int/en/era5-land">ECMWF</a>), available from 1950 to near real-time. The GEE data catalog summarizes…</p>
@@ -427,29 +440,9 @@
 <div><p>ERA5-Land is a reanalysis dataset providing a consistent view of the evolution of land variables over several decades at an enhanced resolution compared to ERA5. ERA5-Land has been produced by replaying the land component of the ECMWF ERA5 climate reanalysis. Reanalysis combines model data with observations from across the world into a globally complete and consistent dataset using the laws of physics. Reanalysis produces data that goes several decades back in time, providing an accurate description of the climate of the past.</p>
 <p>Source: <a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_DAILY_RAW#description">GEE Data Catalog</a></p>
 </div></blockquote>
-<p>To get started we <strong>initialize</strong> the GEE API again…</p>
-<div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ee</span>
-
-<span class="c1"># initialize GEE at the beginning of session</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">()</span>
-<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">ee</span><span class="o">.</span><span class="n">Authenticate</span><span class="p">()</span>         <span class="c1"># authenticate when using GEE for the first time</span>
-    <span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</details>
-</div>
-<p>…and read some settings from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file:</p>
+<p>To get started we read some settings from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file again:</p>
 <ul class="simple">
+<li><p><strong>cloud project</strong> name for the GEE access</p></li>
 <li><p><strong>input/output folders</strong> for data imports and downloads</p></li>
 <li><p><strong>filenames</strong> (DEM, GeoPackage)</p></li>
 <li><p>include future <strong>projections</strong> or not</p></li>
@@ -462,7 +455,9 @@
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>     <span class="c1"># Suppress Deprecation Warnings</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">ast</span>
 
@@ -471,12 +466,14 @@
 <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;config.ini&#39;</span><span class="p">)</span>
 
 <span class="c1"># get file config from config.ini</span>
+<span class="n">cloud_project</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;CLOUD_PROJECT&#39;</span><span class="p">]</span>
 <span class="n">dir_input</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_INPUT&#39;</span><span class="p">]</span>
 <span class="n">dir_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_OUTPUT&#39;</span><span class="p">]</span>
 <span class="n">dir_figures</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_FIGURES&#39;</span><span class="p">]</span>
 <span class="n">output_gpkg</span> <span class="o">=</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;GPKG_NAME&#39;</span><span class="p">]</span>
 <span class="n">scenarios</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span> <span class="s1">&#39;PROJECTIONS&#39;</span><span class="p">)</span>
 <span class="n">show_map</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span><span class="s1">&#39;SHOW_MAP&#39;</span><span class="p">)</span>
+<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">]</span>
 
 <span class="c1"># get style for matplotlib plots</span>
 <span class="n">plt_style</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;PLOT_STYLE&#39;</span><span class="p">])</span>
@@ -484,6 +481,74 @@
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div></div>
+</div>
+<p>…and <strong>initialize</strong> the GEE API.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ee</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">cloud_project</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">ee</span><span class="o">.</span><span class="n">Authenticate</span><span class="p">()</span>
+    <span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">cloud_project</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div></div>
 </div>
 <p>We can now load the catchment outline from the previous notebook and convert it to a <code class="docutils literal notranslate"><span class="pre">ee.FeatureCollection</span></code> to use it in GEE.</p>
 <div class="cell tag_hide-input docutils container">
@@ -502,6 +567,30 @@
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div></div>
 </div>
 <section id="set-the-date-range">
 <h2>Set the date range<a class="headerlink" href="#set-the-date-range" title="Link to this heading">#</a></h2>
@@ -514,7 +603,7 @@
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">scenarios</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="n">date_range</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1979-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2023-01-01&#39;</span><span class="p">]</span>
+    <span class="n">date_range</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1979-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-01-01&#39;</span><span class="p">]</span>
 <span class="k">else</span><span class="p">:</span>
     <span class="n">date_range</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;DATE_RANGE&#39;</span><span class="p">])</span>
 
@@ -546,7 +635,7 @@
                     --jp-layout-color3: var(--colab-primary-surface-color, white);
                 }
             </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The selected date range is 1979-01-01 to 2023-01-01
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The selected date range is 1979-01-01 to 2025-01-01
 </pre></div>
 </div>
 </div>
@@ -754,7 +843,7 @@ Dataset contains Geopotential in m**2 s**-2 as variable &#39;z&#39;
 </div>
 </div>
 </div>
-<p>To load <code class="docutils literal notranslate"><span class="pre">xarray</span></code> data into GEE a little workaround is needed. Credits go out to <a class="reference external" href="https://github.com/lopezvoliver/geemap/blob/netcdf_to_ee/geemap/common.py#L1776">Oliver Lopez</a> for this solution.</p>
+<p>To load <code class="docutils literal notranslate"><span class="pre">xarray</span></code> data into GEE a little workaround is needed. Credits to <a class="reference external" href="https://github.com/lopezvoliver/geemap/blob/netcdf_to_ee/geemap/common.py#L1776">Oliver Lopez</a> for this solution.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -885,7 +974,7 @@ Done!
                     --jp-layout-color3: var(--colab-primary-surface-color, white);
                 }
             </style>
-            </div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "1cdb5e5df4be4083bb25e4c542a13f4b", "version_major": 2, "version_minor": 0}</script></div>
+            </div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "bd6b1a93e40f4f03ba408d46b0b050d9", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>Since our workflow will use a <strong>lumped model</strong>, we will use <strong>area-weighted catchment-wide averages</strong> of our forcing data. Thus, we also aggregate the geopotential based on the grid cell fractions in the catchment and convert it to <strong>geopotential height in meters above sea level</strong>. This represents the <strong>reference altitude of our forcing data</strong>, just as the elevation of a weather station would.</p>
 <div class="cell tag_hide-input docutils container">
@@ -932,8 +1021,8 @@ Done!
                     --jp-layout-color3: var(--colab-primary-surface-color, white);
                 }
             </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Geopotential mean:	32711.74 m2 s-2
-Elevation:		 3335.67 m a.s.l.
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Geopotential mean:	32602.75 m2 s-2
+Elevation:		 3324.56 m a.s.l.
 </pre></div>
 </div>
 </div>
@@ -1047,8 +1136,8 @@ Elevation:		 3335.67 m a.s.l.
             </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Get timestamps...
 Get temperature values...
 Get precipitation values...
-CPU times: user 249 ms, sys: 67.4 ms, total: 317 ms
-Wall time: 2min 27s
+CPU times: user 270 ms, sys: 200 ms, total: 470 ms
+Wall time: 3min 35s
 </pre></div>
 </div>
 </div>
@@ -1119,41 +1208,41 @@ Wall time: 2min 27s
       <th>0</th>
       <td>283996800000</td>
       <td>1979-01-01 01:00:00</td>
-      <td>257.392996</td>
-      <td>-15.757004</td>
-      <td>0.027381</td>
+      <td>257.460053</td>
+      <td>-15.689947</td>
+      <td>0.027150</td>
     </tr>
     <tr>
       <th>1</th>
       <td>284083200000</td>
       <td>1979-01-02 01:00:00</td>
-      <td>256.435964</td>
-      <td>-16.714036</td>
-      <td>0.004825</td>
+      <td>256.509735</td>
+      <td>-16.640265</td>
+      <td>0.004800</td>
     </tr>
     <tr>
       <th>2</th>
       <td>284169600000</td>
       <td>1979-01-03 01:00:00</td>
-      <td>257.867342</td>
-      <td>-15.282658</td>
-      <td>0.001601</td>
+      <td>257.944142</td>
+      <td>-15.205858</td>
+      <td>0.001599</td>
     </tr>
     <tr>
       <th>3</th>
       <td>284256000000</td>
       <td>1979-01-04 01:00:00</td>
-      <td>258.322419</td>
-      <td>-14.827581</td>
-      <td>0.283469</td>
+      <td>258.392049</td>
+      <td>-14.757951</td>
+      <td>0.281500</td>
     </tr>
     <tr>
       <th>4</th>
       <td>284342400000</td>
       <td>1979-01-05 01:00:00</td>
-      <td>258.056697</td>
-      <td>-15.093303</td>
-      <td>0.108583</td>
+      <td>258.125576</td>
+      <td>-15.024424</td>
+      <td>0.107802</td>
     </tr>
     <tr>
       <th>...</th>
@@ -1164,48 +1253,48 @@ Wall time: 2min 27s
       <td>...</td>
     </tr>
     <tr>
-      <th>16066</th>
-      <td>1672099200000</td>
-      <td>2022-12-27 01:00:00</td>
-      <td>253.990888</td>
-      <td>-19.159112</td>
-      <td>0.002117</td>
+      <th>16797</th>
+      <td>1735257600000</td>
+      <td>2024-12-27 01:00:00</td>
+      <td>263.179270</td>
+      <td>-9.970730</td>
+      <td>0.026296</td>
     </tr>
     <tr>
-      <th>16067</th>
-      <td>1672185600000</td>
-      <td>2022-12-28 01:00:00</td>
-      <td>257.364969</td>
-      <td>-15.785031</td>
-      <td>0.223113</td>
+      <th>16798</th>
+      <td>1735344000000</td>
+      <td>2024-12-28 01:00:00</td>
+      <td>259.782440</td>
+      <td>-13.367560</td>
+      <td>0.000917</td>
     </tr>
     <tr>
-      <th>16068</th>
-      <td>1672272000000</td>
-      <td>2022-12-29 01:00:00</td>
-      <td>255.975972</td>
-      <td>-17.174028</td>
-      <td>0.513904</td>
+      <th>16799</th>
+      <td>1735430400000</td>
+      <td>2024-12-29 01:00:00</td>
+      <td>261.269940</td>
+      <td>-11.880060</td>
+      <td>0.005262</td>
     </tr>
     <tr>
-      <th>16069</th>
-      <td>1672358400000</td>
-      <td>2022-12-30 01:00:00</td>
-      <td>256.748078</td>
-      <td>-16.401922</td>
-      <td>4.721328</td>
+      <th>16800</th>
+      <td>1735516800000</td>
+      <td>2024-12-30 01:00:00</td>
+      <td>263.580786</td>
+      <td>-9.569214</td>
+      <td>1.161816</td>
     </tr>
     <tr>
-      <th>16070</th>
-      <td>1672444800000</td>
-      <td>2022-12-31 01:00:00</td>
-      <td>255.077631</td>
-      <td>-18.072369</td>
-      <td>1.234133</td>
+      <th>16801</th>
+      <td>1735603200000</td>
+      <td>2024-12-31 01:00:00</td>
+      <td>259.719079</td>
+      <td>-13.430921</td>
+      <td>1.057546</td>
     </tr>
   </tbody>
 </table>
-<p>16071 rows × 5 columns</p>
+<p>16802 rows × 5 columns</p>
 </div></div></div>
 </div>
 <p>Let’s <strong>plot</strong> the full time series.</p>
@@ -1261,7 +1350,7 @@ Wall time: 2min 27s
                     --jp-layout-color3: var(--colab-primary-surface-color, white);
                 }
             </style>
-            </div><img alt="_images/2f850a7712e0ff53e600a54f83f395a67ab54c089a37db1582c725aa4fe0520d.png" src="_images/2f850a7712e0ff53e600a54f83f395a67ab54c089a37db1582c725aa4fe0520d.png" />
+            </div><img alt="_images/f4abb56115c0fdc3a0134fdeeb527f9b3aee9f1073cdcb67c1bb3f739de19322.png" src="_images/f4abb56115c0fdc3a0134fdeeb527f9b3aee9f1073cdcb67c1bb3f739de19322.png" />
 </div>
 </div>
 </section>
@@ -1319,9 +1408,10 @@ Wall time: 2min 27s
 <span class="c1"># update settings file</span>
 <span class="n">update_yaml</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;settings.yml&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ele_dat&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">ele_dat</span><span class="p">)})</span>
 
-<span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
-<span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="s1">&#39;output_download&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder can be download now (file output_download.zip)&#39;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
+    <span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="s1">&#39;output_download&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder can be download now (file output_download.zip)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1392,6 +1482,7 @@ Output folder can be download now (file output_download.zip)
             </style>
             </div></div>
 </div>
+<p>You can now continue with <a class="reference internal" href="Notebook3_CMIP6.html"><span class="std std-doc">Notebook 3</span></a>.</p>
 </section>
 </section>
 
@@ -1450,8 +1541,7 @@ Output folder can be download now (file output_download.zip)
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1488,7 +1578,7 @@ By Phillip Schuster
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2025.
       <br/>
     
   </p>
@@ -1512,8 +1602,8 @@ By Phillip Schuster
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
