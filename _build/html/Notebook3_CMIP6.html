@@ -1,0 +1,1534 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Climate scenario data &#8212; MATILDA</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Notebook3_CMIP6';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Calibrating the MATILDA framework" href="Notebook4_MATILDA.html" />
+    <link rel="prev" title="Climate forcing data" href="Notebook2_Forcing_data.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="Notebook0_Introduction.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-light" alt="MATILDA - Home"/>
+    <script>document.write(`<img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="Notebook0_Introduction.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Notebook1_Catchment_delineation.html">Catchment delineation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook2_Forcing_data.html">Climate forcing data</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Climate scenario data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook4_MATILDA.html">Calibrating the MATILDA framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook5_MATILDA_scenarios.html">MATILDA Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook6_Analysis.html">Model Output Analysis and Climate Change Impact Analysis</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/phiscu/matilda_edu/main?urlpath=lab/tree/Notebook3_CMIP6.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/phiscu/matilda_edu" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/phiscu/matilda_edu/issues/new?title=Issue%20on%20page%20%2FNotebook3_CMIP6.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Notebook3_CMIP6.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Climate scenario data</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-aggregate-and-download-downscaled-cmip6-data">Select, aggregate, and download downscaled CMIP6 data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-cmip6-data">Processing CMIP6 data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bias-adjustment-using-reananlysis-data">Bias adjustment using reananlysis data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series">Time series</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#violin-plots">Violin plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-filters">Data filters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ensemble-mean-plots">Ensemble mean plots</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#write-cmip6-data-to-file">Write CMIP6 data to file</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="climate-scenario-data">
+<h1>Climate scenario data<a class="headerlink" href="#climate-scenario-data" title="Link to this heading">#</a></h1>
+<p>In this notebook we will…</p>
+<ol class="arabic simple">
+<li><p>… aggregate and download climate scenario data from the Coupled Model Intercomparison Project Phase 6 (<a class="reference external" href="https://wcrp-cmip.org/cmip-phase-6-cmip6/">CMIP6</a>) for our catchment,</p></li>
+<li><p>… preprocess the data,</p></li>
+<li><p>… compare the CMIP6 models with our reanalysis data and adjust them for biases,</p></li>
+<li><p>… and visualize the data before and after bias adjustment.</p></li>
+</ol>
+<p>The <a class="reference external" href="https://www.nature.com/articles/s41597-022-01393-4">NEX-GDDP-CMIP6 dataset</a> we are going to use has been downscaled to 27830 m resolution by the <a class="reference external" href="https://www.nature.com/articles/s41597-022-01393-4">NASA Climate Analytics Group</a> and is available in two <a class="reference external" href="https://unfccc.int/sites/default/files/part1_iiasa_rogelj_ssp_poster.pdf">Shared Socio-Economic Pathways</a> (SSP2 and SSP5). It is available via <a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog/NASA_GDDP-CMIP6#bands">Google Earth Engine</a> which makes it subsettable on the server side and the download files relatively lightweight.</p>
+<p>We start by reading the config and initializing the Google Earth Engine access again.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>     <span class="c1"># Suppress Deprecation Warnings</span>
+<span class="kn">import</span> <span class="nn">configparser</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">import</span> <span class="nn">ee</span>
+<span class="kn">import</span> <span class="nn">geemap</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<span class="c1"># read local config.ini file</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+<span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;config.ini&#39;</span><span class="p">)</span>
+
+<span class="c1"># get paths from config.ini</span>
+<span class="n">dir_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_OUTPUT&#39;</span><span class="p">]</span>
+<span class="n">dir_figures</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_FIGURES&#39;</span><span class="p">]</span>
+<span class="n">output_gpkg</span> <span class="o">=</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;GPKG_NAME&#39;</span><span class="p">]</span>
+<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">]</span>
+
+<span class="c1"># get style for matplotlib plots</span>
+<span class="c1"># plt_style = ast.literal_eval(config[&#39;CONFIG&#39;][&#39;PLOT_STYLE&#39;])</span>
+
+<span class="c1"># set the file format for storage</span>
+<span class="n">compact_files</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span><span class="s1">&#39;COMPACT_FILES&#39;</span><span class="p">)</span>
+
+<span class="c1"># read cloud-project</span>
+<span class="n">cloud_project</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;CLOUD_PROJECT&#39;</span><span class="p">]</span>
+
+<span class="c1"># initialize GEE</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">cloud_project</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">ee</span><span class="o">.</span><span class="n">Authenticate</span><span class="p">()</span>
+    <span class="n">ee</span><span class="o">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">project</span><span class="o">=</span><span class="n">cloud_project</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>Now we can send the catchment outline to GEE to use it as target polygon for aggregation.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load catchment outline as target polygon</span>
+<span class="n">catchment_new</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">output_gpkg</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;catchment_new&#39;</span><span class="p">)</span>
+<span class="n">catchment</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">geopandas_to_ee</span><span class="p">(</span><span class="n">catchment_new</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Catchment outline converted to GEE polygon.&quot;</span><span class="p">)</span>
+
+<span class="c1"># name target subdirectory to be created</span>
+<span class="n">cmip_dir</span> <span class="o">=</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;cmip6/&#39;</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Catchment outline converted to GEE polygon.
+</pre></div>
+</div>
+</div>
+</div>
+<section id="select-aggregate-and-download-downscaled-cmip6-data">
+<h2>Select, aggregate, and download downscaled CMIP6 data<a class="headerlink" href="#select-aggregate-and-download-downscaled-cmip6-data" title="Link to this heading">#</a></h2>
+<p>We have designed a class called <code class="docutils literal notranslate"><span class="pre">CMIPDownloader</span></code> that does everything promised in the heading in one go. The <code class="docutils literal notranslate"><span class="pre">buildFeature()</span></code> function requests daily catchment wide averages of all available CMIP6 models for individual years. All requested years are stored in an <code class="docutils literal notranslate"><span class="pre">ee.ImageCollection</span></code> by the<code class="docutils literal notranslate"><span class="pre">getResult()</span></code> function. To provide the best basis for bias adjustment, a large overlap of reanalysis and scenario data is recommended. By default, the <code class="docutils literal notranslate"><span class="pre">CMIPDownloader</span></code> class requests everything between the earliest available date from ERA5 (1979) and the latest available date from CMIP6 (2100). The <code class="docutils literal notranslate"><span class="pre">download()</span></code> function then starts a given number of parallel requests, each downloading a single year and saving it as a CSV file.</p>
+<p>We can simply specify a target location and start the download for both variables individually. If you are in a binder or only have few CPUs available, choose a moderate number of requests to avoid “hickups”. The download time depends on the number of parallel processes, the traffic on the GEE servers and other mysterious factors. If you run this notebook in a binder, it usually doesn’t take more than 5 minutes for both downloads to finish.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.geetools</span> <span class="kn">import</span> <span class="n">CMIPDownloader</span>
+
+<span class="n">downloader_t</span> <span class="o">=</span> <span class="n">CMIPDownloader</span><span class="p">(</span><span class="n">var</span><span class="o">=</span><span class="s1">&#39;tas&#39;</span><span class="p">,</span> <span class="n">starty</span><span class="o">=</span><span class="mi">1979</span><span class="p">,</span> <span class="n">endy</span><span class="o">=</span><span class="mi">2100</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">cmip_dir</span><span class="p">)</span>
+<span class="n">downloader_t</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+<span class="n">downloader_p</span> <span class="o">=</span> <span class="n">CMIPDownloader</span><span class="p">(</span><span class="n">var</span><span class="o">=</span><span class="s1">&#39;pr&#39;</span><span class="p">,</span> <span class="n">starty</span><span class="o">=</span><span class="mi">1979</span><span class="p">,</span> <span class="n">endy</span><span class="o">=</span><span class="mi">2100</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span> <span class="n">processes</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="nb">dir</span><span class="o">=</span><span class="n">cmip_dir</span><span class="p">)</span>
+<span class="n">downloader_p</span><span class="o">.</span><span class="n">download</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Initiating download request for NEX-GDDP-CMIP6 data from 1979 to 2100.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading CMIP6 data for variable &#39;tas&#39;: 100%|██████████| 122/122 [01:38&lt;00:00,  1.24it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>All downloads complete.
+Initiating download request for NEX-GDDP-CMIP6 data from 1979 to 2100.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Downloading CMIP6 data for variable &#39;pr&#39;: 100%|██████████| 122/122 [01:27&lt;00:00,  1.39it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>All downloads complete.
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We have now downloaded individual files for each year and variable and stored them in <code class="docutils literal notranslate"><span class="pre">output/cmip_dir</span></code>. To use them as model forcing data, they need to be processed.</p>
+</section>
+<section id="processing-cmip6-data">
+<h2>Processing CMIP6 data<a class="headerlink" href="#processing-cmip6-data" title="Link to this heading">#</a></h2>
+<p>The corresponding <code class="docutils literal notranslate"><span class="pre">CMIPProcessor</span></code> class will read all downloaded CSV files and concatenate them into a single file per scenario. It also checks for consistency and drops models that are not available for individual years or scenarios. It processes variables individually and returns a single dataframe for each of the two scenarios from 1979 to 2100.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.geetools</span> <span class="kn">import</span> <span class="n">CMIPProcessor</span>
+
+<span class="n">cmip_dir</span> <span class="o">=</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;cmip6/&#39;</span>
+
+<span class="n">processor_t</span> <span class="o">=</span> <span class="n">CMIPProcessor</span><span class="p">(</span><span class="n">file_dir</span><span class="o">=</span><span class="n">cmip_dir</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s1">&#39;tas&#39;</span><span class="p">)</span>
+<span class="n">ssp2_tas_raw</span><span class="p">,</span> <span class="n">ssp5_tas_raw</span> <span class="o">=</span> <span class="n">processor_t</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+
+<span class="n">processor_p</span> <span class="o">=</span> <span class="n">CMIPProcessor</span><span class="p">(</span><span class="n">file_dir</span><span class="o">=</span><span class="n">cmip_dir</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="s1">&#39;pr&#39;</span><span class="p">)</span>
+<span class="n">ssp2_pr_raw</span><span class="p">,</span> <span class="n">ssp5_pr_raw</span> <span class="o">=</span> <span class="n">processor_p</span><span class="o">.</span><span class="n">get_results</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div></div>
+</div>
+<p>Let’s have a look. We can see that our scenario dataset now contains a fairly large number of CMIP6 models in alphabetical order.</p>
+<div class="cell tag_output_scroll tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">ssp2_tas_raw</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+DatetimeIndex: 44560 entries, 1979-01-01 to 2100-12-31
+Data columns (total 32 columns):
+ #   Column            Non-Null Count  Dtype  
+---  ------            --------------  -----  
+ 0   ACCESS-CM2        44560 non-null  float64
+ 1   ACCESS-ESM1-5     44560 non-null  float64
+ 2   BCC-CSM2-MR       44560 non-null  float64
+ 3   CESM2             44560 non-null  float64
+ 4   CESM2-WACCM       44560 non-null  float64
+ 5   CMCC-CM2-SR5      44560 non-null  float64
+ 6   CMCC-ESM2         44560 non-null  float64
+ 7   CNRM-CM6-1        44560 non-null  float64
+ 8   CNRM-ESM2-1       44560 non-null  float64
+ 9   CanESM5           44560 non-null  float64
+ 10  EC-Earth3         44560 non-null  float64
+ 11  EC-Earth3-Veg-LR  44560 non-null  float64
+ 12  FGOALS-g3         44560 non-null  float64
+ 13  GFDL-CM4_gr1      44560 non-null  float64
+ 14  GFDL-CM4_gr2      44560 non-null  float64
+ 15  GFDL-ESM4         44560 non-null  float64
+ 16  GISS-E2-1-G       44560 non-null  float64
+ 17  HadGEM3-GC31-LL   44560 non-null  float64
+ 18  INM-CM4-8         44560 non-null  float64
+ 19  INM-CM5-0         44560 non-null  float64
+ 20  IPSL-CM6A-LR      44560 non-null  float64
+ 21  KACE-1-0-G        44560 non-null  float64
+ 22  KIOST-ESM         44560 non-null  float64
+ 23  MIROC-ES2L        44560 non-null  float64
+ 24  MIROC6            44560 non-null  float64
+ 25  MPI-ESM1-2-HR     44560 non-null  float64
+ 26  MPI-ESM1-2-LR     44560 non-null  float64
+ 27  MRI-ESM2-0        44560 non-null  float64
+ 28  NESM3             44560 non-null  float64
+ 29  NorESM2-MM        44560 non-null  float64
+ 30  TaiESM1           44560 non-null  float64
+ 31  UKESM1-0-LL       44560 non-null  float64
+dtypes: float64(32)
+memory usage: 11.2 MB
+None
+</pre></div>
+</div>
+</div>
+</div>
+<p>If we want to check which models failed the consistency check of the <code class="docutils literal notranslate"><span class="pre">CMIPProcessor</span></code> we can use its <code class="docutils literal notranslate"><span class="pre">dropped_models</span></code> attribute.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Models that failed the consistency checks:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">processor_t</span><span class="o">.</span><span class="n">dropped_models</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Models that failed the consistency checks:
+
+[&#39;HadGEM3-GC31-MM&#39;, &#39;IITM-ESM&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="bias-adjustment-using-reananlysis-data">
+<h2>Bias adjustment using reananlysis data<a class="headerlink" href="#bias-adjustment-using-reananlysis-data" title="Link to this heading">#</a></h2>
+<p>Due to the coarse resolution of global climate models (GCMs) and the extensive correction of reanalysis data there is substantial bias between the two datasets. To force a glacio-hydrological model calibrated on reanalysis data with climate scenarios this bias needs to be adressed. We will use a method developed by <a class="reference external" href="https://doi.org/10.5194/hess-21-2649-2017">Switanek et.al. (2017)</a> called <strong>Scaled Distribution Mapping (SDM)</strong> to correct for bias while preserving trends and the likelihood of meteorological events in the raw GCM data. The method has been implemented in the <a class="reference external" href="https://github.com/pankajkarman/bias_correction"><code class="docutils literal notranslate"><span class="pre">bias_correction</span></code></a> Python library by <a class="reference external" href="https://pankajkarman.github.io/">Pankaj Kumar</a>. As suggested by the authors we will apply the bias adjustment to discrete blocks of data individually. The <code class="docutils literal notranslate"><span class="pre">adjust_bias()</span></code> function loops over all models and adjusts them to the reanalysis data in the overlap period (1979 to 2024).
+The function is applied separately to each variable and scenario. The <code class="docutils literal notranslate"><span class="pre">bias_adjustment</span></code> library provides a normal and a gamma distribution as a basis for the SDM. As the distribution of the ERA5 Land precipitation data is actually closer to a normal distribution with a cut-off of 0 mm, we use the <code class="docutils literal notranslate"><span class="pre">normal_mapping</span></code> method for both variables.</p>
+<p>The function is applied separately to each variable and scenario. The <code class="docutils literal notranslate"><span class="pre">bias_adjustment</span></code> library provides a normal and a gamma distribution as a basis for the SDM. As the distribution of the ERA5 Land precipitation data is actually closer to a normal distribution with a cut-off of 0 mm, we use the <code class="docutils literal notranslate"><span class="pre">normal_mapping</span></code> method for both variables.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">adjust_bias</span>
+
+<span class="n">era5_file</span> <span class="o">=</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;ERA5L.csv&#39;</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SSP2 Temperature:&quot;</span><span class="p">)</span>
+<span class="n">ssp2_tas</span> <span class="o">=</span> <span class="n">adjust_bias</span><span class="p">(</span><span class="n">predictand</span><span class="o">=</span><span class="n">ssp2_tas_raw</span><span class="p">,</span> <span class="n">predictor</span><span class="o">=</span><span class="n">era5_file</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SSP5 Temperature:&quot;</span><span class="p">)</span>
+<span class="n">ssp5_tas</span> <span class="o">=</span> <span class="n">adjust_bias</span><span class="p">(</span><span class="n">predictand</span><span class="o">=</span><span class="n">ssp5_tas_raw</span><span class="p">,</span> <span class="n">predictor</span><span class="o">=</span><span class="n">era5_file</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SSP2 Precipitation:&quot;</span><span class="p">)</span>
+<span class="n">ssp2_pr</span> <span class="o">=</span> <span class="n">adjust_bias</span><span class="p">(</span><span class="n">predictand</span><span class="o">=</span><span class="n">ssp2_pr_raw</span><span class="p">,</span> <span class="n">predictor</span><span class="o">=</span><span class="n">era5_file</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;SSP5 Precipitation:&quot;</span><span class="p">)</span>
+<span class="n">ssp5_pr</span> <span class="o">=</span> <span class="n">adjust_bias</span><span class="p">(</span><span class="n">predictand</span><span class="o">=</span><span class="n">ssp5_pr_raw</span><span class="p">,</span> <span class="n">predictor</span><span class="o">=</span><span class="n">era5_file</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SSP2 Temperature:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bias Correction: 100%|██████████| 12/12 [00:06&lt;00:00,  1.87it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SSP5 Temperature:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bias Correction: 100%|██████████| 12/12 [00:04&lt;00:00,  2.52it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SSP2 Precipitation:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bias Correction: 100%|██████████| 12/12 [00:04&lt;00:00,  2.71it/s]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SSP5 Precipitation:
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Bias Correction: 100%|██████████| 12/12 [00:04&lt;00:00,  2.61it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The result is a comprehensive dataset of several models over 122 years in two versions (pre- and post-adjustment) for every variable. To see what’s in the data and what happened during bias adjustment we need an overview.</p>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading">#</a></h2>
+<p>The first plot will contain simple timeseries. The first function <code class="docutils literal notranslate"><span class="pre">cmip_plot()</span></code> resamples the data so a given frequency and creates a single plot. <code class="docutils literal notranslate"><span class="pre">cmip_plot_combined()</span></code> arranges multiple plots for both scenarios before and after bias adjustment.</p>
+<section id="time-series">
+<h3>Time series<a class="headerlink" href="#time-series" title="Link to this heading">#</a></h3>
+<p>First, we store our raw and adjusted data in dictionaries. By default, the data is smoothed with a 10-year moving average (<code class="docutils literal notranslate"><span class="pre">smooting_window=10</span></code>). Precipitation data is aggregated to annual totals (<code class="docutils literal notranslate"><span class="pre">agg_level='annual'</span></code>). You can customise this by specifying the appropriate arguments.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">read_era5l</span>
+<span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">cmip_plot_combined</span>
+
+<span class="c1"># store CMIP6 data in dictionaries</span>
+<span class="n">ssp_tas_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;SSP2_raw&#39;</span><span class="p">:</span> <span class="n">ssp2_tas_raw</span><span class="p">,</span> <span class="s1">&#39;SSP2_adjusted&#39;</span><span class="p">:</span> <span class="n">ssp2_tas</span><span class="p">,</span> <span class="s1">&#39;SSP5_raw&#39;</span><span class="p">:</span> <span class="n">ssp5_tas_raw</span><span class="p">,</span> <span class="s1">&#39;SSP5_adjusted&#39;</span><span class="p">:</span> <span class="n">ssp5_tas</span><span class="p">}</span>
+<span class="n">ssp_pr_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;SSP2_raw&#39;</span><span class="p">:</span> <span class="n">ssp2_pr_raw</span><span class="p">,</span> <span class="s1">&#39;SSP2_adjusted&#39;</span><span class="p">:</span> <span class="n">ssp2_pr</span><span class="p">,</span> <span class="s1">&#39;SSP5_raw&#39;</span><span class="p">:</span> <span class="n">ssp5_pr_raw</span><span class="p">,</span> <span class="s1">&#39;SSP5_adjusted&#39;</span><span class="p">:</span> <span class="n">ssp5_pr</span><span class="p">}</span>
+
+<span class="n">era5</span> <span class="o">=</span> <span class="n">read_era5l</span><span class="p">(</span><span class="n">era5_file</span><span class="p">)</span>
+
+<span class="n">cmip_plot_combined</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ssp_tas_dict</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">era5</span><span class="p">,</span> <span class="n">target_label</span><span class="o">=</span><span class="s1">&#39;ERA5-Land&#39;</span><span class="p">,</span> <span class="n">smooth_window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s2">NB3_CMIP6_Temp.png&quot;</span><span class="p">)</span>
+<span class="n">cmip_plot_combined</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ssp_pr_dict</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">era5</span><span class="p">,</span> <span class="n">precip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_label</span><span class="o">=</span><span class="s1">&#39;ERA5-Land&#39;</span><span class="p">,</span> <span class="n">agg_level</span><span class="o">=</span><span class="s1">&#39;annual&#39;</span><span class="p">,</span> <span class="n">smooth_window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s2">NB3_CMIP6_Prec.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><img alt="_images/e252cf1d660bb69fd459201367b5adf270faa26bd32a77e2c3483da75bbdc8e0.png" src="_images/e252cf1d660bb69fd459201367b5adf270faa26bd32a77e2c3483da75bbdc8e0.png" />
+<img alt="_images/05c24be28c498de10686d144c53490f2b8bfb2f7b0197e6df4339bcf8ff939ee.png" src="_images/05c24be28c498de10686d144c53490f2b8bfb2f7b0197e6df4339bcf8ff939ee.png" />
+</div>
+</div>
+<p>Apparently, some models have striking curves indicating unrealistic outliers or sudden jumps in the data. To clearly identify faulty time series, one option is to choose a qualitative approach by identifying the models using an interactive <code class="docutils literal notranslate"><span class="pre">plotly</span></code> plot. Here we can zoom and select/deselect curves as we like, to identify model names.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">ssp5_tas_raw</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s1">&#39;10YE&#39;</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div></div>
+</div>
+</section>
+<section id="violin-plots">
+<h3>Violin plots<a class="headerlink" href="#violin-plots" title="Link to this heading">#</a></h3>
+<p>To look at it from a different perpective we can also have a look at the individual distributions of all models. A nice way to cover several aspects at once is to use <code class="docutils literal notranslate"><span class="pre">seaborne</span></code> <a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.violinplot.html">violinplots</a>.</p>
+<p>First we have to rearrange our input dictionaries a little bit. For comparison the <code class="docutils literal notranslate"><span class="pre">vplots()</span></code> function will arrange the plots in a similar grid as in the figures above.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">dict_filter</span>
+<span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">vplots</span>
+
+<span class="n">tas_raw</span> <span class="o">=</span> <span class="n">dict_filter</span><span class="p">(</span><span class="n">ssp_tas_dict</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">)</span>
+<span class="n">tas_adjusted</span> <span class="o">=</span> <span class="n">dict_filter</span><span class="p">(</span><span class="n">ssp_tas_dict</span><span class="p">,</span> <span class="s1">&#39;adjusted&#39;</span><span class="p">)</span>
+<span class="n">pr_raw</span> <span class="o">=</span> <span class="n">dict_filter</span><span class="p">(</span><span class="n">ssp_pr_dict</span><span class="p">,</span> <span class="s1">&#39;raw&#39;</span><span class="p">)</span>
+<span class="n">pr_adjusted</span> <span class="o">=</span> <span class="n">dict_filter</span><span class="p">(</span><span class="n">ssp_pr_dict</span><span class="p">,</span> <span class="s1">&#39;adjusted&#39;</span><span class="p">)</span>
+
+<span class="n">vplots</span><span class="p">(</span><span class="n">tas_raw</span><span class="p">,</span> <span class="n">tas_adjusted</span><span class="p">,</span> <span class="n">era5</span><span class="p">,</span> <span class="n">target_label</span><span class="o">=</span><span class="s1">&#39;ERA5-Land&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s2">NB3_vplot_Temp.png&quot;</span><span class="p">)</span>
+<span class="n">vplots</span><span class="p">(</span><span class="n">pr_raw</span><span class="p">,</span> <span class="n">pr_adjusted</span><span class="p">,</span> <span class="n">era5</span><span class="p">,</span> <span class="n">target_label</span><span class="o">=</span><span class="s1">&#39;ERA5-Land&#39;</span><span class="p">,</span> <span class="n">precip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s2">NB3_vplot_Prec.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><img alt="_images/0acbcc981afe32d3b7cae9741437f9a2c572ffeceeab8138bf5fec633ea70ddc.png" src="_images/0acbcc981afe32d3b7cae9741437f9a2c572ffeceeab8138bf5fec633ea70ddc.png" />
+<img alt="_images/bcbea399bee0e1d9ce35ef433d3b74456cb3c79b88ece07b05bf2df4e5e09a3d.png" src="_images/bcbea399bee0e1d9ce35ef433d3b74456cb3c79b88ece07b05bf2df4e5e09a3d.png" />
+</div>
+</div>
+</section>
+<section id="data-filters">
+<h3>Data filters<a class="headerlink" href="#data-filters" title="Link to this heading">#</a></h3>
+<p>Since we have a large number of models and some problems may be difficult to identify in a plot, we can use some standard filters combined in the <code class="docutils literal notranslate"><span class="pre">DataFilter</span></code> class. By default it filters models that contain …</p>
+<p>… outliers deviating more than 3 standard deviations from the mean (<code class="docutils literal notranslate"><span class="pre">zscore_threshold</span></code>) and/or …</p>
+<p>… increases/decreases of more than 5 units in a single timestep (<code class="docutils literal notranslate"><span class="pre">jump_threshold</span></code>).</p>
+<p>The functions can be applied separately (<code class="docutils literal notranslate"><span class="pre">check_outliers</span></code> or <code class="docutils literal notranslate"><span class="pre">check_jumps</span></code>) or together (<code class="docutils literal notranslate"><span class="pre">filter_all</span></code>). All three return a <code class="docutils literal notranslate"><span class="pre">list</span></code> of model names.</p>
+<p>Here, we also use the <code class="docutils literal notranslate"><span class="pre">resampling_rate</span></code> argument to resample the data to annual means (<code class="docutils literal notranslate"><span class="pre">'YE'</span></code>) before running the checks.</p>
+<div class="alert alert-block alert-info">
+    <b>Note:</b> While extreme temperature outliers are easy to identify, precipitation data is more variable between models and requires careful evaluation. In this example, we remove only models failing the temperature checks from the ensemble. Adjust the filters to your needs and use them for precipitation if you know what your are doing. 
+</div><div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">DataFilter</span>
+
+<span class="nb">filter</span> <span class="o">=</span> <span class="n">DataFilter</span><span class="p">(</span><span class="n">ssp2_tas_raw</span><span class="p">,</span> <span class="n">zscore_threshold</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">jump_threshold</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">resampling_rate</span><span class="o">=</span><span class="s1">&#39;YE&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Models with temperature outliers: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">outliers</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Models with temperature jumps: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">jumps</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Models with either one or both: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">filtered_models</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Models with temperature outliers: [&#39;KIOST-ESM&#39;]
+Models with temperature jumps: []
+Models with either one or both: [&#39;KIOST-ESM&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The identified columns can then be removed from the CMIP6 ensemble dataset using another helper function. We run the <code class="docutils literal notranslate"><span class="pre">drop_model()</span></code> function on the dictionaries of all variables and run <code class="docutils literal notranslate"><span class="pre">cmip_plot_combined()</span></code> again to check the result.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">drop_model</span>
+
+<span class="n">ssp_tas_dict</span> <span class="o">=</span> <span class="n">drop_model</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">filtered_models</span><span class="p">,</span> <span class="n">ssp_tas_dict</span><span class="p">)</span>
+<span class="n">ssp_pr_dict</span> <span class="o">=</span> <span class="n">drop_model</span><span class="p">(</span><span class="nb">filter</span><span class="o">.</span><span class="n">filtered_models</span><span class="p">,</span> <span class="n">ssp_pr_dict</span><span class="p">)</span>
+
+
+<span class="n">cmip_plot_combined</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ssp_tas_dict</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">era5</span><span class="p">,</span> <span class="n">target_label</span><span class="o">=</span><span class="s1">&#39;ERA5-Land&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s2">NB3_CMIP6_Temp_filtered.png&quot;</span><span class="p">)</span>
+<span class="n">cmip_plot_combined</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">ssp_pr_dict</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">era5</span><span class="p">,</span> <span class="n">precip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_label</span><span class="o">=</span><span class="s1">&#39;ERA5-Land&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">agg_level</span><span class="o">=</span><span class="s1">&#39;annual&#39;</span><span class="p">,</span> <span class="n">smooth_window</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s2">NB3_CMIP6_Prec_filtered.png&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><img alt="_images/3bbd4b10d894c1801813fcf676425f26f5ac3fcff3223a54d282d64f84c68e80.png" src="_images/3bbd4b10d894c1801813fcf676425f26f5ac3fcff3223a54d282d64f84c68e80.png" />
+<img alt="_images/3e7d5ac4cb25e2d9053c966330e3d8388061137e03f4e5a9909a7ff10027f1bd.png" src="_images/3e7d5ac4cb25e2d9053c966330e3d8388061137e03f4e5a9909a7ff10027f1bd.png" />
+</div>
+</div>
+</section>
+<section id="ensemble-mean-plots">
+<h3>Ensemble mean plots<a class="headerlink" href="#ensemble-mean-plots" title="Link to this heading">#</a></h3>
+<p>Now that we no longer need to focus on individual models, we can reduce the number of lines by plotting only the ensemble means with a 90% confidence interval. With fewer lines in the plot, we can also reduce the resampling frequency and display the annual means.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">cmip_plot_ensemble</span>
+
+<span class="n">cmip_plot_ensemble</span><span class="p">(</span><span class="n">ssp_tas_dict</span><span class="p">,</span> <span class="n">era5</span><span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">],</span> <span class="n">intv_mean</span><span class="o">=</span><span class="s1">&#39;YE&#39;</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s1">NB3_CMIP6_Ensemble_Temp.png&#39;</span><span class="p">)</span>
+<span class="n">cmip_plot_ensemble</span><span class="p">(</span><span class="n">ssp_pr_dict</span><span class="p">,</span> <span class="n">era5</span><span class="p">[</span><span class="s1">&#39;prec&#39;</span><span class="p">],</span> <span class="n">precip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">intv_sum</span><span class="o">=</span><span class="s1">&#39;ME&#39;</span><span class="p">,</span> <span class="n">intv_mean</span><span class="o">=</span><span class="s1">&#39;YE&#39;</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s1">NB3_CMIP6_Ensemble_Prec.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><img alt="_images/e315c4c8f3d01f98b70f0363af0f3fba7b19da2872df6645ca34edbdd4b2b7a3.png" src="_images/e315c4c8f3d01f98b70f0363af0f3fba7b19da2872df6645ca34edbdd4b2b7a3.png" />
+<img alt="_images/58fc774a4d4bd05133771dcc35172e4f04ad0975586c5548c2cce5f710ae1220.png" src="_images/58fc774a4d4bd05133771dcc35172e4f04ad0975586c5548c2cce5f710ae1220.png" />
+</div>
+</div>
+<p>We can see that the SDM adjusts the range and mean of the target data while preserving the distribution and trend of the original data. However, the inter-model variance is slightly reduced for temperature and notably increased for precipitation.</p>
+<p>Last but not least, we will have a closer look at the performance of the bias adjustment. To do that, we will create probability plots for all models comparing original, target, and adjusted data with each other and a standard normal distribution. The <code class="docutils literal notranslate"><span class="pre">prob_plot</span></code> function creates such a plot for an individual model and scenario. The <code class="docutils literal notranslate"><span class="pre">pp_matrix</span></code> function loops the <code class="docutils literal notranslate"><span class="pre">prob_plot</span></code> function over all models in a <code class="docutils literal notranslate"><span class="pre">DataFrame</span></code> and arranges them in a matrix.</p>
+<p>First we’ll have a look at the temperature.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">pp_matrix</span>
+
+<span class="n">pp_matrix</span><span class="p">(</span><span class="n">ssp2_tas_raw</span><span class="p">,</span> <span class="n">era5</span><span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">],</span> <span class="n">ssp2_tas</span><span class="p">,</span> <span class="n">scenario</span><span class="o">=</span><span class="s1">&#39;SSP2&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s1">NB3_CMIP6_SSP2_probability_Temp.png&#39;</span><span class="p">)</span>
+<span class="n">pp_matrix</span><span class="p">(</span><span class="n">ssp5_tas_raw</span><span class="p">,</span> <span class="n">era5</span><span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">],</span> <span class="n">ssp5_tas</span><span class="p">,</span> <span class="n">scenario</span><span class="o">=</span><span class="s1">&#39;SSP5&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s1">NB3_CMIP6_SSP5_probability_Temp.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><img alt="_images/dce77e56626617a7dfaf8c0d637de64649ee736b0ad0d9fde71ae7c008c1976d.png" src="_images/dce77e56626617a7dfaf8c0d637de64649ee736b0ad0d9fde71ae7c008c1976d.png" />
+<img alt="_images/96b58dbef76c4daaf2688df8113f457eb3aa778a0de1a603194b0d60b25e65a7.png" src="_images/96b58dbef76c4daaf2688df8113f457eb3aa778a0de1a603194b0d60b25e65a7.png" />
+</div>
+</div>
+<p>We can see that the SDM worked very well for the temperature data, with high agreement between the target and adjusted data.</p>
+<p>Now, let’s examine the probability curves for precipitation. Since the precipitation data is bounded at 0 mm and most days have small values greater than 0 mm, we resample the data as monthly sums to get an idea of the overall performance.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pp_matrix</span><span class="p">(</span><span class="n">ssp2_pr_raw</span><span class="p">,</span> <span class="n">era5</span><span class="p">[</span><span class="s1">&#39;prec&#39;</span><span class="p">],</span> <span class="n">ssp2_pr</span><span class="p">,</span> <span class="n">precip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scenario</span><span class="o">=</span><span class="s1">&#39;SSP2&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s1">NB3_CMIP6_SSP2_probability_Prec.png&#39;</span><span class="p">)</span>
+<span class="n">pp_matrix</span><span class="p">(</span><span class="n">ssp5_pr_raw</span><span class="p">,</span> <span class="n">era5</span><span class="p">[</span><span class="s1">&#39;prec&#39;</span><span class="p">],</span> <span class="n">ssp5_pr</span><span class="p">,</span> <span class="n">precip</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scenario</span><span class="o">=</span><span class="s1">&#39;SSP5&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig_path</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s1">NB3_CMIP6_SSP5_probability_Prec.png&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><img alt="_images/c9aeb9fa0d359a39de98238f75cec7c9fbcadb90a16c95b475402e9ad35bb990.png" src="_images/c9aeb9fa0d359a39de98238f75cec7c9fbcadb90a16c95b475402e9ad35bb990.png" />
+<img alt="_images/c77295864e0d10ace4b99bf2c367dcf1c040fa78d7e017d8454c007abc06e58e.png" src="_images/c77295864e0d10ace4b99bf2c367dcf1c040fa78d7e017d8454c007abc06e58e.png" />
+</div>
+</div>
+<p>Considering the complexity and heterogeneity of precipitation data, the performance of the SDM is acceptable. Although the fitted data of most models differ from the target data at low and very high values, the general distribution of monthly precipitation is accurately represented.</p>
+</section>
+</section>
+<section id="write-cmip6-data-to-file">
+<h2>Write CMIP6 data to file<a class="headerlink" href="#write-cmip6-data-to-file" title="Link to this heading">#</a></h2>
+<p>After a thorough review of the climate scenario data, we can write the final selection to files to be used in the next notebook. We want to use reanalysis data for the MATILDA model wherever possible and only use CMIP6 data for future projections. Therefore, we need to replace all of the data from our calibration period with ERA5-Land data.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">replace_values</span>
+
+
+<span class="n">era5l</span> <span class="o">=</span> <span class="n">read_era5l</span><span class="p">(</span><span class="n">era5_file</span><span class="p">)</span>
+<span class="n">ssp2_tas</span> <span class="o">=</span> <span class="n">ssp_tas_dict</span><span class="p">[</span><span class="s1">&#39;SSP2_adjusted&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ssp5_tas</span> <span class="o">=</span> <span class="n">ssp_tas_dict</span><span class="p">[</span><span class="s1">&#39;SSP5_adjusted&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ssp2_pr</span> <span class="o">=</span> <span class="n">ssp_pr_dict</span><span class="p">[</span><span class="s1">&#39;SSP2_adjusted&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">ssp5_pr</span> <span class="o">=</span> <span class="n">ssp_pr_dict</span><span class="p">[</span><span class="s1">&#39;SSP5_adjusted&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">ssp2_tas</span> <span class="o">=</span> <span class="n">replace_values</span><span class="p">(</span><span class="n">ssp2_tas</span><span class="p">,</span> <span class="n">era5l</span><span class="p">,</span> <span class="s1">&#39;temp&#39;</span><span class="p">)</span>
+<span class="n">ssp5_tas</span> <span class="o">=</span> <span class="n">replace_values</span><span class="p">(</span><span class="n">ssp5_tas</span><span class="p">,</span> <span class="n">era5l</span><span class="p">,</span> <span class="s1">&#39;temp&#39;</span><span class="p">)</span>
+<span class="n">ssp2_pr</span> <span class="o">=</span> <span class="n">replace_values</span><span class="p">(</span><span class="n">ssp2_pr</span><span class="p">,</span> <span class="n">era5l</span><span class="p">,</span> <span class="s1">&#39;prec&#39;</span><span class="p">)</span>
+<span class="n">ssp5_pr</span> <span class="o">=</span> <span class="n">replace_values</span><span class="p">(</span><span class="n">ssp5_pr</span><span class="p">,</span> <span class="n">era5l</span><span class="p">,</span> <span class="s1">&#39;prec&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div></div>
+</div>
+<p>Since the whole ensemble results in relatively large files, we store the dictionaries in binary format. While these are not human-readable, they are compact and fast to read and write.</p>
+<div class="alert alert-block alert-info">
+<b>Note:</b> In the config file you can choose between two storage options: <code>pickle</code> files are fast to read and write, but take up more disk space (<code>COMPACT_FILES = False</code>). You can use them on your local machine. <code>parquet</code> files need less disk space but take longer to read and write (<code>COMPACT_FILES = True</code>). They should be your choice in the Binder.</div><div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">dict_to_pickle</span><span class="p">,</span> <span class="n">dict_to_parquet</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="n">tas</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;SSP2&#39;</span><span class="p">:</span> <span class="n">ssp2_tas</span><span class="p">,</span> <span class="s1">&#39;SSP5&#39;</span><span class="p">:</span> <span class="n">ssp5_tas</span><span class="p">}</span>
+<span class="n">pr</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;SSP2&#39;</span><span class="p">:</span> <span class="n">ssp2_pr</span><span class="p">,</span> <span class="s1">&#39;SSP5&#39;</span><span class="p">:</span> <span class="n">ssp5_pr</span><span class="p">}</span>
+
+<span class="k">if</span> <span class="n">compact_files</span><span class="p">:</span>
+    <span class="c1"># For storage efficiency:</span>
+    <span class="n">dict_to_parquet</span><span class="p">(</span><span class="n">tas</span><span class="p">,</span> <span class="n">cmip_dir</span> <span class="o">+</span> <span class="s1">&#39;adjusted/tas_parquet&#39;</span><span class="p">)</span>
+    <span class="n">dict_to_parquet</span><span class="p">(</span><span class="n">pr</span><span class="p">,</span> <span class="n">cmip_dir</span> <span class="o">+</span> <span class="s1">&#39;adjusted/pr_parquet&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># For speed:</span>
+    <span class="n">dict_to_pickle</span><span class="p">(</span><span class="n">tas</span><span class="p">,</span> <span class="n">cmip_dir</span> <span class="o">+</span> <span class="s1">&#39;adjusted/tas.pickle&#39;</span><span class="p">)</span>
+    <span class="n">dict_to_pickle</span><span class="p">(</span><span class="n">pr</span><span class="p">,</span> <span class="n">cmip_dir</span> <span class="o">+</span> <span class="s1">&#39;adjusted/pr.pickle&#39;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
+    <span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="s1">&#39;output_download&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder can be download now (file output_download.zip)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output folder can be download now (file output_download.zip)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">reset</span> -f
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output text_html">
+            <style>
+                .geemap-dark {
+                    --jp-widgets-color: white;
+                    --jp-widgets-label-color: white;
+                    --jp-ui-font-color1: white;
+                    --jp-layout-color2: #454545;
+                    background-color: #383838;
+                }
+
+                .geemap-dark .jupyter-button {
+                    --jp-layout-color3: #383838;
+                }
+
+                .geemap-colab {
+                    background-color: var(--colab-primary-surface-color, white);
+                }
+
+                .geemap-colab .jupyter-button {
+                    --jp-layout-color3: var(--colab-primary-surface-color, white);
+                }
+            </style>
+            </div></div>
+</div>
+<p>You can now continue with <a class="reference internal" href="Notebook4_MATILDA.html"><span class="std std-doc">Notebook 4</span></a> to calibrate the MATILDA model.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Notebook2_Forcing_data.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Climate forcing data</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Notebook4_MATILDA.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Calibrating the MATILDA framework</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-aggregate-and-download-downscaled-cmip6-data">Select, aggregate, and download downscaled CMIP6 data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#processing-cmip6-data">Processing CMIP6 data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bias-adjustment-using-reananlysis-data">Bias adjustment using reananlysis data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualization">Visualization</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#time-series">Time series</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#violin-plots">Violin plots</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-filters">Data filters</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ensemble-mean-plots">Ensemble mean plots</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#write-cmip6-data-to-file">Write CMIP6 data to file</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Phillip Schuster
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

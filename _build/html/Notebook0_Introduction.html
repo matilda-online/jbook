@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Introduction &#8212; MATILDA</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Notebook0_Introduction';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Catchment delineation" href="Notebook1_Catchment_delineation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-light" alt="MATILDA - Home"/>
+    <script>document.write(`<img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Notebook1_Catchment_delineation.html">Catchment delineation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook2_Forcing_data.html">Climate forcing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook3_CMIP6.html">Climate scenario data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook4_MATILDA.html">Calibrating the MATILDA framework</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook5_MATILDA_scenarios.html">MATILDA Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook6_Analysis.html">Model Output Analysis and Climate Change Impact Analysis</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/phiscu/matilda_edu/main?urlpath=lab/tree/Notebook0_Introduction.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/phiscu/matilda_edu" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/phiscu/matilda_edu/issues/new?title=Issue%20on%20page%20%2FNotebook0_Introduction.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Notebook0_Introduction.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introduction</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signing-up-for-google-earth-engine-gee">Signing up for Google Earth Engine (GEE)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorize-access-for-google-earth-engine">Authorize access for Google Earth Engine</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-config-ini-file">The <em>config.ini</em> file</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
+<p>Welcome to <strong>MATILDA-Online</strong>, the Python-based workflow for <strong>Modeling Water Resources in Glacierized Catchments</strong>! This book describes the comprehensive toolkit in detail and guides you step-by-step from data acquisition to analysis of climate change impacts on the selected catchment. Designed with flexibility and accessibility in mind, MATILDA integrates robust scientific models, public data sources, and user-friendly tools to make sophisticated glacio-hydrological modeling accessible to researchers, practitioners, and students alike.</p>
+<p>The workflow is divided into a series of interactive notebooks, each focused on a specific component of the modeling process. These notebooks streamline complex tasks such as catchment delineation, data processing, model calibration, and climate scenario analysis, ensuring clarity and reproducibility at each step:</p>
+<ul class="simple">
+<li><p><strong><a class="reference internal" href="Notebook1_Catchment_delineation.html"><span class="std std-doc">Notebook 1 - Catchment Delineation</span></a>:</strong> Delineate your catchment and retrieve static geospatial data, including digital elevation models, glacier outlines, and ice thickness distributions.</p></li>
+<li><p><strong><a class="reference internal" href="Notebook2_Forcing_data.html"><span class="std std-doc">Notebook 2 - Forcing Data</span></a>:</strong> Acquire and process ERA5-Land reanalysis data, preparing inputs for glacio-hydrological model calibration.</p></li>
+<li><p><strong><a class="reference internal" href="Notebook3_CMIP6.html"><span class="std std-doc">Notebook 3 - CMIP6 Climate Data</span></a>:</strong> Download and process historical and future climate data from the Coupled Model Intercomparison Project Phase 6 (CMIP6) for two emission scenarios.</p></li>
+<li><p><strong><a class="reference internal" href="Notebook4_MATILDA.html"><span class="std std-doc">Notebook 4 - MATILDA Model</span></a>:</strong> Run the MATILDA model with default parameters and calibrate it based on mutiple objectives.</p></li>
+<li><p><strong><a class="reference internal" href="Notebook5_MATILDA_scenarios.html"><span class="std std-doc">Notebook 5 - Scenario Simulations</span></a>:</strong> Apply your calibrated parameter set to run the model over all CMIP6 ensemble members for robust scenario-based analysis.</p></li>
+<li><p><strong><a class="reference internal" href="Notebook6_Analysis.html"><span class="std std-doc">Notebook 6 - Result Analysis &amp; Impact Assessment</span></a>:</strong> Visualize model output in interactive plots across ensemble simulations, extract key meteorological and hydrological indicators of of climate change impacts, and create a visual summary.</p></li>
+</ul>
+<p>The workflow below is demonstrated using a sample site in the Tian Shan Mountains of Kyrgyzstan. To try the toolkit for yourself, simply click on the rocket icon in the toolbar above to launch an online environment hosted by <a class="reference external" href="https://mybinder.org/">mybinder.org</a>. There you can run any notebook with the sample data or upload your own and edit the config file accordingly. Note that while most of the workflow will work fine in the binder, calibrating the model is computationally intensive and will be slow to run on a single CPU. For a comprehensive calibration that takes full advantage of the <a class="reference external" href="https://spotpy.readthedocs.io/en/latest/">spotpy</a> library, we recommend downloading the notebooks and running them on a local machine with multi-core processing capabilities. Additional options to reduce calibration time are described in Notebook 4.</p>
+<p>Have fun exploring and happy modeling!</p>
+<p><img alt="flowchart" src="_images/workflow_detailed_2024_-Full_legend.png" /></p>
+<section id="signing-up-for-google-earth-engine-gee">
+<h2>Signing up for Google Earth Engine (GEE)<a class="headerlink" href="#signing-up-for-google-earth-engine-gee" title="Link to this heading">#</a></h2>
+<p>Much of the public data acquisition will be done using the <a class="reference external" href="https://developers.google.com/earth-engine/tutorials/community/intro-to-python-api">Google Earth Engine Python API</a>. This not only allows us to access an unique collection of public datasets but to “outsource” most of their preprocessing to Google servers. Therefore, you require an Earth Engine Account to use this service. If you don’t have one, sign up as follows.</p>
+<ol class="arabic simple">
+<li><p>To start visit the <a class="reference external" href="https://earthengine.google.com/">Earth Engine website</a> and click on <em>Get Started</em> in the top right corner.</p></li>
+</ol>
+<p><img alt="enter image description here" src="https://i.postimg.cc/nzMyrSfG/start2.png" /></p>
+<ol class="arabic simple" start="2">
+<li><p>Log into your Google account or create one using any email adress.</p></li>
+</ol>
+<p><img alt="enter image description here" src="https://i.postimg.cc/7YQqNzm6/sign-in-google.png" /></p>
+<ol class="arabic simple" start="3">
+<li><p>Once you signed in you can register your first project. Click on <em>Register a Noncommercial or Commercial Cloud project</em>.</p></li>
+</ol>
+<p><img alt="" src="https://i.postimg.cc/hjqDdqM1/get-started.png" /></p>
+<ol class="arabic simple" start="4">
+<li><p>Next, choose how you want to use Earth Engine. You may select <em>Unpaid usage</em> and <em>Academia &amp; Research</em>.</p></li>
+</ol>
+<p><img alt="" src="https://i.postimg.cc/2y0rMLY0/for-academia.png" /></p>
+<p><a id="step-5">5. </a>Now you have the option to join an existing <strong>Google Cloud Project</strong> or create a new one.
+For the latter click on <em>Create a new Google Cloud Project</em>, and choose your organization, create a project ID and optionally choose a project name. Click on <em>CONTINUE TO SUMMARY</em> when finished.</p>
+<p><img alt="enter image description here" src="https://i.postimg.cc/pXd28CQ4/ID3.png" /></p>
+<ol class="arabic simple" start="6">
+<li><p>Before your project is registered you might be asked to accept the Terms of Services if you haven’t done so already.
+Click on <em>Cloud Terms of Services</em>. You will be redirected to your Google account where you can accept the terms.</p></li>
+</ol>
+<p><img alt="enter image description here" src="https://i.postimg.cc/Wb91fCbs/cloud-terms.png" /></p>
+<ol class="arabic simple" start="7">
+<li><p>Finally, confirm your Cloud Project information by clicking on <em>CONFIRM AND CONTINUE</em>.</p></li>
+</ol>
+<p><img alt="enter image description here" src="https://i.postimg.cc/L8n8dDnL/confirm.png" /></p>
+<ol class="arabic simple" start="8">
+<li><p>The first cell of every notebook using GEE will check your authentication status. If it is the first time the GEE API is initialized, a hyperlink will be generated that brings you to a GEE log in page. There you need to …</p></li>
+</ol>
+</section>
+<section id="authorize-access-for-google-earth-engine">
+<h2>Authorize access for Google Earth Engine<a class="headerlink" href="#authorize-access-for-google-earth-engine" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Choose your account and project and click on <em>GENERATE TOKEN.</em></p></li>
+</ol>
+<p><img alt="enter image description here" src="_images/nb0_gee_token_1.png" /></p>
+<ol class="arabic simple" start="2">
+<li><p>If not done already, you will need to sign in to your Google Account. You’ll get a security notification for unverified apps. Click <em>continue</em>.</p></li>
+</ol>
+<p><img alt="enter image description here" src="https://i.postimg.cc/8PzQmGk8/continue.png" /></p>
+<ol class="arabic simple" start="3">
+<li><p>Next, grant your Earth Engine Notebook Client access to your account and click <em>Continue</em>.</p></li>
+</ol>
+<p><img alt="enter image description here" src="_images/nb0_gee_token_3.png" /></p>
+<ol class="arabic simple" start="4">
+<li><p>Finally, copy the authorisation code …</p></li>
+</ol>
+<p><img alt="enter image description here" src="_images/nb0_gee_token_4.png" /></p>
+<ol class="arabic simple" start="5">
+<li><p>… and paste it into the designated field in the notebook.</p></li>
+</ol>
+<p><img alt="enter image description here" src="https://i.postimg.cc/ZnfQM9bG/enter-code.png" /></p>
+<ol class="arabic simple" start="6">
+<li><p>You should get a message saying <em>Successfully saved authorization token.</em> You are now ready to start with the MATILDA workflow. Before we dive into data handling, let’s have a look at …</p></li>
+</ol>
+</section>
+<section id="the-config-ini-file">
+<h2>The <em>config.ini</em> file<a class="headerlink" href="#the-config-ini-file" title="Link to this heading">#</a></h2>
+<p>This file contains a list of essential information for the workflow and allows customization. If you want to try MATILDA-Online with the sample dataset, you only need to edit the entry <code class="docutils literal notranslate"><span class="pre">CLOUD_PROJECT</span></code> and change it to your projects name from <a href="#step-5">Step 5</a>.  If you want to use your own data, replace the file with the discharge observation in the <code class="docutils literal notranslate"><span class="pre">input/</span></code> folder and adapt the reference coordinates accordingly.</p>
+<ol class="arabic simple">
+<li><p>The first section <code class="docutils literal notranslate"><span class="pre">[FILE_SETTINGS]</span></code> allows you to <strong>edit paths and file names for in- and outputs</strong>. This can especially be useful if you model multiple catchments in the same copy of the repository.</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">[CONFIG]</span></code> section you can …</p>
+<ul class="simple">
+<li><p>… specify your <strong>Google Cloud project</strong>. This information is <strong>mandatory</strong> to use the GEE in the workflow. The current project <code class="docutils literal notranslate"><span class="pre">matilda-edu</span></code> is set up for demonstration purposes and is not publicly accessible.</p></li>
+<li><p>… specify your <strong>reference coordinates</strong> (usually your gauging station location) and select the calibration period. The latter should cover your observation period plus a few years before as a spin-off.</p></li>
+<li><p>… specify the calibration period of the hydrlogical model depending on your data.</p></li>
+<li><p>… change the <strong>digital elevation model</strong> used.</p></li>
+<li><p>… choose download option from GEE (direct download or via <code class="docutils literal notranslate"><span class="pre">xarray</span></code>).</p></li>
+<li><p>… choose whether to create scenario-based <strong>projections</strong> or just model the past.</p></li>
+<li><p>… disable the generation of <strong>live maps</strong>.</p></li>
+<li><p>… configure the <strong>style of output figures</strong>. More information about the available styles can be found in the <strong><a class="reference external" href="https://github.com/garrettj403/SciencePlots/wiki/Gallery">SciencePlots manual</a></strong>.</p></li>
+<li><p>… choose between a faster (<code class="docutils literal notranslate"><span class="pre">.pickle</span></code>) and a more compact (<code class="docutils literal notranslate"><span class="pre">.parquet</span></code>) format for intermediate files.</p></li>
+<li><p>… set the number of cores available for computation. If you are in a binder, leave this at 1.</p></li>
+<li><p>… decide whether you want to store your output folder in a <code class="docutils literal notranslate"><span class="pre">.zip</span></code> file at the end of every Notebook. This is useful when you work online and want to download your (intermediate) results.</p></li>
+</ul>
+</li>
+</ol>
+<p> 
+3. The last section <code class="docutils literal notranslate"><span class="pre">[MEDIA_SERVER]</span></code> holds credentials for the file access on a file repository of our university and should not be edited if you are not a university member and know what you’re doing. The credentials only grant read access to glacier-related public data and are not of value to you.</p>
+<p>With the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> set up, you may now start with <strong><a class="reference internal" href="Notebook1_Catchment_delineation.html"><span class="std std-doc">Notebook 1</span></a></strong>.</p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="Notebook1_Catchment_delineation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Catchment delineation</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signing-up-for-google-earth-engine-gee">Signing up for Google Earth Engine (GEE)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorize-access-for-google-earth-engine">Authorize access for Google Earth Engine</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-config-ini-file">The <em>config.ini</em> file</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Phillip Schuster
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

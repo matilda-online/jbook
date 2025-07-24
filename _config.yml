@@ -3,7 +3,7 @@
 
 title: MATILDA
 author: Phillip Schuster
-copyright: 2023
+copyright: 2025
 logo: https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg
 
 # Force re-execution of notebooks on each build.
@@ -22,9 +22,9 @@ bibtex_bibfiles:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/phiscu/matilda_edu  # Online location of your book
+  url: https://github.com/phiscu/matilda_edu # Online location of your book
   #path_to_book: docs  # Optional path to your book, relative to the repository root
-  branch: main  # Which branch of the repository should be used when creating links (optional)
+  branch: main # Which branch of the repository should be used when creating links (optional)
 
 # Add GitHub buttons to your book
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
@@ -34,9 +34,9 @@ html:
 
 launch_buttons:
   notebook_interface: "jupyterlab"
-  binderhub_url: "https://mybinder.org"  # The URL for your BinderHub (e.g., https://mybinder.org)
+  binderhub_url: "https://mybinder.org" # The URL for your BinderHub (e.g., https://mybinder.org)
 
 sphinx:
   config:
     html_js_files:
-    - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js
+      - https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js

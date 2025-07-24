@@ -4,10 +4,9 @@
 format: jb-book
 root: Notebook0_Introduction
 chapters:
-- file: Notebook1_Catchment_delineation
-- file: Notebook2_Forcing_data
-- file: Notebook3_CMIP6
-- file: Notebook4_MATILDA
-- file: Notebook5_MATILDA_scenarios
-- file: Notebook6_Analysis
-- file: Notebook7_Climate_Change_Impact
+  - file: Notebook1_Catchment_delineation
+  - file: Notebook2_Forcing_data
+  - file: Notebook3_CMIP6
+  - file: Notebook4_MATILDA
+  - file: Notebook5_MATILDA_scenarios
+  - file: Notebook6_Analysis

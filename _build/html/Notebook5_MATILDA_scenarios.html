@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MATILDA Scenarios &#8212; MATILDA</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Notebook5_MATILDA_scenarios';</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Model Output Analysis and Climate Change Impact Analysis" href="Notebook6_Analysis.html" />
+    <link rel="prev" title="Calibrating the MATILDA framework" href="Notebook4_MATILDA.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="Notebook0_Introduction.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-light" alt="MATILDA - Home"/>
+    <script>document.write(`<img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="Notebook0_Introduction.html">
+                    Introduction
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Notebook1_Catchment_delineation.html">Catchment delineation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook2_Forcing_data.html">Climate forcing data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook3_CMIP6.html">Climate scenario data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook4_MATILDA.html">Calibrating the MATILDA framework</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">MATILDA Scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Notebook6_Analysis.html">Model Output Analysis and Climate Change Impact Analysis</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/phiscu/matilda_edu/main?urlpath=lab/tree/Notebook5_MATILDA_scenarios.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch on Binder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img alt="Binder logo" src="_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/phiscu/matilda_edu" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/phiscu/matilda_edu/issues/new?title=Issue%20on%20page%20%2FNotebook5_MATILDA_scenarios.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Notebook5_MATILDA_scenarios.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>MATILDA Scenarios</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-the-scenario-runs">Set up the scenario runs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-matilda-for-all-climate-projections">Running MATILDA for all climate projections</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="matilda-scenarios">
+<h1>MATILDA Scenarios<a class="headerlink" href="#matilda-scenarios" title="Link to this heading">#</a></h1>
+<p>After calibrating MATILDA we can now use the best parameter set to run the model with climate scenario data until 2100. In this notebook we will…</p>
+<ul class="simple">
+<li><p>…run MATILDA with the same parameters and settings for two emission scenarios and all models of the ensemble.</p></li>
+</ul>
+<div class="alert alert-block alert-info">
+<b>Note:</b> On a single CPU one MATILDA run over 120y takes ~4s. For all ensemble members this adds up to ~4min. The <code>MatildaBulkProcessor</code> class allows you to reduce this time significantly with more CPUs so you might want to run this notebook locally. Or have a coffee. Again...</div>
+<section id="set-up-the-scenario-runs">
+<h2>Set up the scenario runs<a class="headerlink" href="#set-up-the-scenario-runs" title="Link to this heading">#</a></h2>
+<p>As before, we start by reading our paths from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code>.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">configparser</span>
+
+<span class="c1"># read local config.ini file</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+<span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;config.ini&#39;</span><span class="p">)</span>
+
+<span class="c1"># get directories from config.ini</span>
+<span class="n">dir_input</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_INPUT&#39;</span><span class="p">]</span>
+<span class="n">dir_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_OUTPUT&#39;</span><span class="p">]</span>
+<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">]</span>
+
+<span class="c1"># set the file format for storage</span>
+<span class="n">compact_files</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span><span class="s1">&#39;COMPACT_FILES&#39;</span><span class="p">)</span>
+
+<span class="c1"># get the number of available cores</span>
+<span class="n">num_cores</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;NUM_CORES&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input path: &#39;</span><span class="si">{</span><span class="n">dir_input</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path: &#39;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Input path: &#39;input/&#39;
+Output path: &#39;output/&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="alert alert-block alert-info">
+<b>Note:</b> Choose in the config between faster <code>pickle</code> files and smaller <code>parquet</code> files.</div><p>Let’s extend the modeling period to the full century. Therefore, we read the <code class="docutils literal notranslate"><span class="pre">settings.yaml</span></code> to a ditionary and change the respective settings. We also turn off the plotting module to reduce processing time and add the glacier profile from its <code class="docutils literal notranslate"><span class="pre">.csv</span></code>.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">read_yaml</span><span class="p">,</span> <span class="n">write_yaml</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">matilda_settings</span> <span class="o">=</span> <span class="n">read_yaml</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">/settings.yml&quot;</span><span class="p">)</span>
+<span class="n">adapted_settings</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;set_up_start&quot;</span><span class="p">:</span> <span class="s1">&#39;1998-01-01&#39;</span><span class="p">,</span>  <span class="c1"># Start date of the setup period</span>
+    <span class="s2">&quot;set_up_end&quot;</span><span class="p">:</span> <span class="s1">&#39;1999-12-31&#39;</span><span class="p">,</span>  <span class="c1"># End date of the setup period</span>
+    <span class="s2">&quot;sim_start&quot;</span><span class="p">:</span> <span class="s1">&#39;2000-01-01&#39;</span><span class="p">,</span>  <span class="c1"># Start date of the simulation period</span>
+    <span class="s2">&quot;sim_end&quot;</span><span class="p">:</span> <span class="s1">&#39;2100-12-31&#39;</span><span class="p">,</span>  <span class="c1"># End date of the simulation period</span>
+    <span class="s2">&quot;plots&quot;</span><span class="p">:</span> <span class="kc">False</span>
+<span class="p">}</span>
+<span class="n">matilda_settings</span><span class="p">[</span><span class="s1">&#39;glacier_profile&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">/glacier_profile.csv&quot;</span><span class="p">)</span>
+
+<span class="n">matilda_settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">adapted_settings</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Settings for MATILDA scenario runs:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">matilda_settings</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> <span class="nb">print</span><span class="p">(</span><span class="n">key</span> <span class="o">+</span> <span class="s1">&#39;: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">matilda_settings</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Settings for MATILDA scenario runs:
+
+area_cat: 300.6637184185051
+area_glac: 31.829413146586116
+ele_cat: 3271.895648388366
+ele_dat: 3324.5555520312164
+ele_glac: 4001.8798828125
+elev_rescaling: True
+freq: M
+lat: 42.18511742495568
+plot_type: all
+set_up_end: 1999-12-31
+set_up_start: 1998-01-01
+sim_end: 2100-12-31
+sim_start: 2000-01-01
+warn: False
+glacier_profile:      Elevation      Area          WE  EleZone
+0         1970  0.000000      0.0000     1900
+1         2000  0.000000      0.0000     2000
+2         2100  0.000000      0.0000     2100
+3         2200  0.000000      0.0000     2200
+4         2300  0.000000      0.0000     2300
+..         ...       ...         ...      ...
+156       4730  0.000023  20721.3700     4700
+157       4740  0.000012  14450.2180     4700
+158       4750  0.000006  10551.4730     4700
+159       4760  0.000000      0.0000     4700
+160       4780  0.000002   6084.7456     4700
+
+[161 rows x 4 columns]
+plots: False
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now, we read the calibrated parameter set from the <code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code> and our forcing data from the binary files.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">parquet_to_dict</span><span class="p">,</span> <span class="n">pickle_to_dict</span>
+
+<span class="n">param_dict</span> <span class="o">=</span> <span class="n">read_yaml</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">/parameters.yml&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parameters loaded.&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">compact_files</span><span class="p">:</span>
+    <span class="c1"># For size:</span>
+    <span class="n">tas</span> <span class="o">=</span> <span class="n">parquet_to_dict</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/tas_parquet&quot;</span><span class="p">)</span>
+    <span class="n">pr</span> <span class="o">=</span> <span class="n">parquet_to_dict</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/pr_parquet&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="c1"># For speed</span>
+    <span class="n">tas</span> <span class="o">=</span> <span class="n">pickle_to_dict</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/tas.pickle&quot;</span><span class="p">)</span>
+    <span class="n">pr</span> <span class="o">=</span> <span class="n">pickle_to_dict</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/pr.pickle&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Forcing data loaded.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Parameters loaded.
+Forcing data loaded.
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">create_scenario_dict</span></code> function converts the individual climate projections into MATILDA input dataframes. We store the ensemble of MATILDA inputs in a nested dictionary again and save the file in a <code class="docutils literal notranslate"><span class="pre">parquet</span></code> (or <code class="docutils literal notranslate"><span class="pre">pickle</span></code>).</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">dict_to_parquet</span><span class="p">,</span> <span class="n">dict_to_pickle</span><span class="p">,</span> <span class="n">create_scenario_dict</span>
+
+<span class="n">scenarios</span> <span class="o">=</span> <span class="n">create_scenario_dict</span><span class="p">(</span><span class="n">tas</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Storing MATILDA scenario input dataframes on disk...&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">compact_files</span><span class="p">:</span>
+    <span class="n">dict_to_parquet</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/matilda_scenario_input_parquet&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">dict_to_pickle</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/matilda_scenario_input.pickle&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Storing MATILDA scenario input dataframes on disk...
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="running-matilda-for-all-climate-projections">
+<h2>Running MATILDA for all climate projections<a class="headerlink" href="#running-matilda-for-all-climate-projections" title="Link to this heading">#</a></h2>
+<p>Now that we are set up we need to <strong>run MATILDA for every CMIP6 model and both scenarios</strong>. This adds up to <strong>50-70 model runs at ~4s each</strong> on a single core, depending on how many models remained in your ensemble. So you can either start the bulk processor and have a break or download the repo and change the config according to your available cores.</p>
+<div class="alert alert-block alert-info">
+<b>Note:</b> Don't be confused by the status bar. It only updates after one full scenario is processed.</div><div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">MatildaBulkProcessor</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="c1"># Create an instance of the MatildaBulkProcessor class</span>
+<span class="n">matilda_bulk</span> <span class="o">=</span> <span class="n">MatildaBulkProcessor</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="n">matilda_settings</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">)</span>
+
+<span class="c1"># Run Matilda in a loop (takes a while - have a coffee)</span>
+<span class="k">if</span> <span class="n">num_cores</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">matilda_scenarios</span> <span class="o">=</span> <span class="n">matilda_bulk</span><span class="o">.</span><span class="n">run_single_process</span><span class="p">()</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">matilda_scenarios</span> <span class="o">=</span> <span class="n">matilda_bulk</span><span class="o">.</span><span class="n">run_multi_process</span><span class="p">(</span><span class="n">num_cores</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Storing MATILDA scenario outputs on disk...&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">compact_files</span><span class="p">:</span>
+    <span class="n">dict_to_parquet</span><span class="p">(</span><span class="n">matilda_scenarios</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/matilda_scenarios_parquet&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">dict_to_pickle</span><span class="p">(</span><span class="n">matilda_scenarios</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/matilda_scenarios.pickle&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
+    <span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="s1">&#39;output_download&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder can be download now (file output_download.zip)&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Scenarios SSP2 and SSP5: 100%|██████████| 2/2 [03:23&lt;00:00, 101.82s/it]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Storing MATILDA scenario outputs on disk...
+Output folder can be download now (file output_download.zip)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">reset</span> -f
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>The result is a large nested dictionary with 100-140 dataframes of MATILDA outputs. Now, it is finally time to look at the results. Explore your projections in <a class="reference internal" href="Notebook6_Analysis.html"><span class="std std-doc">Notebook 6</span></a>.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Notebook4_MATILDA.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Calibrating the MATILDA framework</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Notebook6_Analysis.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Model Output Analysis and Climate Change Impact Analysis</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up-the-scenario-runs">Set up the scenario runs</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-matilda-for-all-climate-projections">Running MATILDA for all climate projections</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Phillip Schuster
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2025.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
