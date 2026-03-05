@@ -4,7 +4,7 @@
 title: MATILDA
 author: Phillip Schuster
 copyright: 2025
-logo: https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg
+logo: images/HU_Siegel_RGB.svg
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
