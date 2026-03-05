@@ -28,11 +28,11 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -42,7 +42,7 @@
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
@@ -154,8 +154,8 @@
       
     
     
-    <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-light" alt="MATILDA - Home"/>
-    <script>document.write(`<img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
+    <img src="_static/MATILDA_Logo_processes.png" class="logo__image only-light" alt="MATILDA - Home"/>
+    <script>document.write(`<img src="_static/MATILDA_Logo_processes.png" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
   
   
 </a></div>
@@ -438,13 +438,13 @@ document.write(`
 <h2>Set up the scenario runs<a class="headerlink" href="#set-up-the-scenario-runs" title="Link to this heading">#</a></h2>
 <p>As before, we start by reading our paths from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code>.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">configparser</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
 
 <span class="c1"># read local config.ini file</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
@@ -477,14 +477,14 @@ Output path: &#39;output/&#39;
 <div class="alert alert-block alert-info">
 <b>Note:</b> Choose in the config between faster <code>pickle</code> files and smaller <code>parquet</code> files.</div><p>Let’s extend the modeling period to the full century. Therefore, we read the <code class="docutils literal notranslate"><span class="pre">settings.yaml</span></code> to a ditionary and change the respective settings. We also turn off the plotting module to reduce processing time and add the glacier profile from its <code class="docutils literal notranslate"><span class="pre">.csv</span></code>.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">read_yaml</span><span class="p">,</span> <span class="n">write_yaml</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_yaml</span><span class="p">,</span> <span class="n">write_yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="n">matilda_settings</span> <span class="o">=</span> <span class="n">read_yaml</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">/settings.yml&quot;</span><span class="p">)</span>
 <span class="n">adapted_settings</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;set_up_start&quot;</span><span class="p">:</span> <span class="s1">&#39;1998-01-01&#39;</span><span class="p">,</span>  <span class="c1"># Start date of the setup period</span>
@@ -541,13 +541,13 @@ plots: False
 </div>
 <p>Now, we read the calibrated parameter set from the <code class="docutils literal notranslate"><span class="pre">parameters.yml</span></code> and our forcing data from the binary files.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">parquet_to_dict</span><span class="p">,</span> <span class="n">pickle_to_dict</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">parquet_to_dict</span><span class="p">,</span> <span class="n">pickle_to_dict</span>
 
 <span class="n">param_dict</span> <span class="o">=</span> <span class="n">read_yaml</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">/parameters.yml&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parameters loaded.&quot;</span><span class="p">)</span>
@@ -575,13 +575,13 @@ Forcing data loaded.
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">create_scenario_dict</span></code> function converts the individual climate projections into MATILDA input dataframes. We store the ensemble of MATILDA inputs in a nested dictionary again and save the file in a <code class="docutils literal notranslate"><span class="pre">parquet</span></code> (or <code class="docutils literal notranslate"><span class="pre">pickle</span></code>).</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">dict_to_parquet</span><span class="p">,</span> <span class="n">dict_to_pickle</span><span class="p">,</span> <span class="n">create_scenario_dict</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">dict_to_parquet</span><span class="p">,</span> <span class="n">dict_to_pickle</span><span class="p">,</span> <span class="n">create_scenario_dict</span>
 
 <span class="n">scenarios</span> <span class="o">=</span> <span class="n">create_scenario_dict</span><span class="p">(</span><span class="n">tas</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
 
@@ -607,14 +607,14 @@ Forcing data loaded.
 <p>Now that we are set up we need to <strong>run MATILDA for every CMIP6 model and both scenarios</strong>. This adds up to <strong>50-70 model runs at ~4s each</strong> on a single core, depending on how many models remained in your ensemble. So you can either start the bulk processor and have a break or download the repo and change the config according to your available cores.</p>
 <div class="alert alert-block alert-info">
 <b>Note:</b> Don't be confused by the status bar. It only updates after one full scenario is processed.</div><div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">MatildaBulkProcessor</span>
-<span class="kn">import</span> <span class="nn">shutil</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatildaBulkProcessor</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
 <span class="c1"># Create an instance of the MatildaBulkProcessor class</span>
 <span class="n">matilda_bulk</span> <span class="o">=</span> <span class="n">MatildaBulkProcessor</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="n">matilda_settings</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">)</span>
@@ -651,10 +651,10 @@ Output folder can be download now (file output_download.zip)
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">reset</span> -f
@@ -757,7 +757,7 @@ By Phillip Schuster
 
   <p class="copyright">
     
-      © Copyright 2025.
+      © Copyright Phillip Schuster 2026.
       <br/>
     
   </p>

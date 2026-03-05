@@ -3,8 +3,8 @@
 
 title: MATILDA
 author: Phillip Schuster
-copyright: 2025
-logo: images/HU_Siegel_RGB.svg
+copyright: "Phillip Schuster 2026"
+logo: images/MATILDA_Logo_processes.png
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html

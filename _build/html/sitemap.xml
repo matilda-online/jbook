@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="http://localhost:3003/sitemap_style.xsl" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://localhost:3003</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3003/notebook1-catchment-delineation</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3003/notebook2-forcing-data</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3003/notebook3-cmip6</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3003/notebook4-matilda</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3003/notebook5-matilda-scenarios</loc>
+  </url>
+  <url>
+    <loc>http://localhost:3003/notebook6-analysis</loc>
+  </url>
+</urlset>
