@@ -448,7 +448,12 @@ document.write(`
 <li><p>include future <strong>projections</strong> or not</p></li>
 <li><p>show/hide <strong>interactive map</strong> in notebooks</p></li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>     <span class="c1"># Suppress Deprecation Warnings</span>
@@ -475,9 +480,15 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <p>…and <strong>initialize</strong> the GEE API.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ee</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">authenticate_and_initialize_ee</span>
@@ -486,6 +497,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Attempting Earth Engine Setup for project: matilda-edu ---
 1. Trying to initialize with existing credentials...
@@ -495,7 +507,12 @@ document.write(`
 </div>
 </div>
 <p>We can now load the catchment outline from the previous notebook and convert it to a <code class="docutils literal notranslate"><span class="pre">ee.FeatureCollection</span></code> to use it in GEE.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">geemap</span>
@@ -505,11 +522,17 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 </div>
 <section id="set-the-date-range">
 <h2>Set the date range<a class="headerlink" href="#set-the-date-range" title="Link to this heading">#</a></h2>
 <p>If you are only interested in modeling the past, set <code class="docutils literal notranslate"><span class="pre">PROJECTIONS=False</span></code> in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> to only download reanalysis data for your defined modeling period. Otherwise, all available historical data (since 1979) is downloaded to provide the best possible basis for bias adjustment of the climate scenario data.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">scenarios</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
     <span class="n">date_range</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1979-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-01-01&#39;</span><span class="p">]</span>
@@ -520,6 +543,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -560,7 +584,12 @@ document.write(`
 <p>Source: <a class="reference external" href="https://codes.ecmwf.int/grib/param-db/?id=129">ECMWF Parameter Database</a></p>
 </div></blockquote>
 <p>Since the ERA5 geopotential height is not available in the GEE Data Catalog, we downloaded it using the ECMWF Copernicus Data Store (<a class="reference external" href="https://cds.climate.copernicus.eu/#!/home">CDS</a>) API, converted it to <code class="docutils literal notranslate"><span class="pre">.ncdf</span></code> format, and reuploaded it. Therefore, the file has to be accessed in a similar way to the ice thickness data in Notebook 1.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">resourcespace</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResourceSpace</span>
 
@@ -579,6 +608,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -642,7 +672,12 @@ document.write(`
 </div></div></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">.ncdf</span></code> file is then unzipped and loaded as <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset for further processing.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">zipfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZipFile</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
@@ -661,6 +696,7 @@ document.write(`
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -691,7 +727,12 @@ Dataset contains Geopotential in m**2 s**-2 as variable &#39;z&#39;
 </div>
 </div>
 <p>The original dataset covers the entire globe, so we crop it to the catchment area plus a 1° buffer zone.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get catchment bounding box with buffer</span>
 <span class="n">bounds</span> <span class="o">=</span> <span class="n">catchment_new</span><span class="o">.</span><span class="n">total_bounds</span>
@@ -705,6 +746,7 @@ Dataset contains Geopotential in m**2 s**-2 as variable &#39;z&#39;
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -734,7 +776,12 @@ Dataset contains Geopotential in m**2 s**-2 as variable &#39;z&#39;
 </div>
 </div>
 <p>To load <code class="docutils literal notranslate"><span class="pre">xarray</span></code> data into GEE a little workaround is needed. Credits to <a class="reference external" href="https://github.com/lopezvoliver/geemap/blob/netcdf_to_ee/geemap/common.py#L1776">Oliver Lopez</a> for this solution.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># function to load nc file into GEE</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -778,6 +825,7 @@ Dataset contains Geopotential in m**2 s**-2 as variable &#39;z&#39;
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -810,7 +858,12 @@ Done!
 </div>
 </div>
 <p>If mapping is enabled in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> you can now display the <strong>geopotential</strong> data in the <strong>GEE map</strong>. <a id="map"></a></p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">geemap.colormaps</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
 
@@ -829,6 +882,7 @@ Done!
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -855,7 +909,12 @@ Done!
             </div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "dc6f59cf44c8412ab7e53a03f79f4dd6", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <p>Since our workflow will use a <strong>lumped model</strong>, we will use <strong>area-weighted catchment-wide averages</strong> of our forcing data. Thus, we also aggregate the geopotential based on the grid cell fractions in the catchment and convert it to <strong>geopotential height in meters above sea level</strong>. This represents the <strong>reference altitude of our forcing data</strong>, just as the elevation of a weather station would.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># execute reducer</span>
 <span class="nb">dict</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">reduceRegion</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Reducer</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
@@ -870,6 +929,7 @@ Done!
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -909,7 +969,12 @@ Elevation:		 3335.67 m a.s.l.
 <p>Source: <a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_DAILY_RAW#description">GEE Data Catalog</a></p>
 </div></blockquote>
 <p>On the server side, we simply create an <code class="docutils literal notranslate"><span class="pre">ee.ImageCollection</span></code> with the desired bands (temperature and precipitation) and date range. To calculate area-weighted aggregates we apply the <code class="docutils literal notranslate"><span class="pre">ee.Reducer</span></code> function.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -927,6 +992,7 @@ Elevation:		 3335.67 m a.s.l.
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -953,7 +1019,12 @@ Elevation:		 3335.67 m a.s.l.
             </div></div>
 </div>
 <p>We can then aggregate the results into arrays, download them with <code class="docutils literal notranslate"><span class="pre">.getInfo()</span></code> and store them as dataframe columns. Depending on the selected date range and server traffic this can take up to a few minutes.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
 
@@ -970,6 +1041,7 @@ Elevation:		 3335.67 m a.s.l.
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -1003,12 +1075,18 @@ Wall time: 3min 5s
 </div>
 </div>
 <p>The constructed data frame now looks like this:</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -1152,7 +1230,12 @@ Wall time: 3min 5s
 </div></div></div>
 </div>
 <p>Let’s <strong>plot</strong> the full time series.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.dates</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mdates</span>
@@ -1175,6 +1258,7 @@ Wall time: 3min 5s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -1205,12 +1289,18 @@ Wall time: 3min 5s
 <section id="store-data-for-next-steps">
 <h2>Store data for next steps<a class="headerlink" href="#store-data-for-next-steps" title="Link to this heading">#</a></h2>
 <p>To continue in the workflow, we write the ERA5 data to a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file…</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;ERA5L.csv&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -1237,7 +1327,12 @@ Wall time: 3min 5s
             </div></div>
 </div>
 <p>…and update the <code class="docutils literal notranslate"><span class="pre">settings.yml</span></code> file with the reference altitude of the ERA5-Land data (<code class="docutils literal notranslate"><span class="pre">ele_dat</span></code>) and refresh <code class="docutils literal notranslate"><span class="pre">output_download.zip</span></code> with newly acquired data.</p>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_yaml</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
@@ -1252,6 +1347,7 @@ Wall time: 3min 5s
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
@@ -1281,12 +1377,18 @@ Output folder can be download now (file output_download.zip)
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">reset</span> -f
 </pre></div>
 </div>
 </div>
+</details>
 <div class="cell_output docutils container">
 <div class="output text_html">
             <style>
