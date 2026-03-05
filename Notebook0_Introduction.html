@@ -28,11 +28,11 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -42,7 +42,7 @@
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
@@ -57,6 +57,8 @@
     <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'Notebook0_Introduction';</script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -155,8 +157,8 @@
       
     
     
-    <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-light" alt="MATILDA - Home"/>
-    <script>document.write(`<img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
+    <img src="_static/MATILDA_Logo_processes.png" class="logo__image only-light" alt="MATILDA - Home"/>
+    <script>document.write(`<img src="_static/MATILDA_Logo_processes.png" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
   
   
 </a></div>
@@ -445,43 +447,60 @@ document.write(`
 <p><img alt="flowchart" src="_images/workflow_detailed_2024_-Full_legend.png" /></p>
 <section id="signing-up-for-google-earth-engine-gee">
 <h2>Signing up for Google Earth Engine (GEE)<a class="headerlink" href="#signing-up-for-google-earth-engine-gee" title="Link to this heading">#</a></h2>
-<p>Much of the public data acquisition will be done using the <a class="reference external" href="https://developers.google.com/earth-engine/tutorials/community/intro-to-python-api">Google Earth Engine Python API</a>. This not only allows us to access an unique collection of public datasets but to “outsource” most of their preprocessing to Google servers. Therefore, you require an Earth Engine Account to use this service. If you don’t have one, sign up as follows.</p>
+<p>Much of the data acquisition will be done using the <a class="reference external" href="https://developers.google.com/earth-engine/tutorials/community/intro-to-python-api">Google Earth Engine Python API</a>. This not only allows us to access an unique collection of public datasets but to “outsource” most of their preprocessing to Google servers.</p>
+<div class="alert alert-block alert-info">
+    <b>Note:</b> Currently, every user must use their own Google Cloud Project to access MATILDA-Online. However, the latest updates to the Google Cloud Services website and security policy now require users to answer a questionnaire when registering their projects as non-commercial in order to use the service for free. We are currently working on outsourcing the GEE processes to improve the user experience.
+</div>
+<p>If you already have a Google Cloud project from previous work, continue with <a class="reference internal" href="#gee-auth"><span class="xref myst">authorization of GEE</span></a>. If you have never used GEE or another Google Cloud service before, sign up as follows.</p>
 <ol class="arabic simple">
 <li><p>To start visit the <a class="reference external" href="https://earthengine.google.com/">Earth Engine website</a> and click on <em>Get Started</em> in the top right corner.</p></li>
 </ol>
 <p><img alt="enter image description here" src="https://i.postimg.cc/nzMyrSfG/start2.png" /></p>
 <ol class="arabic simple" start="2">
-<li><p>Log into your Google account or create one using any email adress.</p></li>
+<li><p>Log into your Google account or <a class="reference external" href="https://accounts.google.com/signup">create one</a> using any email adress.</p></li>
 </ol>
 <p><img alt="enter image description here" src="https://i.postimg.cc/7YQqNzm6/sign-in-google.png" /></p>
 <ol class="arabic simple" start="3">
-<li><p>Once you signed in you can register your first project. Click on <em>Register a Noncommercial or Commercial Cloud project</em>.</p></li>
+<li><p>Once you signed in, click on <em>Continue</em> to agree that your e-mail address is used by the Earth Engine Code Editor.</p></li>
 </ol>
-<p><img alt="" src="https://i.postimg.cc/hjqDdqM1/get-started.png" /></p>
+<p><img alt="gcloud_tut_1" src="_images/gcloud_tut_1.png" /></p>
 <ol class="arabic simple" start="4">
-<li><p>Next, choose how you want to use Earth Engine. You may select <em>Unpaid usage</em> and <em>Academia &amp; Research</em>.</p></li>
+<li><p>Next, click <em>Allow</em> to grant the Code Editor the required permissions.</p></li>
 </ol>
-<p><img alt="" src="https://i.postimg.cc/2y0rMLY0/for-academia.png" /></p>
-<p><a id="step-5">5. </a>Now you have the option to join an existing <strong>Google Cloud Project</strong> or create a new one.
-For the latter click on <em>Create a new Google Cloud Project</em>, and choose your organization, create a project ID and optionally choose a project name. Click on <em>CONTINUE TO SUMMARY</em> when finished.</p>
-<p><img alt="enter image description here" src="https://i.postimg.cc/pXd28CQ4/ID3.png" /></p>
+<p><img alt="gcloud_tut_2" src="_images/gcloud_tut_2.png" /></p>
+<p><a id="step-5">5. </a>A default cloud project called “My Project” is created for you. If you click on the project name in the tool bar (<strong>1</strong>)…</p>
+<p><img alt="gcloud_tut_3" src="_images/gcloud_tut_3.png" /></p>
+<p>… you will see a pop-up window where you can add, delete or rename cloud projects. You can also see the cloud ID of your project (here <em>refined_grammar_100722</em>). You will need <strong>your</strong> ID later to tell MATILDA-Online which cloud project to use.</p>
+<p><img alt="gcloud_tut_3_1" src="_images/gcloud_tut_3_1.png" /></p>
+<p>Close the pop-up window, to continue to register your project as either commercial or non-commercial. In the current setup, MATILDA-Online is designed as a <em>non-commercial</em> tool. Therefore, we only describe the process for scientific or educational applications. To do so, click on <em>Get started</em> in the lower box (<strong>2</strong>).</p>
 <ol class="arabic simple" start="6">
-<li><p>Before your project is registered you might be asked to accept the Terms of Services if you haven’t done so already.
-Click on <em>Cloud Terms of Services</em>. You will be redirected to your Google account where you can accept the terms.</p></li>
+<li><p>On the following page click <em>Get started</em> once again.</p></li>
 </ol>
-<p><img alt="enter image description here" src="https://i.postimg.cc/Wb91fCbs/cloud-terms.png" /></p>
+<p><img alt="gcloud_tut_4" src="_images/gcloud_tut_4.png" /></p>
 <ol class="arabic simple" start="7">
-<li><p>Finally, confirm your Cloud Project information by clicking on <em>CONFIRM AND CONTINUE</em>.</p></li>
+<li><p>Complete the questionnaire with your background and institution and click <em>Register</em> to submit it. A free community plan is sufficient for using the tool.</p></li>
 </ol>
-<p><img alt="enter image description here" src="https://i.postimg.cc/L8n8dDnL/confirm.png" /></p>
+<p><img alt="gcloud_tut_5" src="_images/gcloud_tut_5.png" /></p>
 <ol class="arabic simple" start="8">
-<li><p>The first cell of every notebook using GEE will check your authentication status. If it is the first time the GEE API is initialized, a hyperlink will be generated that brings you to a GEE log in page. There you need to …</p></li>
+<li><p>Finally, <em>enable</em> the Earth Engine API and wait for the process to finish.</p></li>
 </ol>
+<p><img alt="gcloud_tut_6" src="_images/gcloud_tut_6.png" /></p>
+<ol class="arabic simple" start="9">
+<li><p>When you see the green confirmation box, you have sucessfully registered a Google Cloud Project and can continue to use MATILDA-Online.</p></li>
+</ol>
+<p><img alt="gcloud_tut_7" src="_images/gcloud_tut_7.png" /></p>
+<p><a id="gee-auth"></a></p>
 </section>
 <section id="authorize-access-for-google-earth-engine">
 <h2>Authorize access for Google Earth Engine<a class="headerlink" href="#authorize-access-for-google-earth-engine" title="Link to this heading">#</a></h2>
+<div class="alert alert-block alert-info">
+    <b>Note:</b> If you run into any problems regarding authorization, please try the procedure in a <b>private browser tab</b> before contacting us.
+</div>
+<p>The Notebooks that use GEE (1-3) include a cell for initialization and authentification similar to the one below. If it is the first time the GEE API is initialized, a hyperlink will be generated and (if your browser allows) opened in a pop-up window. <em>(If there is no pop-up, just copy-paste the url in a browser tab.)</em></p>
+<p><img alt="auth_link" src="_images/auth_link.png" /></p>
+<p>This brings you to a GEE log-in page. There you need to …</p>
 <ol class="arabic simple">
-<li><p>Choose your account and project and click on <em>GENERATE TOKEN.</em></p></li>
+<li><p>Choose your account and project and click on <em>GENERATE TOKEN</em>. Make sure to <strong>choose the correct combination of account and project</strong> since Google is very strict in terms of account roles and permissions.</p></li>
 </ol>
 <p><img alt="enter image description here" src="_images/nb0_gee_token_1.png" /></p>
 <ol class="arabic simple" start="2">
@@ -506,7 +525,7 @@ Click on <em>Cloud Terms of Services</em>. You will be redirected to your Google
 </section>
 <section id="the-config-ini-file">
 <h2>The <em>config.ini</em> file<a class="headerlink" href="#the-config-ini-file" title="Link to this heading">#</a></h2>
-<p>This file contains a list of essential information for the workflow and allows customization. If you want to try MATILDA-Online with the sample dataset, you only need to edit the entry <code class="docutils literal notranslate"><span class="pre">CLOUD_PROJECT</span></code> and change it to your projects name from <a href="#step-5">Step 5</a>.  If you want to use your own data, replace the file with the discharge observation in the <code class="docutils literal notranslate"><span class="pre">input/</span></code> folder and adapt the reference coordinates accordingly.</p>
+<p>This file contains a list of essential information for the workflow and allows customization. If you want to try MATILDA-Online with the example dataset, you only need to edit the entry <code class="docutils literal notranslate"><span class="pre">CLOUD_PROJECT</span></code> and change it to your projects name from <a href="#step-5">Step 5</a>.  If you want to use your own data, replace the file with the discharge observation in the <code class="docutils literal notranslate"><span class="pre">input/</span></code> folder and adapt the reference coordinates accordingly.</p>
 <ol class="arabic simple">
 <li><p>The first section <code class="docutils literal notranslate"><span class="pre">[FILE_SETTINGS]</span></code> allows you to <strong>edit paths and file names for in- and outputs</strong>. This can especially be useful if you model multiple catchments in the same copy of the repository.</p></li>
 <li><p>In the <code class="docutils literal notranslate"><span class="pre">[CONFIG]</span></code> section you can …</p>
@@ -615,7 +634,7 @@ By Phillip Schuster
 
   <p class="copyright">
     
-      © Copyright 2025.
+      © Copyright Phillip Schuster 2026.
       <br/>
     
   </p>

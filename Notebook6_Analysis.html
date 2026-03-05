@@ -28,11 +28,11 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -42,7 +42,7 @@
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
@@ -153,8 +153,8 @@
       
     
     
-    <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-light" alt="MATILDA - Home"/>
-    <script>document.write(`<img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
+    <img src="_static/MATILDA_Logo_processes.png" class="logo__image only-light" alt="MATILDA - Home"/>
+    <script>document.write(`<img src="_static/MATILDA_Logo_processes.png" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
   
   
 </a></div>
@@ -444,15 +444,15 @@ document.write(`
 <h2>Custom dataframes<a class="headerlink" href="#custom-dataframes" title="Link to this heading">#</a></h2>
 <p>First, we read our paths from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> again and use some helper functions to convert our stored MATILDA output back into a dictionary.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">pickle_to_dict</span><span class="p">,</span> <span class="n">parquet_to_dict</span><span class="p">,</span><span class="n">read_yaml</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">configparser</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">pickle_to_dict</span><span class="p">,</span> <span class="n">parquet_to_dict</span><span class="p">,</span><span class="n">read_yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
 
 <span class="c1"># read output directory from config.ini file</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
@@ -488,14 +488,14 @@ Done!
 <p>At the moment, the structure of the ensemble output is as follows:</p>
 <p>To analyze all projections of a single variable, we need to rearrange the data. The <code class="docutils literal notranslate"><span class="pre">custom_df_matilda()</span></code> function returns a dataframe with all ensemble members for a given variable and scenario resampled to a desired frequency, e.g. <strong>the total annual runoff under SSP 2</strong>.</p>
 <div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">custom_df_matilda</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">custom_df_matilda</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="c1"># Application example:</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total Annual Runoff Projections across Ensemble Members:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -561,13 +561,13 @@ TIMESTAMP
 <p><a class="reference external" href="https://miro.medium.com/max/3840/1*qSCzTfliGMCcPfIQcGIAJw.jpeg"><img src="https://miro.medium.com/max/3840/1*qSCzTfliGMCcPfIQcGIAJw.jpeg" width="70%"/></a></p>
 <p>© <em><a class="reference external" href="https://medium.com/design-ibm/who-needs-backup-dancers-when-you-can-have-confidence-intervals-485f9464c06f">Stefanie Owens &#64; Medium.com</a></em></p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">confidence_interval</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">confidence_interval</span>
 
 <span class="n">confidence_interval</span> <span class="o">=</span> <span class="n">confidence_interval</span><span class="p">(</span><span class="n">matilda_SSP2</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">95% Confidence Intervals for Total Annual Runoff Projections:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -600,13 +600,13 @@ TIMESTAMP
 </div>
 <p>We are going to use the <code class="docutils literal notranslate"><span class="pre">plotly</span></code> library again to create interactive plots. For now, let’s plot <em>total discharge</em> over all ensemble members. You can change the variables and resampling frequency in the example at will.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">plot_ci_matilda</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_ci_matilda</span>
 
 <span class="c1"># Application example</span>
 <span class="n">plot_ci_matilda</span><span class="p">(</span><span class="s1">&#39;total_runoff&#39;</span><span class="p">,</span><span class="n">dic</span><span class="o">=</span><span class="n">matilda_scenarios</span><span class="p">,</span> <span class="n">resample_freq</span><span class="o">=</span><span class="s1">&#39;YE&#39;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -622,16 +622,16 @@ TIMESTAMP
 <h2>Interactive plotting application<a class="headerlink" href="#interactive-plotting-application" title="Link to this heading">#</a></h2>
 <p>To make the full dataset more accessible, we can integrate these figures into an <strong>interactive application</strong> using <a class="reference external" href="https://dash.plotly.com/"><code class="docutils literal notranslate"><span class="pre">ploty.Dash</span></code></a>. This launches a <code class="docutils literal notranslate"><span class="pre">Dash</span></code> server that updates the figures as you select variables and frequencies in the <strong>dropdown menus</strong>. To compare time series, you can align multiple figures in the same application. The demo application aligns four figures showing <em>total runoff, total precipitation</em>, <em>runoff_from_glaciers</em>, and <em>glacier area</em> by default directly in the output cell. If you want to display the complete application in a separate Jupyter tab, set <code class="docutils literal notranslate"><span class="pre">display_mode='tab'</span></code>.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">adjust_jupyter_config</span>
-<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">Dash</span>
-<span class="kn">from</span> <span class="nn">jupyter_server</span> <span class="kn">import</span> <span class="n">serverapp</span>
-<span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">matilda_dash</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">adjust_jupyter_config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dash</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jupyter_server</span><span class="w"> </span><span class="kn">import</span> <span class="n">serverapp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">matilda_dash</span>
 
 <span class="c1"># retrieve server information to find out whether it&#39;s running locally or on mybinder.org server</span>
 <span class="c1">#adjust_jupyter_config()</span>
@@ -656,7 +656,8 @@ TIMESTAMP
 </div>
 <!-- <img src="dashboard_1_output.gif" width="1050" loop autoplay> -->
 <figure class="align-default">
-<a class="reference internal image-reference" href="_images/dashboard_1_output.gif"><img alt="_images/dashboard_1_output.gif" src="_images/dashboard_1_output.gif" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="_images/dashboard_1_output.gif"><img alt="_images/dashboard_1_output.gif" src="_images/dashboard_1_output.gif" style="width: 100%;" />
+</a>
 </figure>
 </section>
 <section id="climate-change-impact-analysis">
@@ -678,15 +679,15 @@ TIMESTAMP
 </ul>
 <p>For details on these metrics check the <a class="reference internal" href="#tools/indicators.py"><span class="xref myst">source code</span></a>.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">dict_to_pickle</span><span class="p">,</span> <span class="n">dict_to_parquet</span>
-<span class="kn">from</span> <span class="nn">tools.indicators</span> <span class="kn">import</span> <span class="n">calculate_indicators</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">dict_to_pickle</span><span class="p">,</span> <span class="n">dict_to_parquet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tools.indicators</span><span class="w"> </span><span class="kn">import</span> <span class="n">calculate_indicators</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Calculating Climate Change Indicators...&quot;</span><span class="p">)</span>
 <span class="n">matilda_indicators</span> <span class="o">=</span> <span class="n">calculate_indicators</span><span class="p">(</span><span class="n">matilda_scenarios</span><span class="p">)</span>
@@ -718,15 +719,15 @@ SSP5: 100%|██████████| 31/31 [00:09&lt;00:00,  3.13it/s]
 </div>
 <p>Now, we create another <strong>interactive application</strong> to visualize the calculated indicators.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">matilda_indicators_dash</span>
-<span class="kn">from</span> <span class="nn">dash</span> <span class="kn">import</span> <span class="n">Dash</span>
-<span class="kn">from</span> <span class="nn">jupyter_server</span> <span class="kn">import</span> <span class="n">serverapp</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">matilda_indicators_dash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dash</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dash</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jupyter_server</span><span class="w"> </span><span class="kn">import</span> <span class="n">serverapp</span>
 
 
 <span class="n">app2</span> <span class="o">=</span> <span class="n">Dash</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -749,7 +750,8 @@ SSP5: 100%|██████████| 31/31 [00:09&lt;00:00,  3.13it/s]
 </div>
 <!-- <img src="dashboard_2_output.gif" width="1050" loop autoplay> -->
 <figure class="align-default">
-<a class="reference internal image-reference" href="_images/dashboard_2_output.gif"><img alt="_images/dashboard_2_output.gif" src="_images/dashboard_2_output.gif" style="width: 100%;" /></a>
+<a class="reference internal image-reference" href="_images/dashboard_2_output.gif"><img alt="_images/dashboard_2_output.gif" src="_images/dashboard_2_output.gif" style="width: 100%;" />
+</a>
 </figure>
 </section>
 <section id="matilda-summary">
@@ -757,13 +759,13 @@ SSP5: 100%|██████████| 31/31 [00:09&lt;00:00,  3.13it/s]
 <p>While interactive applications are great to explore, they require a lot of data and a running server. Therefore, we create two <b>summary figures</b> to illustrate the most important results in a compact way.</p>
 <p>The first figure shows the forcing data, the glacier area and all components of the water balance over the course of the 21st century.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">MatildaSummary</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatildaSummary</span>
 
 <span class="n">summary</span> <span class="o">=</span> <span class="n">MatildaSummary</span><span class="p">(</span><span class="n">dir_input</span><span class="p">,</span> <span class="n">dir_output</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
 <span class="n">summary</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
@@ -804,13 +806,13 @@ Figure saved to output//figures/summary_ensemble.png
 </div>
 <p>The second figure summarizes the ensemble means of the key variables in <strong>two-dimensional grids</strong>. This allows to easily identify <strong>changes in the seasonal cycle</strong> over the years.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">plot_annual_cycles</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_annual_cycles</span>
 
 <span class="n">plot_annual_cycles</span><span class="p">(</span><span class="n">matilda_scenarios</span><span class="p">,</span> <span class="n">save_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">/figures/summary_gridplots.png&quot;</span><span class="p">)</span>
 </pre></div>
@@ -839,7 +841,8 @@ Figure saved to output//figures/summary_gridplots.png
 <h2>Finish line<a class="headerlink" href="#finish-line" title="Link to this heading">#</a></h2>
 <p><strong>Congratulations</strong>, you made it till the end! We reward you with a <strong>virtual swim in the beautiful Issyk-Kul</strong>!</p>
 <figure class="align-default">
-<a class="reference internal image-reference" href="_images/issykul_swim.JPG"><img alt="_images/issykul_swim.JPG" src="_images/issykul_swim.JPG" style="width: 70%;" /></a>
+<a class="reference internal image-reference" href="_images/issykul_swim.JPG"><img alt="_images/issykul_swim.JPG" src="_images/issykul_swim.JPG" style="width: 70%;" />
+</a>
 </figure>
 <p>© <em>Phillip Schuster</em></p>
 <p>You can now explore your results, go back to refine your calibration or close this book for good.</p>
@@ -933,7 +936,7 @@ By Phillip Schuster
 
   <p class="copyright">
     
-      © Copyright 2025.
+      © Copyright Phillip Schuster 2026.
       <br/>
     
   </p>

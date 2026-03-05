@@ -28,11 +28,11 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -42,7 +42,7 @@
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=9eb32ce0"></script>
-    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="_static/copybutton.js?v=f281be69"></script>
@@ -156,8 +156,8 @@
       
     
     
-    <img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-light" alt="MATILDA - Home"/>
-    <script>document.write(`<img src="https://www.hu-berlin.de/++resource++humboldt.logo.Logo.svg" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
+    <img src="_static/MATILDA_Logo_processes.png" class="logo__image only-light" alt="MATILDA - Home"/>
+    <script>document.write(`<img src="_static/MATILDA_Logo_processes.png" class="logo__image only-dark" alt="MATILDA - Home"/>`);</script>
   
   
 </a></div>
@@ -453,15 +453,15 @@ document.write(`
 <p>The framework for Modeling water resources in glacierized catchments [MATILDA] (<a class="github reference external" href="https://github.com/cryotools/matilda">cryotools/matilda</a>) has been developed for use in this workflow and is published as a Python package. It is based on the widely used <a class="reference external" href="https://www.cabdirect.org/cabdirect/abstract/19961904773">HBV hydrological model</a>, complemented by a temperature-index glacier melt model based on the code of <a class="reference external" href="https://zenodo.org/record/3467639">Seguinot (2019)</a>. Glacier evolution over time is simulated using a modified version of the Δ<em>h</em> approach following <a class="reference external" href="https://doi.org/10.5194/hess-22-2211-2018">Seibert et. al. (2018)</a>.</p>
 <p>As before we start by loading configurations such as the calibration period and some helper functions to work with  <code class="docutils literal notranslate"><span class="pre">yaml</span></code> files.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">update_yaml</span><span class="p">,</span> <span class="n">read_yaml</span><span class="p">,</span> <span class="n">write_yaml</span>
-<span class="kn">import</span> <span class="nn">configparser</span>
-<span class="kn">import</span> <span class="nn">ast</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_yaml</span><span class="p">,</span> <span class="n">read_yaml</span><span class="p">,</span> <span class="n">write_yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 
 <span class="c1"># read local config.ini file</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
@@ -486,13 +486,13 @@ document.write(`
 </div>
 <p>Since HBV is a so-called ‘bucket’ model and all the buckets are empty in the first place we need to fill them in a setup period of minimum one year. If not specified, the first two years of the <code class="docutils literal notranslate"><span class="pre">DATE_RANGE</span></code> in the <code class="docutils literal notranslate"><span class="pre">config</span></code> are used for set up.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="n">length_of_setup_period</span> <span class="o">=</span> <span class="mi">2</span>
 
@@ -521,10 +521,10 @@ sim_end: 2020-12-31
 <p>Many MATILDA parameters have been calculated in previous notebooks and stored in <code class="docutils literal notranslate"><span class="pre">settings.yaml</span></code>. We can easily add the modeling periods using a helper function. The calculated glacier profile from Notebook 1 can be imported as a <code class="docutils literal notranslate"><span class="pre">pandas</span> <span class="pre">DataFrame</span></code> and added to the <code class="docutils literal notranslate"><span class="pre">settings</span></code> dictionary as well.</p>
 <p>Finally, we will also add some optional settings that control the aggregation frequency of the outputs, the choice of graphical outputs, and more.</p>
 <div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">update_yaml</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;settings.yml&#39;</span><span class="p">,</span> <span class="n">dates</span><span class="p">)</span>
@@ -588,10 +588,10 @@ glacier_profile:      Elevation      Area          WE  EleZone
 <h2>Run MATILDA with default parameters<a class="headerlink" href="#run-matilda-with-default-parameters" title="Link to this heading">#</a></h2>
 <p>We will force MATILDA with the pre-processed ERA5-Land data from Notebook 2. Although MATILDA can run without calibration on observations, the results would have extreme uncertainties. Therefore, we recommend to use at least discharge observations for your selected point to evaluate the simulations against. Here, we load discharge observations for your example catchment. As you can see, we have meteorological forcing data since 1979 and discharge data since 1982. However, most of the glacier datasets used start in 2000/2001 and glaciers are a significant part of the water balance. In its current version, MATILDA is not able to extrapolate glacier cover, so we will only calibrate the model using data from 2000 onwards.</p>
 <div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">era5</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;ERA5L.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="s1">&#39;temp&#39;</span><span class="p">,</span> <span class="s1">&#39;prec&#39;</span><span class="p">])</span>
@@ -797,13 +797,13 @@ glacier_profile:      Elevation      Area          WE  EleZone
 </div>
 <p>With all settings and input data in place, we can run MATILDA with <strong>default parameters</strong>.</p>
 <div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.core</span> <span class="kn">import</span> <span class="n">matilda_simulation</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matilda.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">matilda_simulation</span>
 
 <span class="n">output_matilda</span> <span class="o">=</span> <span class="n">matilda_simulation</span><span class="p">(</span><span class="n">era5</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
 </pre></div>
@@ -992,13 +992,13 @@ End of the MATILDA simulation
 <b>Note:</b> As all remote sensing estimates the used dataset has significant uncertainties. A comparison to other datasets and the impact on the modeling results are discussed in the associated publication. </div>
 <p>We pick all individual mass balance records that match the glacier IDs in our catchment and calculate the catchment-wide mean. In addition, we use the uncertainty estimate provided in the dataset to derive an uncertainty range.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="n">mass_balances</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">dir_input</span> <span class="o">+</span> <span class="s1">&#39;/hma_mb_20190215_0815_rmse.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RGIId&#39;</span><span class="p">,</span> <span class="s1">&#39;mb_mwea&#39;</span><span class="p">,</span> <span class="s1">&#39;mb_mwea_sigma&#39;</span><span class="p">])</span>
 <span class="n">ids</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;/RGI/Glaciers_in_catchment.csv&#39;</span><span class="p">)</span>
@@ -1027,10 +1027,10 @@ End of the MATILDA simulation
 Unfortunately, access to the dataset requires a (free) registration at <strong>NASA’s EarthData</strong> portal, which prevents a seamless integration. Also, the dataset consists of large files and requires some pre-processing that <strong>could not be done in a Jupyter Notebook</strong>. However, we provide you with the <code class="docutils literal notranslate"><span class="pre">SWEETR</span></code> tool, a <strong>fully automated workflow</strong> that you can run on your local computer to download, process, and aggregate the data. Please refer to the dedicated <a class="reference external" href="https://github.com/phiscu/hma_snow">Github repository</a> for further instructions.</p>
 <img src="images/mean_swe_example.png" alt="Mean_SWE" width="400"><p>When you run the <code class="docutils literal notranslate"><span class="pre">SWEETR</span></code> tool with your catchment outline, it returns cropped raster files as the one shown above and, more importantly, a <strong>timeseries of catchment-wide daily mean SWE</strong> from 1999 to 2016. Just replace the <code class="docutils literal notranslate"><span class="pre">input/swe.csv</span></code> file with your result. Now we can load the timeseries as a dataframe.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">swe</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_input</span><span class="si">}</span><span class="s1">/swe.csv&#39;</span><span class="p">)</span>
@@ -1041,10 +1041,10 @@ Unfortunately, access to the dataset requires a (free) registration at <strong>N
 </div>
 <p>Along with the cropped SWE rasters the <code class="docutils literal notranslate"><span class="pre">SWEETR</span></code> tool creates binary masks for seasonal- and non-seasonal snow. Due to its strong signal in remote sensing data, seasonal snow can be better detected leading to more robust SWE estimates. However, the non-seasonal snow largely agrees with the glacierized area. Therefore, we will calibrate the snow routine by comparing the SWE of the ice-free sub-catchment with the seasonal snow of the reanalysis. Since the latter has a coarse resolution of 500 m, the excluded catchment area is a bit larger than the RGI glacier outlines (in the example: 17.2% non-seasonal snow vs. 10.8% glacierized sub-catchment). Therefore, we use a scaling factor to account for this mismatch in the reference area.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">glac_ratio</span> <span class="o">=</span> <span class="n">settings</span><span class="p">[</span><span class="s1">&#39;area_glac&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">settings</span><span class="p">[</span><span class="s1">&#39;area_cat&#39;</span><span class="p">]</span>       <span class="c1"># read glacieriezed and total area from the settings</span>
@@ -1065,13 +1065,13 @@ Unfortunately, access to the dataset requires a (free) registration at <strong>N
 <p>The MATILDA framework provides an interface for <a class="reference external" href="https://github.com/thouska/spotpy/">SPOTPY</a>. Here we will use the <code class="docutils literal notranslate"><span class="pre">psample()</span></code> function to run MATILDA with the same settings as before but varying parameters. To do this, we will remove redundant <code class="docutils literal notranslate"><span class="pre">settings</span></code> and add some new ones specific to the function. Be sure to choose the number of repetitions carefully.</p>
 <div class="alert alert-block alert-info">
 <b>Note:</b> A latin hypercube sampling with only 5 samples does not actually make sense but the number is chosen for demonstration purposes. </div><div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">drop_keys</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">drop_keys</span>
 
 <span class="n">psample_settings</span> <span class="o">=</span> <span class="n">drop_keys</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;warn&#39;</span><span class="p">,</span> <span class="s1">&#39;plots&#39;</span><span class="p">,</span> <span class="s1">&#39;plot_type&#39;</span><span class="p">])</span>
 
@@ -1156,13 +1156,13 @@ parallel: False
 </div>
 <p>With these settings we can start <code class="docutils literal notranslate"><span class="pre">psample()</span></code> to run our model with various parameter combinations. The default parameter boundaries can be found in the MATILDA <a class="reference external" href="https://github.com/cryotools/matilda/tree/master?tab=readme-ov-file#parameter-list">parameter documentation</a>. If you want to narrow down the parameter space, you can do that using the following syntax. Here, we define custom ranges for the temperature lapse rate and the precipitation correction factor and run a short Latin Hypercube Sampling (LHS) for demonstration.</p>
 <div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.mspot_glacier</span> <span class="kn">import</span> <span class="n">psample</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matilda.mspot_glacier</span><span class="w"> </span><span class="kn">import</span> <span class="n">psample</span>
 
 <span class="n">lim_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lr_temp_lo&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.007</span><span class="p">,</span> <span class="s1">&#39;lr_temp_up&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.005</span><span class="p">,</span> <span class="s1">&#39;PCORR_lo&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;PCORR_up&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">}</span>
 
@@ -1219,10 +1219,10 @@ Run number 0 has the highest objectivefunction with: 0.4418
 </div>
 <p>In this example the function ran the model 5 times with different parameter sets and returned the one with the highest KGE score. It can be accessed from the results dictionary.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">best_parameterset</span> <span class="o">=</span> <span class="n">best_summary</span><span class="p">[</span><span class="s1">&#39;best_param&#39;</span><span class="p">]</span>
@@ -1257,10 +1257,10 @@ Run number 0 has the highest objectivefunction with: 0.4418
 <p>…with the latter set to default values. The results can then be filtered sequentially based on thresholds for <span class="math notranslate nohighlight">\(MAE_{smb}\)</span>, <span class="math notranslate nohighlight">\(KGE_{swe}\)</span>, and subsequently <span class="math notranslate nohighlight">\(KGE_{r}\)</span>. <code class="docutils literal notranslate"><span class="pre">PCORR</span></code> was set to the mean value of the posterior distribution for subsequent calibration steps.</p>
 <p>First, we edit the settings to write results to a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file and run random sampling for the parameter subset governing the runoff amount while fixing all other parameters.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Edit the settings to write results in a .csv file</span>
@@ -1332,10 +1332,10 @@ Run number 2 has the highest objectivefunction with: 0.348
 </div>
 <p>Next, we load the samples from the <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file and can apply appropriate filters to the data, if desired.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">step1_samples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">calib_step1.csv&quot;</span><span class="p">)</span>
@@ -1375,15 +1375,15 @@ Run number 2 has the highest objectivefunction with: 0.348
 <p>We then plot the posterior distributions for each parameter.</p>
 <div class="alert alert-block alert-info">
 <b>Note:</b> For very few samples they are likely to look very similar.</div><div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">matplotlib.ticker</span> <span class="kn">import</span> <span class="n">FuncFormatter</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.ticker</span><span class="w"> </span><span class="kn">import</span> <span class="n">FuncFormatter</span>
 
 <span class="c1"># Create a 2x4 matrix of subplots</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
@@ -1397,7 +1397,7 @@ Run number 2 has the highest objectivefunction with: 0.348
     <span class="n">axs</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Density&#39;</span><span class="p">)</span>
     <span class="n">axs</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">parameter</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">parameter</span> <span class="ow">in</span> <span class="p">[</span><span class="n">step1_samples</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">step1_samples</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">4</span><span class="p">]]:</span>
-        <span class="k">def</span> <span class="nf">format_ticks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">format_ticks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
             <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{:.0f}</span><span class="s1">e-4&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)</span>  <span class="c1"># Adjust multiplier here for desired scientific notation</span>
         <span class="n">axs</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">FuncFormatter</span><span class="p">(</span><span class="n">format_ticks</span><span class="p">))</span>
     <span class="c1"># Add vertical lines for mean, mean ± standard deviation</span>
@@ -1417,10 +1417,10 @@ Run number 2 has the highest objectivefunction with: 0.348
 </div>
 <p>Finally, we calculate the mean and standard deviation for each parameter and write the results to a table.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculate mean and standard deviation for each column</span>
@@ -1464,10 +1464,10 @@ CFMAX_rel   1.60841  0.21586
 <h3>Step 2: Snow routine calibration<a class="headerlink" href="#step-2-snow-routine-calibration" title="Link to this heading">#</a></h3>
 <p>Three of the remaining parameters control the snow routine: <code class="docutils literal notranslate"><span class="pre">TT_snow</span></code>, <code class="docutils literal notranslate"><span class="pre">TT_diff</span></code>, and <code class="docutils literal notranslate"><span class="pre">CFMAX_snow</span></code>. These parameters affect how snow accumulation and melting are simulated, making them critical for high mountain catchments. We repeat the procedure of step 1, but additionally fix all previously calibrated parameters. The results can then be filtered based on <strong><span class="math notranslate nohighlight">\(KGE_{swe}\)</span></strong>. As before, the selected snow routine parameters are set to the mean of the posterior distribution for use in subsequent calibration steps.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># New database name</span>
@@ -1596,10 +1596,10 @@ CFMAX_snow  5.84661  2.78856
 <p>Since we already calibrated the snow routine, there is only one parameter left that controls glacier evolution: the ice melt rate <code class="docutils literal notranslate"><span class="pre">CFMAX_ice</span></code>. Since the melt rate for ice is higher than the one for snow due to differences in albedo, the parameter is calculated from the snow melt rate using a factor <code class="docutils literal notranslate"><span class="pre">CFMAX_rel</span></code>. We will therefore calibrate this factor instead of <code class="docutils literal notranslate"><span class="pre">CFMAX_ice</span></code> directly.</p>
 <p>As before, we draw stratified random samples using the LHS algorithm and filter for a mean absolute error (<span class="math notranslate nohighlight">\(\text{MAE}\)</span>) threshold around the target SMB. To account for the large uncertainties in the remote sensing estimates for the SMB, we don’t fix the ice melt rate but constrain it to a range that lies with the uncertainty band of the dataset.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># New database name</span>
@@ -1690,13 +1690,13 @@ CFMAX_rel upper bound: 1.858667
 <p>In the last step we calibrate the remaining 11 parameters controlling the soil, response, and routing routines all at once. Since this leads to a large parameter space, we apply the Differential Evolution Markov Chain algorithm (DEMCz). This technique is more efficient at finding global optima than other Monte Carlo Markov Chain (MCMC) algorithms and does not require prior distribution information.</p>
 <p>However, the algorithm is sensitive to informal likelihood functions such as the <span class="math notranslate nohighlight">\(\text{KGE}\)</span>. To mitigate this problem, we use an adapted version based on the gamma-distribution (<code class="docutils literal notranslate"><span class="pre">loglike_kge</span></code>).</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.mspot_glacier</span> <span class="kn">import</span> <span class="n">loglike_kge</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matilda.mspot_glacier</span><span class="w"> </span><span class="kn">import</span> <span class="n">loglike_kge</span>
 
 <span class="c1"># New database name</span>
 <span class="n">psample_settings</span><span class="p">[</span><span class="s1">&#39;dbname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;calib_step4&#39;</span>
@@ -1806,10 +1806,10 @@ Run number 22 has the highest objectivefunction with: 0.6913
 </div>
 <p>Again, we can apply various criteria to filter the samples, e.g. for the glacier mass balance (<span class="math notranslate nohighlight">\(MAE_{smb}\)</span>) and runff (<span class="math notranslate nohighlight">\(KGE_{r}\)</span>).</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Reading the samples from file</span>
@@ -1827,10 +1827,10 @@ Run number 22 has the highest objectivefunction with: 0.6913
 </div>
 <p>We can now plot the posterior distribution of all 11 parameters and the calibration variables.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a 3x5 matrix of subplots</span>
@@ -1857,13 +1857,13 @@ Run number 22 has the highest objectivefunction with: 0.6913
 </div>
 <p>Depending on your sample size and filter criteria, there might still be a large number of possible parameter sets. To identify the best sample, you can either apply further criteria (e.g. seasonal <span class="math notranslate nohighlight">\(\text{KGE}\)</span> scores) or use visual methods.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
 <span class="n">custom_text</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Index: </span><span class="si">{</span><span class="n">index</span><span class="si">}</span><span class="s1">&lt;br&gt;KGE_Runoff: </span><span class="si">{</span><span class="n">KGE_Runoff</span><span class="si">}</span><span class="s1">&lt;br&gt;MAE_SMB: </span><span class="si">{</span><span class="n">MAE_SMB</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">KGE_Runoff</span><span class="p">,</span> <span class="n">MAE_SMB</span><span class="p">)</span> <span class="ow">in</span>
                <span class="nb">zip</span><span class="p">(</span><span class="n">step4_samples</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">step4_samples</span><span class="p">[</span><span class="s1">&#39;KGE_Runoff&#39;</span><span class="p">],</span> <span class="n">step4_samples</span><span class="p">[</span><span class="s1">&#39;MAE_SMB&#39;</span><span class="p">])]</span>
 
@@ -1895,10 +1895,10 @@ Run number 22 has the highest objectivefunction with: 0.6913
 </div>
 <p>When you identified the best run, you can get the respective parameter set using the index number (e.g run number 10).</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Select ID of your best run</span>
@@ -1931,10 +1931,10 @@ Run number 22 has the highest objectivefunction with: 0.6913
 <p>The following parameter set was computed applying the mentioned calibration strategy on an HPC cluster with large sample sizes for every step.
 <a id="param"></a></p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">param</span> <span class="o">=</span> <span class="p">{</span>
@@ -1998,10 +1998,10 @@ AG: 0.54930484
 </div>
 <p>Properly calibrated, the model shows a much better results.</p>
 <div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_matilda</span> <span class="o">=</span> <span class="n">matilda_simulation</span><span class="p">(</span><span class="n">era5</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">,</span> <span class="o">**</span><span class="n">param</span><span class="p">)</span>
@@ -2168,10 +2168,10 @@ End of the MATILDA simulation
 </div>
 <p>In addition to the standard plots we can explore the results interactive <code class="docutils literal notranslate"><span class="pre">ploty</span></code> plots. Go ahead and zoom as you like or select/deselect individual curves.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_matilda</span><span class="p">[</span><span class="mi">9</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -2184,10 +2184,10 @@ End of the MATILDA simulation
 </div>
 <p>The same works for the long-term seasonal cycle.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_matilda</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -2204,13 +2204,13 @@ End of the MATILDA simulation
 <p>To reduce the computation time of the calibration procedure, we need to reduce the number of parameters to be optimized. Therefore, we will perform a global sensitivity analysis to identify the most important parameters and set the others to default values. The algorithm of choice will be the <a class="reference external" href="https://www.tandfonline.com/doi/abs/10.1080/00401706.1999.10485594">Fourier Amplitude Sensitivity Test (FAST)</a> available through the <a class="reference external" href="https://github.com/thouska/spotpy/blob/master/src/spotpy/algorithms/fast.py">SPOTPY</a> library. As before, we will show the general procedure with a few iterations, but display results from extensive runs on a HPC. You can use the results as a guide for your parameter choices, but keep in mind that they are highly correlated with your catchment properties, such as elevation range and glacier coverage.</p>
 <p>First, we calculate the required number of iterations using a formula from <a class="reference external" href="https://www.informs-sim.org/wsc12papers/includes/files/con308.pdf">Henkel et. al. 2012</a>. We choose the SPOTPY default frequency step of 2 and set the interference factor to a maximum of 4, since we assume a high intercorrelation of the model parameters. The total number of parameters in MATILDA is 21.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">fast_iter</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">interf</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">freqst</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fast_iter</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">interf</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">freqst</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Calculates the number of parameter iterations needed for parameterization and sensitivity analysis using FAST.</span>
 <span class="sd">    Parameters</span>
@@ -2242,13 +2242,13 @@ End of the MATILDA simulation
 <p>That is a lot of iterations! Running this routine on a single core would take about two days, but can be sped up significantly with each additional core. The setup would look exactly like the parameter optimization before.</p>
 <div class="alert alert-block alert-info">
 <b>Note:</b> No matter what number of iterations you define, SPOTPY will run $N*k$ times, where $k$ is the number of model parameters. So even if we set rep=10, the algorithm will run at least 21 times.</div><div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.mspot_glacier</span> <span class="kn">import</span> <span class="n">psample</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matilda.mspot_glacier</span><span class="w"> </span><span class="kn">import</span> <span class="n">psample</span>
 
 <span class="n">fast_settings</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rep&#39;</span><span class="p">:</span> <span class="mi">52437</span><span class="p">,</span>                              <span class="c1"># Choose wisely before running</span>
                  <span class="s1">&#39;target_mb&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
@@ -2328,13 +2328,13 @@ parallel: False
 </div>
 <p>We ran <em>FAST</em>s for the example catchment an an HPC with the full number of iterations required. The results are saved in <em>CSV</em> files. We can use the <code class="docutils literal notranslate"><span class="pre">spotpy.analyser</span></code> library to create easy-to-read data frames from the databases. The summary shows the first (<code class="docutils literal notranslate"><span class="pre">S1</span></code>) and the total order sensitivity index (<code class="docutils literal notranslate"><span class="pre">ST</span></code>) for each parameter. <code class="docutils literal notranslate"><span class="pre">S1</span></code> refers to the variance of the model output explained by the parameter, holding all other parameters constant. The <code class="docutils literal notranslate"><span class="pre">ST</span></code> takes into account the interaction of the parameters and is therefore a good measure of the impact of individual parameters on the model output.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.helpers</span> <span class="kn">import</span> <span class="n">get_si</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_si</span>
 
 <span class="n">display</span><span class="p">(</span><span class="n">get_si</span><span class="p">(</span><span class="n">dir_input</span> <span class="o">+</span> <span class="s1">&#39;FAST/&#39;</span> <span class="o">+</span> <span class="s1">&#39;example_fast_nolim.csv&#39;</span><span class="p">))</span>
 </pre></div>
@@ -2481,10 +2481,10 @@ parallel: False
 </div>
 <p>If you have additional information on certain parameters, limiting their bounds can have a large impact on sensitivity. For our example catchment, field observations showed that the temperature lapse rate and precipitation correction were unlikely to exceed a certain range, so we limited the parameter space for both and ran a <em>FAST</em> again.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lim_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;lr_temp_lo&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.007</span><span class="p">,</span> <span class="s1">&#39;lr_temp_up&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.005</span><span class="p">,</span> <span class="s1">&#39;PCORR_lo&#39;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s1">&#39;PCORR_up&#39;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">}</span>
@@ -2496,13 +2496,13 @@ parallel: False
 </div>
 <p>To see the effect of parameter restrictions on sensitivity, we can plot the indices of both runs. Feel free to explore further by adding more <em>FAST</em> outputs to the plot function.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">tools.plots</span> <span class="kn">import</span> <span class="n">plot_sensitivity_bars</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_sensitivity_bars</span>
 
 <span class="n">step1</span> <span class="o">=</span> <span class="n">dir_input</span> <span class="o">+</span> <span class="s1">&#39;FAST/&#39;</span> <span class="o">+</span> <span class="s1">&#39;example_fast_nolim.csv&#39;</span>
 <span class="n">step2</span> <span class="o">=</span> <span class="n">dir_input</span> <span class="o">+</span> <span class="s1">&#39;FAST/&#39;</span> <span class="o">+</span> <span class="s1">&#39;era5_ipynb_fast_step1.csv&#39;</span>
@@ -2517,10 +2517,10 @@ parallel: False
 </div>
 <p>From this figure, we can easily identify the most important parameters. Depending on your desired accuracy and computational resources, you can choose a sensitivity threshold. Let’s say we want to fix all parameters with a sensitivity index below 0.1. For our example, this will reduce the calibration parameters to 7.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">si_df</span> <span class="o">=</span> <span class="n">get_si</span><span class="p">(</span><span class="n">step2</span><span class="p">)</span>
@@ -2547,10 +2547,10 @@ SFCF
 </div>
 <p>To give you an idea how much this procedure can reduce calibration time, we run the <code class="docutils literal notranslate"><span class="pre">fast_iter()</span></code> function again.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Needed number of iterations for FAST with all parameters: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">fast_iter</span><span class="p">(</span><span class="mi">21</span><span class="p">)))</span>
@@ -2569,13 +2569,13 @@ Needed number of iterations for FAST with the 7 most sensitive parameters: 4935
 <p>For a single core this would roughly translate into a reduction from 44h to 4h.</p>
 <p>To run the calibration with the reduced parameter space, we simply need to define values for the fixed parameters and use a helper function to translate them into boundary arguments. Here we simply use the values from our last <em>SPOTPY</em> run (<code class="docutils literal notranslate"><span class="pre">param</span></code>).</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">matilda.mspot_glacier</span> <span class="kn">import</span> <span class="n">dict2bounds</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matilda.mspot_glacier</span><span class="w"> </span><span class="kn">import</span> <span class="n">dict2bounds</span>
 
 <span class="n">fixed_param</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">param</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sensitive</span><span class="p">}</span>
 <span class="n">fixed_param_bounds</span> <span class="o">=</span> <span class="n">dict2bounds</span><span class="p">(</span><span class="n">fixed_param</span><span class="p">)</span>
@@ -2625,10 +2625,10 @@ AG_up: 0.54930484
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">psample()</span></code> setup is then as simple as before.</p>
 <div class="cell tag_output_scroll tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_settings</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rep&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>                             <span class="c1"># Number of model runs. For advice check the documentation of the algorithms.</span>
@@ -2703,10 +2703,10 @@ Run number 3 has the highest objectivefunction with: 0.3747
 <b>Note:</b> The number of iterations required depends on the selected algorithm and the number of free parameters. To choose the correct setting, consult the <a href='https://spotpy.readthedocs.io/en/latest/Algorithm_guide/'>SPOTPY documentation</a> and the original literature for each algorithm.</div><p>Now, we save the best parameter set for use in the next notebook. The set is stored in the <code class="docutils literal notranslate"><span class="pre">best_summary</span></code> variable.</p>
 <p><strong>Note:</strong> In our example we will skip this step and use the <a class="reference internal" href="#param"><span class="xref myst">result from the calibration on an HPC cluster</span></a>.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># param = best_summary[&#39;best_param&#39;]</span>
@@ -2717,10 +2717,10 @@ Run number 3 has the highest objectivefunction with: 0.3747
 </div>
 <p>Finally, we store the parameter set in a <code class="docutils literal notranslate"><span class="pre">.yml</span></code> file.</p>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">write_yaml</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;parameters.yml&#39;</span><span class="p">)</span>
@@ -2737,13 +2737,13 @@ Parameter set stored in &#39;output/parameters.yml&#39;
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">shutil</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
 <span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
     <span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
@@ -2760,10 +2760,10 @@ Parameter set stored in &#39;output/parameters.yml&#39;
 </div>
 </div>
 <div class="cell tag_hide-input docutils container">
-<details class="hide above-input">
+<details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
-<span class="expanded">Hide code cell source</span>
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">reset</span> -f
@@ -2879,7 +2879,7 @@ By Phillip Schuster
 
   <p class="copyright">
     
-      © Copyright 2025.
+      © Copyright Phillip Schuster 2026.
       <br/>
     
   </p>
