@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction &#8212; MATILDA</title>
+    <title>Welcome to MATILDA-Online &#8212; MATILDA</title>
   
   
   
@@ -179,7 +179,7 @@
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1 current active">
                 <a class="reference internal" href="#">
-                    Introduction
+                    Welcome to MATILDA-Online
                 </a>
             </li>
         </ul>
@@ -406,7 +406,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction</h1>
+    <h1>Welcome to MATILDA-Online</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -416,9 +416,22 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signing-up-for-google-earth-engine-gee">Signing up for Google Earth Engine (GEE)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorize-access-for-google-earth-engine">Authorize access for Google Earth Engine</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-config-ini-file">The <em>config.ini</em> file</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-this-works">🧭 How this works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-launch-the-tool">🚀 How to launch the tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-need-before-continuing">✅ What you need before continuing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#by-the-end-of-this-notebook-you-will-have">📝 By the end of this Notebook you will have …</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#google-cloud-project-where-to-start">☁️ Google Cloud project: where to start</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-already-used-google-earth-engine-or-another-google-cloud-service">If you already used Google Earth Engine or another Google Cloud service </a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-are-new-to-these-services">If you are new to these services</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signing-up-for-google-earth-engine-gee">🌏 Signing up for Google Earth Engine (GEE)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorize-access-for-google-earth-engine">🔑 Authorize access for Google Earth Engine</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#find-your-project-id">Find your project ID</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-your-project-id-in-the-notebooks">Use your project ID in the notebooks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-config-ini-file">⚙️ The <em>config.ini</em> file</a></li>
 </ul>
             </nav>
         </div>
@@ -430,30 +443,85 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
-<p>Welcome to <strong>MATILDA-Online</strong>, the Python-based workflow for <strong>Modeling Water Resources in Glacierized Catchments</strong>! This book describes the comprehensive toolkit in detail and guides you step-by-step from data acquisition to analysis of climate change impacts on the selected catchment. Designed with flexibility and accessibility in mind, MATILDA integrates robust scientific models, public data sources, and user-friendly tools to make sophisticated glacio-hydrological modeling accessible to researchers, practitioners, and students alike.</p>
-<p>The workflow is divided into a series of interactive notebooks, each focused on a specific component of the modeling process. These notebooks streamline complex tasks such as catchment delineation, data processing, model calibration, and climate scenario analysis, ensuring clarity and reproducibility at each step:</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="welcome-to-matilda-online">
+<h1>Welcome to MATILDA-Online<a class="headerlink" href="#welcome-to-matilda-online" title="Link to this heading">#</a></h1>
+<p>MATILDA is a <strong>notebook-based workflow</strong> for modeling water resources in glacierized catchments.</p>
+<hr class="docutils" />
+<section id="how-this-works">
+<h2>🧭 How this works<a class="headerlink" href="#how-this-works" title="Link to this heading">#</a></h2>
+<p>MATILDA is a series of <strong>Jupyter notebooks</strong>. They contain a mix of executable code and descriptive text. There is one notebook for each step of the modeling workflow:</p>
 <ul class="simple">
-<li><p><strong><a class="reference internal" href="Notebook1_Catchment_delineation.html"><span class="std std-doc">Notebook 1 - Catchment Delineation</span></a>:</strong> Delineate your catchment and retrieve static geospatial data, including digital elevation models, glacier outlines, and ice thickness distributions.</p></li>
-<li><p><strong><a class="reference internal" href="Notebook2_Forcing_data.html"><span class="std std-doc">Notebook 2 - Forcing Data</span></a>:</strong> Acquire and process ERA5-Land reanalysis data, preparing inputs for glacio-hydrological model calibration.</p></li>
-<li><p><strong><a class="reference internal" href="Notebook3_CMIP6.html"><span class="std std-doc">Notebook 3 - CMIP6 Climate Data</span></a>:</strong> Download and process historical and future climate data from the Coupled Model Intercomparison Project Phase 6 (CMIP6) for two emission scenarios.</p></li>
-<li><p><strong><a class="reference internal" href="Notebook4_MATILDA.html"><span class="std std-doc">Notebook 4 - MATILDA Model</span></a>:</strong> Run the MATILDA model with default parameters and calibrate it based on mutiple objectives.</p></li>
-<li><p><strong><a class="reference internal" href="Notebook5_MATILDA_scenarios.html"><span class="std std-doc">Notebook 5 - Scenario Simulations</span></a>:</strong> Apply your calibrated parameter set to run the model over all CMIP6 ensemble members for robust scenario-based analysis.</p></li>
-<li><p><strong><a class="reference internal" href="Notebook6_Analysis.html"><span class="std std-doc">Notebook 6 - Result Analysis &amp; Impact Assessment</span></a>:</strong> Visualize model output in interactive plots across ensemble simulations, extract key meteorological and hydrological indicators of of climate change impacts, and create a visual summary.</p></li>
+<li><p><strong>Notebook 1</strong> — Catchment delineation and static data acquisition</p></li>
+<li><p><strong>Notebook 2</strong> — ERA5-Land forcing data</p></li>
+<li><p><strong>Notebook 3</strong> — CMIP6 climate projection data</p></li>
+<li><p><strong>Notebook 4</strong> — MATILDA model setup and calibration</p></li>
+<li><p><strong>Notebook 5</strong> — Scenario simulations</p></li>
+<li><p><strong>Notebook 6</strong> — Analysis and visualization</p></li>
 </ul>
-<p>The workflow below is demonstrated using a sample site in the Tian Shan Mountains of Kyrgyzstan. <strong>To try the toolkit for yourself, simply click on the rocket icon in the toolbar <a class="reference external" href="https://mybinder.org/v2/gh/phiscu/matilda_edu/no_outputs?urlpath=lab/tree/Notebook0_Introduction.ipynb">🚀</a></strong> above to launch an online environment hosted by <a class="reference external" href="https://mybinder.org/">mybinder.org</a>. There you can run any notebook with the sample data or upload your own and edit the config file accordingly.</p>
-<p>Note that while most of the workflow will work fine in the binder, calibrating the model is computationally intensive and will be slow to run on a single CPU. For a comprehensive calibration that takes full advantage of the <a class="reference external" href="https://spotpy.readthedocs.io/en/latest/">spotpy</a> library, we recommend downloading the notebooks and running them on a local machine with multi-core processing capabilities. Additional options to reduce calibration time are described in Notebook 4.</p>
-<p>Have fun exploring and happy modeling!</p>
-<p><img alt="flowchart" src="_images/workflow_detailed_2024_-Full_legend.png" /></p>
-<section id="signing-up-for-google-earth-engine-gee">
-<h2>Signing up for Google Earth Engine (GEE)<a class="headerlink" href="#signing-up-for-google-earth-engine-gee" title="Link to this heading">#</a></h2>
-<p>Much of the data acquisition will be done using the <a class="reference external" href="https://developers.google.com/earth-engine/tutorials/community/intro-to-python-api">Google Earth Engine Python API</a>. This not only allows us to access an unique collection of public datasets but to “outsource” most of their preprocessing to Google servers.</p>
-<div class="alert alert-block alert-info">
-    <b>Note:</b> Currently, every user must use their own Google Cloud Project to access MATILDA-Online. However, the latest updates to the Google Cloud Services website and security policy now require users to answer a questionnaire when registering their projects as non-commercial in order to use the service for free. We are currently working on outsourcing the GEE processes to improve the user experience.
-</div>
-<p>If you already have a Google Cloud project from previous work, continue with <a class="reference internal" href="#gee-auth"><span class="xref myst">authorization of GEE</span></a>. If you have never used GEE or another Google Cloud service before, sign up as follows.</p>
+<p><img alt="logo" src="_images/MATILDA_Logo_processes_30perc.png" /></p>
+</section>
+<section id="how-to-launch-the-tool">
+<h2>🚀 How to launch the tool<a class="headerlink" href="#how-to-launch-the-tool" title="Link to this heading">#</a></h2>
+<p>You can run the notebooks either <strong>online</strong> or on your <strong>local</strong> computer. <em>Note that the online environment has only limited computing capacities!</em></p>
+<p>Choose one way to start:</p>
+<ul class="simple">
+<li><p><strong>Launch online:</strong> click the <strong>rocket icon</strong> (🚀) above and start the online environment called <strong>Binder</strong>.</p></li>
+<li><p><strong>Run locally:</strong> click the <strong>GitHub icon</strong> (<img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" width="18">), open the repository, and follow the setup steps in the manual.</p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="what-you-need-before-continuing">
+<h2>✅ What you need before continuing<a class="headerlink" href="#what-you-need-before-continuing" title="Link to this heading">#</a></h2>
+<p>Much of the data acquisition will be done using the <a class="reference external" href="https://earthengine.google.com/">Google Earth Engine</a> (from here on called <strong>GEE</strong>). So before we can start, we need to <strong>register with GEE and link it to MATILDA</strong>.</p>
+<p>To run MATILDA with the <strong>example data</strong>, you need:</p>
+<ul class="simple">
+<li><p>a valid <strong>Google Cloud project ID</strong></p></li>
+<li><p>permission to use that project</p></li>
+</ul>
+<p>To run MATILDA with <strong>your own data</strong>, you additionally need:</p>
+<ul class="simple">
+<li><p><strong>discharge observations</strong> (in the same format as the example)</p></li>
+<li><p><strong>gauging station coordinates</strong></p></li>
+</ul>
+</section>
+<hr class="docutils" />
+<section id="by-the-end-of-this-notebook-you-will-have">
+<h2>📝 By the end of this Notebook you will have …<a class="headerlink" href="#by-the-end-of-this-notebook-you-will-have" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
+<li><p>understand how the MATILDA workflow is organized</p></li>
+<li><p>prepared Google Cloud / Earth Engine access</p></li>
+<li><p>found or created a valid Cloud project</p></li>
+<li><p>authorized access to this project</p></li>
+<li><p>prepared the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code></p></li>
+</ol>
+<div class="alert alert-block alert-warning">
+    <b>Most important:</b> Without your unique <b>Cloud project ID</b>, you won't be able to use the tool!
+</div>
+<p>After that, continue with <strong>Notebook 1</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="google-cloud-project-where-to-start">
+<h2>☁️ Google Cloud project: where to start<a class="headerlink" href="#google-cloud-project-where-to-start" title="Link to this heading">#</a></h2>
+<p>MATILDA currently requires each user to have her or his own <strong>Google Cloud project ID</strong>.</p>
+<section id="if-you-already-used-google-earth-engine-or-another-google-cloud-service">
+<h3>If you already used Google Earth Engine or another Google Cloud service <img alt="gcloud_logo" src="_images/gcloud_logo_30x.png" /><a class="headerlink" href="#if-you-already-used-google-earth-engine-or-another-google-cloud-service" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>➡️ Continue with the <a href="#gee-auth">Authorization tutorial</a></p>
+</div></blockquote>
+</section>
+<section id="if-you-are-new-to-these-services">
+<h3>If you are new to these services<a class="headerlink" href="#if-you-are-new-to-these-services" title="Link to this heading">#</a></h3>
+<blockquote>
+<div><p>➡️ Continue with <strong>signing up</strong> right below ⬇️</p>
+</div></blockquote>
+</section>
+</section>
+<hr class="docutils" />
+<section id="signing-up-for-google-earth-engine-gee">
+<h2>🌏 Signing up for Google Earth Engine (GEE)<a class="headerlink" href="#signing-up-for-google-earth-engine-gee" title="Link to this heading">#</a></h2>
+<div class="alert alert-block alert-info">
+    <b>Note:</b> We are aware that the Google Cloud setup is getting increasingly complicated. We are currently working on outsourcing the GEE processes to improve the user experience.
+</div><ol class="arabic simple">
 <li><p>To start visit the <a class="reference external" href="https://earthengine.google.com/">Earth Engine website</a> and click on <em>Get Started</em> in the top right corner.</p></li>
 </ol>
 <p><img alt="enter image description here" src="https://i.postimg.cc/nzMyrSfG/start2.png" /></p>
@@ -487,46 +555,61 @@ document.write(`
 </ol>
 <p><img alt="gcloud_tut_6" src="_images/gcloud_tut_6.png" /></p>
 <ol class="arabic simple" start="9">
-<li><p>When you see the green confirmation box, you have sucessfully registered a Google Cloud Project and can continue to use MATILDA-Online.</p></li>
+<li><p>When you see the green confirmation box, you have sucessfully registered a Google Cloud Project and can continue to use MATILDA-Online 🎉.</p></li>
 </ol>
 <p><img alt="gcloud_tut_7" src="_images/gcloud_tut_7.png" /></p>
 <p><a id="gee-auth"></a></p>
 </section>
 <section id="authorize-access-for-google-earth-engine">
-<h2>Authorize access for Google Earth Engine<a class="headerlink" href="#authorize-access-for-google-earth-engine" title="Link to this heading">#</a></h2>
+<h2>🔑 Authorize access for Google Earth Engine<a class="headerlink" href="#authorize-access-for-google-earth-engine" title="Link to this heading">#</a></h2>
+<section id="find-your-project-id">
+<h3>Find your project ID<a class="headerlink" href="#find-your-project-id" title="Link to this heading">#</a></h3>
+<p>To tell MATILDA which cloud project to use, we need to store the <strong>projects unique ID</strong> in the <em>config.ini</em> file. You can find your project ID when you click on the project name in the tool bar (<strong>1</strong>) of your <a class="reference external" href="http://console.cloud.google.com/">Google Cloud Console</a> home screen.</p>
+<p><img alt="gcloud_tut_3" src="_images/gcloud_tut_3_2.png" /></p>
+<p>In the pop-up window you can see the cloud ID in the last column (here <em>refined_grammar_100722</em>).</p>
+<p><img alt="gcloud_tut_3_1" src="_images/gcloud_tut_3_1.png" /></p>
+</section>
+<section id="use-your-project-id-in-the-notebooks">
+<h3>Use your project ID in the notebooks<a class="headerlink" href="#use-your-project-id-in-the-notebooks" title="Link to this heading">#</a></h3>
+<ol class="arabic simple">
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file edit the entry <code class="docutils literal notranslate"><span class="pre">CLOUD_PROJECT</span></code> and change it to your projects ID.</p></li>
+</ol>
+<ol class="arabic simple" start="2">
+<li><p>The Notebooks that use GEE (1-3) include a cell for initialization and authentification similar to the one below. If it is the first time the GEE API is initialized, a hyperlink will be generated and opened in a pop-up window. <em>(If there is no pop-up, just copy-paste the url in a browser tab.)</em></p></li>
+</ol>
 <div class="alert alert-block alert-info">
     <b>Note:</b> If you run into any problems regarding authorization, please try the procedure in a <b>private browser tab</b> before contacting us.
 </div>
-<p>The Notebooks that use GEE (1-3) include a cell for initialization and authentification similar to the one below. If it is the first time the GEE API is initialized, a hyperlink will be generated and (if your browser allows) opened in a pop-up window. <em>(If there is no pop-up, just copy-paste the url in a browser tab.)</em></p>
 <p><img alt="auth_link" src="_images/auth_link.png" /></p>
 <p>This brings you to a GEE log-in page. There you need to …</p>
-<ol class="arabic simple">
-<li><p>Choose your account and project and click on <em>GENERATE TOKEN</em>. Make sure to <strong>choose the correct combination of account and project</strong> since Google is very strict in terms of account roles and permissions.</p></li>
+<ol class="arabic simple" start="3">
+<li><p>… choose your account and project and click on <em>GENERATE TOKEN</em>. Make sure to <strong>choose the correct combination of account and project</strong> since Google is very strict in terms of account roles and permissions.</p></li>
 </ol>
 <p><img alt="enter image description here" src="_images/nb0_gee_token_1.png" /></p>
-<ol class="arabic simple" start="2">
+<ol class="arabic simple" start="4">
 <li><p>If not done already, you will need to sign in to your Google Account. You’ll get a security notification for unverified apps. Click <em>continue</em>.</p></li>
 </ol>
-<p><img alt="enter image description here" src="https://i.postimg.cc/8PzQmGk8/continue.png" /></p>
-<ol class="arabic simple" start="3">
+<p><img alt="enter image description here" src="_images/nb0_gee_token_2.png" /></p>
+<ol class="arabic simple" start="5">
 <li><p>Next, grant your Earth Engine Notebook Client access to your account and click <em>Continue</em>.</p></li>
 </ol>
 <p><img alt="enter image description here" src="_images/nb0_gee_token_3.png" /></p>
-<ol class="arabic simple" start="4">
-<li><p>Finally, copy the authorisation code …</p></li>
+<ol class="arabic simple" start="6">
+<li><p>Finally, copy the authorization code …</p></li>
 </ol>
 <p><img alt="enter image description here" src="_images/nb0_gee_token_4.png" /></p>
-<ol class="arabic simple" start="5">
+<ol class="arabic simple" start="7">
 <li><p>… and paste it into the designated field in the notebook.</p></li>
 </ol>
-<p><img alt="enter image description here" src="https://i.postimg.cc/ZnfQM9bG/enter-code.png" /></p>
-<ol class="arabic simple" start="6">
-<li><p>You should get a message saying <em>Successfully saved authorization token.</em> You are now ready to start with the MATILDA workflow. Before we dive into data handling, let’s have a look at …</p></li>
+<p><img alt="enter image description here" src="_images/nb0_gee_token_5.png" /></p>
+<ol class="arabic simple" start="8">
+<li><p>You should get a message saying <em>Successfully saved authorization token.</em> 🎉 You are now ready to start with the MATILDA workflow. Before we dive into data handling, let’s have a look at …</p></li>
 </ol>
 </section>
+</section>
 <section id="the-config-ini-file">
-<h2>The <em>config.ini</em> file<a class="headerlink" href="#the-config-ini-file" title="Link to this heading">#</a></h2>
-<p>This file contains a list of essential information for the workflow and allows customization. If you want to try MATILDA-Online with the example dataset, you only need to edit the entry <code class="docutils literal notranslate"><span class="pre">CLOUD_PROJECT</span></code> and change it to your projects name from <a href="#step-5">Step 5</a>.  If you want to use your own data, replace the file with the discharge observation in the <code class="docutils literal notranslate"><span class="pre">input/</span></code> folder and adapt the reference coordinates accordingly.</p>
+<h2>⚙️ The <em>config.ini</em> file<a class="headerlink" href="#the-config-ini-file" title="Link to this heading">#</a></h2>
+<p>This file contains a list of essential information for the workflow and allows customization. If you want to try MATILDA-Online with the example dataset, you only need to edit the entry <code class="docutils literal notranslate"><span class="pre">CLOUD_PROJECT</span></code> and change it to your project ID (check the <a href="#gee-auth">Authorization tutorial</a>).  If you want to use your own data, replace the file with the discharge observation in the <code class="docutils literal notranslate"><span class="pre">input/</span></code> folder and adapt the reference coordinates accordingly.</p>
 <ol class="arabic simple">
 <li><p>The first section <code class="docutils literal notranslate"><span class="pre">[FILE_SETTINGS]</span></code> allows you to <strong>edit paths and file names for in- and outputs</strong>. This can especially be useful if you model multiple catchments in the same copy of the repository.</p></li>
 <li><p>In the <code class="docutils literal notranslate"><span class="pre">[CONFIG]</span></code> section you can …</p>
@@ -608,9 +691,22 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signing-up-for-google-earth-engine-gee">Signing up for Google Earth Engine (GEE)</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorize-access-for-google-earth-engine">Authorize access for Google Earth Engine</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-config-ini-file">The <em>config.ini</em> file</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-this-works">🧭 How this works</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-launch-the-tool">🚀 How to launch the tool</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-need-before-continuing">✅ What you need before continuing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#by-the-end-of-this-notebook-you-will-have">📝 By the end of this Notebook you will have …</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#google-cloud-project-where-to-start">☁️ Google Cloud project: where to start</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-already-used-google-earth-engine-or-another-google-cloud-service">If you already used Google Earth Engine or another Google Cloud service </a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#if-you-are-new-to-these-services">If you are new to these services</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#signing-up-for-google-earth-engine-gee">🌏 Signing up for Google Earth Engine (GEE)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authorize-access-for-google-earth-engine">🔑 Authorize access for Google Earth Engine</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#find-your-project-id">Find your project ID</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#use-your-project-id-in-the-notebooks">Use your project ID in the notebooks</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-config-ini-file">⚙️ The <em>config.ini</em> file</a></li>
 </ul>
   </nav></div>
 
