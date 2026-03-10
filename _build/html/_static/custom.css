@@ -1,0 +1,7 @@
+a[title="Launch MATILDA in Binder"] {
+  border: 1px solid var(--pst-color-border);
+  border-radius: 0.25rem;
+  line-height: 1;
+  padding: 0.35rem 0.55rem;
+  text-decoration: none;
+}
