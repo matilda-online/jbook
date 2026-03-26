@@ -354,8 +354,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-gee-and-download-dem">Start GEE and download DEM</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catchment-deliniation">Catchment deliniation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#delineate-catchment-from-the-outlet-point">Delineate catchment from the outlet point</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-digital-elevation-model-dem">Download the digital elevation model (DEM)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#determine-glaciers-in-catchment-area">Determine glaciers in catchment area</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interim-summary">Interim Summary:</a></li>
 </ul>
@@ -377,24 +377,23 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="catchment-delineation">
 <h1>Catchment delineation<a class="headerlink" href="#catchment-delineation" title="Link to this heading">#</a></h1>
-<p>We start our workflow by downloading all the static data we need. In this notebook we will…</p>
+<p>We start our workflow by delineating the catchment from the configured outlet point and downloading the static data we need. In this notebook we will…</p>
 <ol class="arabic simple">
+<li><p>…delineate the <strong>catchment</strong> and determine the <strong>catchment area</strong> using your reference position (e.g. the location of your gauging station) as the outlet point,</p></li>
 <li><p>…download a <strong>Digital Elevation Model</strong> (DEM) for hydrologic applications,</p></li>
-<li><p>…<strong>delineate the catchment</strong> and determine the <strong>catchment area</strong> using your reference position (e.g. the location of your gauging station) as the “pouring point”,</p></li>
 <li><p>…identify all glaciers within the catchment and download the <strong>glacier outlines and ice thicknesses</strong>,</p></li>
 <li><p>…create a <strong>glacier mass profile</strong> based on elevation zones.</p></li>
 </ol>
+<p>Catchment delineation in this notebook uses the <strong>MG Hydro / Global Watersheds API</strong>. This method is much faster than delineating locally and allows the DEM to be downloaded for the actual catchment area. The author <a class="reference external" href="https://mghydro.com/">Matthew Herberger</a> deserves all the credit for this service. However, the author privately funds hosting of the service, which can experience downtime. Therefore, we implemented a fallback option that delineates the catchment area locally using the <a class="reference external" href="https://github.com/pysheds/pysheds">pysheds</a> library.</p>
 <div class="alert alert-block alert-warning">
-<b>Important:</b> To run this notebook, the ID of a <b>Google Cloud project</b> you have permissions for, needs to be stored in your <code>config.ini</code> file. If you don't have an ID yet, return to Notebook 1 to get one.
-</div>
-<p>First of all, we will read some settings from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file:</p>
+<b>Troubleshooting:</b> Always inspect the delineated catchment visually. If the result looks implausible, first try <code>MGHYDRO_PRECISION = high</code> in <code>config.ini</code>. If that still does not work, use a high-resolution DEM and delineate locally as a fallback workflow outside this notebook.
+</div><p>First, we read the required settings from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file:</p>
 <ul class="simple">
-<li><p><strong>cloud project</strong> name for the GEE access</p></li>
-<li><p><strong>input/output</strong> folders for data imports and downloads</p></li>
-<li><p><strong>filenames</strong> (DEM, GeoPackage)</p></li>
-<li><p><strong>coordinates</strong> of the defined “pouring” point (Lat/Long)</p></li>
-<li><p>chosen <strong>DEM</strong> from GEE data catalog</p></li>
-<li><p><strong>show/hide GEE map</strong> in notebooks</p></li>
+<li><p>input/output folders for downloads and figures</p></li>
+<li><p>filenames for DEM and catchment layers</p></li>
+<li><p>coordinates of the outlet point</p></li>
+<li><p>chosen DEM from the data catalog</p></li>
+<li><p>MG Hydro delineation settings</p></li>
 </ul>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
@@ -404,57 +403,61 @@ document.write(`
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>     <span class="c1"># Suppress Deprecation Warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">scienceplots</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
 
-<span class="c1"># read local config.ini file</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
 <span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;config.ini&#39;</span><span class="p">)</span>
 
-<span class="c1"># get file config from config.ini</span>
-<span class="n">cloud_project</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;CLOUD_PROJECT&#39;</span><span class="p">]</span>
 <span class="n">output_folder</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_OUTPUT&#39;</span><span class="p">]</span>
 <span class="n">figures_folder</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_FIGURES&#39;</span><span class="p">]</span>
 <span class="n">filename</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DEM_FILENAME&#39;</span><span class="p">]</span>
 <span class="n">output_gpkg</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;GPKG_NAME&#39;</span><span class="p">]</span>
+<span class="n">catchment_file</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;CATCHMENT_FILENAME&#39;</span><span class="p">]</span>
+<span class="n">rivers_file</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;RIVERS_FILENAME&#39;</span><span class="p">]</span>
 <span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">]</span>
 
-<span class="c1"># create folder for output figures</span>
-<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">figures_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># get used GEE DEM, coords and other settings</span>
 <span class="n">dem_config</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;DEM&#39;</span><span class="p">])</span>
 <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;COORDS&#39;</span><span class="p">])</span>
-<span class="n">show_map</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span> <span class="s1">&#39;SHOW_MAP&#39;</span><span class="p">)</span>
 
-<span class="c1"># get style for matplotlib plots</span>
+<span class="n">mghydro_precision</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MGHYDRO_PRECISION&#39;</span><span class="p">,</span> <span class="s1">&#39;high&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
 <span class="n">plt_style</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;PLOT_STYLE&#39;</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">plt_style</span><span class="p">)</span>
 
-<span class="c1"># print config data</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Google Cloud Project : </span><span class="si">{</span><span class="n">cloud_project</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">figures_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;MG Hydro precision: </span><span class="si">{</span><span class="n">mghydro_precision</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;DEM to download: </span><span class="si">{</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Coordinates of discharge point: Lat </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s1">, Lon </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Catchment output: </span><span class="si">{</span><span class="n">catchment_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Rivers output: </span><span class="si">{</span><span class="n">rivers_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;DEM output: </span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Google Cloud Project : matilda-edu
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MG Hydro precision: high
 DEM to download: MERIT 30m
 Coordinates of discharge point: Lat 42.300264, Lon 78.091444
+Catchment output: output/catchment_mghydro.geojson
+Rivers output: output/catchment_mghydro_rivers.geojson
+DEM output: output/dem_gee.tif
 </pre></div>
 </div>
 </div>
 </div>
-<p>Now, the Google Earth Engine (GEE) access can be initialized. If this is the first time you run the notebook on this machine, you need to authenticate. When using <code>mybinder.org</code> you need to authenticate every time a new session has been launched. Follow the instructions on screen or see the guide in → <a class="reference internal" href="Notebook0_Introduction.html#Authorize-access-for-Google-Earth-Engine"><span class="std std-ref">Notebook 0</span></a>.</p>
-<p>🚨 <em>Troubleshooting: If you can log into your Google account but don’t receive a verification code, try to open the link <strong>in a private tab</strong>.</em></p>
+<section id="delineate-catchment-from-the-outlet-point">
+<h2>Delineate catchment from the outlet point<a class="headerlink" href="#delineate-catchment-from-the-outlet-point" title="Link to this heading">#</a></h2>
+<p>We use the configured outlet point to request a watershed boundary and the upstream river network from the MG Hydro API. Both are saved as GeoJSON files and plotted for a quick visual check.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -462,25 +465,26 @@ Coordinates of discharge point: Lat 42.300264, Lon 78.091444
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">authenticate_and_initialize_ee</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">delineate_catchment_mghydro</span>
 
-<span class="n">authenticate_and_initialize_ee</span><span class="p">(</span><span class="n">cloud_project</span><span class="p">)</span>
+<span class="n">watershed_gdf</span><span class="p">,</span> <span class="n">rivers_gdf</span> <span class="o">=</span> <span class="n">delineate_catchment_mghydro</span><span class="p">(</span>
+    <span class="n">lat</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">lon</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+    <span class="n">watershed_output_path</span><span class="o">=</span><span class="n">catchment_file</span><span class="p">,</span>
+    <span class="n">rivers_output_path</span><span class="o">=</span><span class="n">rivers_file</span><span class="p">,</span>
+    <span class="n">fallback_to_local</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">precision</span><span class="o">=</span><span class="n">mghydro_precision</span><span class="p">,</span>
+    <span class="n">plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Attempting Earth Engine Setup for project: matilda-edu ---
-1. Trying to initialize with existing credentials...
-✅ Earth Engine successfully initialized with existing credentials for project: matilda-edu
-</pre></div>
+<img alt="_images/fa90e1791ff0f1c3037bd9cc80db3bbaaace3fd583959394976a07a441b79cc4.png" src="_images/fa90e1791ff0f1c3037bd9cc80db3bbaaace3fd583959394976a07a441b79cc4.png" />
 </div>
 </div>
-</div>
-<section id="start-gee-and-download-dem">
-<h2>Start GEE and download DEM<a class="headerlink" href="#start-gee-and-download-dem" title="Link to this heading">#</a></h2>
-<p>Once we are set up, we can start working with the data. Let’s start with the <strong>base map</strong>, if enabled in <code class="docutils literal notranslate"><span class="pre">config.ini</span></code>. The map can be used to follow the steps as more layers are added throughout the notebook.</p>
-<p><strong>Note</strong>: <em>The map is drawn interactively and can only be displayed when you run the tool but not on the website.</em></p>
+<p>The delineated catchment is now stored locally and can be inspected like any other vector dataset. We also derive the catchment area and the bounding box, which will be useful for the following download steps.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -488,298 +492,26 @@ Coordinates of discharge point: Lat 42.300264, Lon 78.091444
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">geemap</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">catchment_area_km2</span> <span class="o">=</span> <span class="n">watershed_gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">watershed_gdf</span><span class="o">.</span><span class="n">estimate_utm_crs</span><span class="p">())</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">1e6</span>
+<span class="n">xmin</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">watershed_gdf</span><span class="o">.</span><span class="n">total_bounds</span>
 
-<span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
-    <span class="n">Map</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">Map</span><span class="p">()</span>
-    <span class="n">display</span><span class="p">(</span><span class="n">Map</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Map view disabled in config.ini&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Catchment area: </span><span class="si">{</span><span class="n">catchment_area_km2</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> km²&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Catchment bounds: xmin=</span><span class="si">{</span><span class="n">xmin</span><span class="si">:</span><span class="s1">.5f</span><span class="si">}</span><span class="s1">, ymin=</span><span class="si">{</span><span class="n">ymin</span><span class="si">:</span><span class="s1">.5f</span><span class="si">}</span><span class="s1">, xmax=</span><span class="si">{</span><span class="n">xmax</span><span class="si">:</span><span class="s1">.5f</span><span class="si">}</span><span class="s1">, ymax=</span><span class="si">{</span><span class="n">ymax</span><span class="si">:</span><span class="s1">.5f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Map view disabled in config.ini
-</pre></div>
-</div>
-</div>
-</div>
-<p>Now we can download the DEM from the GEE catalog and add it as a new layer to the map. The default is the <a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog/MERIT_DEM_v1_0_3">MERIT DEM</a>, but you can use any DEM available in the <em><a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog">Google Earth Engine Data Catalog</a></em> by specifying it in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ee</span>
-<span class="k">if</span> <span class="n">dem_config</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Image&#39;</span><span class="p">:</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
-<span class="k">elif</span> <span class="n">dem_config</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ImageCollection&#39;</span><span class="p">:</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">mosaic</span><span class="p">()</span>
-
-<span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
-    <span class="n">srtm_vis</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;bands&#39;</span><span class="p">:</span> <span class="n">dem_config</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
-                <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">6000</span><span class="p">,</span>
-                <span class="s1">&#39;palette&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;000000&#39;</span><span class="p">,</span> <span class="s1">&#39;478FCD&#39;</span><span class="p">,</span> <span class="s1">&#39;86C58E&#39;</span><span class="p">,</span> <span class="s1">&#39;AFC35E&#39;</span><span class="p">,</span> <span class="s1">&#39;8F7131&#39;</span><span class="p">,</span> <span class="s1">&#39;B78D4F&#39;</span><span class="p">,</span> <span class="s1">&#39;E2B8A6&#39;</span><span class="p">,</span> <span class="s1">&#39;FFFFFF&#39;</span><span class="p">]</span>
-                <span class="p">}</span>
-
-    <span class="n">Map</span><span class="o">.</span><span class="n">addLayer</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">srtm_vis</span><span class="p">,</span> <span class="n">dem_config</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="kc">True</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div></div>
-</div>
-<p>Next, we add the location of our discharge observations to the map and generate a <strong>40km</strong> buffer box.</p>
-<div class="alert alert-block alert-info">
-    <b>Note:</b> Please check that the default box covers your research area. Alternatively, you can manually adjust the box by drawing a polygon using the tools in the sidebar. <b>If the selected box is too small, the catchment area will be cropped.</b></div><div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">point</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-<span class="n">box</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">buffer</span><span class="p">(</span><span class="mi">40000</span><span class="p">)</span><span class="o">.</span><span class="n">bounds</span><span class="p">()</span>
-
-<span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">addLayer</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">},</span> <span class="s1">&#39;Discharge Point&#39;</span><span class="p">)</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">addLayer</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;grey&#39;</span><span class="p">},</span> <span class="s1">&#39;Catchment Area&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">centerObject</span><span class="p">(</span><span class="n">box</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div></div>
-</div>
-<p>The gauging location (marker) and the box (polygon/rectangle) can also be added manually to the map above. If features have been drawn, they will overrule the configured discharge point and automatically created box.</p>
-<p><a id="rp01"><strong>Restart Point #1</strong></a></p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">Map</span><span class="o">.</span><span class="n">draw_features</span><span class="p">:</span>
-        <span class="n">f_type</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()[</span><span class="s1">&#39;geometry&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">f_type</span> <span class="o">==</span> <span class="s1">&#39;Point&#39;</span><span class="p">:</span>
-            <span class="n">point</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Manually set pouring point will be considered&quot;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">f_type</span> <span class="o">==</span> <span class="s1">&#39;Polygon&#39;</span><span class="p">:</span>
-            <span class="n">box</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">geometry</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Manually drawn box will be considered&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div></div>
-</div>
-<p>Now we can export the DEM as a <code class="docutils literal notranslate"><span class="pre">.tif</span></code> file for the selected extent to the output folder. Depending on the size of the selected area, this might take a while for processing and downloading.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
-
-<span class="n">download_xr</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span> <span class="s1">&#39;GEE_DOWNLOAD_XR&#39;</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">download_xr</span><span class="p">:</span>
-    <span class="c1"># new method using Xarray (supports larger areas)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Get GEE data as Xarray...&#39;</span><span class="p">)</span>
-        <span class="n">ic</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-        <span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span>
-            <span class="n">ic</span><span class="p">,</span>
-            <span class="n">engine</span><span class="o">=</span><span class="s1">&#39;ee&#39;</span><span class="p">,</span>
-            <span class="n">projection</span><span class="o">=</span><span class="n">ic</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">projection</span><span class="p">(),</span>
-            <span class="n">geometry</span><span class="o">=</span><span class="n">box</span>
-        <span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Prepare Xarray for GeoTiff conversion...&#39;</span><span class="p">)</span>
-        <span class="n">ds_t</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">drop_vars</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
-        <span class="n">ds_t</span><span class="o">.</span><span class="n">rio</span><span class="o">.</span><span class="n">set_spatial_dims</span><span class="p">(</span><span class="s2">&quot;lon&quot;</span><span class="p">,</span> <span class="s2">&quot;lat&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Save DEM as GeoTiff...&#39;</span><span class="p">)</span>
-        <span class="n">ds_t</span><span class="o">.</span><span class="n">rio</span><span class="o">.</span><span class="n">to_raster</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DEM successfully saved at&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Error during Xarray routine. Try direct download from GEE...&#39;</span><span class="p">)</span>
-        <span class="n">geemap</span><span class="o">.</span><span class="n">ee_export_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="n">box</span><span class="p">,</span> <span class="n">file_per_band</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="c1"># old method using GEE API to download .tif directly</span>
-    <span class="n">geemap</span><span class="o">.</span><span class="n">ee_export_image</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="n">filename</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">region</span><span class="o">=</span><span class="n">box</span><span class="p">,</span> <span class="n">file_per_band</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Get GEE data as Xarray...
-Error during Xarray routine. Try direct download from GEE...
-Generating URL ...
-Downloading data from https://earthengine.googleapis.com/v1/projects/matilda-edu/thumbnails/141fe950f2bef07c701b0790d3823376-405ebe96af04c7bc3b2f2f680473a268:getPixels
-Please wait ...
-Data downloaded to /home/phillip/Seafile/EBA-CA/Repositories/matilda_edu/output/dem_gee.tif
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Catchment area: 302.68 km²
+Catchment bounds: xmin=78.05875, ymin=42.05125, xmax=78.32708, ymax=42.31875
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="catchment-deliniation">
-<h2>Catchment deliniation<a class="headerlink" href="#catchment-deliniation" title="Link to this heading">#</a></h2>
-<p>Based on the downloaded DEM file, we can delineate the watershed using the <code>pysheds</code> library. The result will be a raster and displayed at the end of this section.</p>
-<p>The full documentation of the <code>pysheds</code> module can be found <a class="reference external" href="https://github.com/pysheds/pysheds">here</a>.</p>
-<div class="alert alert-block alert-info">
-<b>Note:</b> The catchment delineation involves several steps with large array operations and can take a moment.</div><div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-
-<span class="c1"># GIS packages</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pysheds.grid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">fiona</span>
-
-<span class="c1"># load DEM</span>
-<span class="n">DEM_file</span> <span class="o">=</span> <span class="n">filename</span>
-<span class="n">grid</span> <span class="o">=</span> <span class="n">Grid</span><span class="o">.</span><span class="n">from_raster</span><span class="p">(</span><span class="n">DEM_file</span><span class="p">)</span>
-<span class="n">dem</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">read_raster</span><span class="p">(</span><span class="n">DEM_file</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DEM loaded.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>DEM loaded.
-CPU times: user 2.62 s, sys: 1.02 s, total: 3.64 s
-Wall time: 3.33 s
-</pre></div>
-</div>
-</div>
-</div>
+<section id="download-the-digital-elevation-model-dem">
+<h2>Download the digital elevation model (DEM)<a class="headerlink" href="#download-the-digital-elevation-model-dem" title="Link to this heading">#</a></h2>
+<p>Now that we have the catchment boundaries, we can send a precise request to the MATILDA web service to download a DEM. The default is the <a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog/MERIT_DEM_v1_0_3">MERIT DEM</a>, but you can use any of the alternatives listed in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -787,76 +519,34 @@ Wall time: 3.33 s
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_dem_webservice</span>
 
-<span class="c1"># Fill depressions in DEM</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Fill depressions in DEM...&quot;</span><span class="p">)</span>
-<span class="n">flooded_dem</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">fill_depressions</span><span class="p">(</span><span class="n">dem</span><span class="p">)</span>
-<span class="c1"># Resolve flats in DEM</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resolve flats in DEM...&quot;</span><span class="p">)</span>
-<span class="n">inflated_dem</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">resolve_flats</span><span class="p">(</span><span class="n">flooded_dem</span><span class="p">)</span>
-
-<span class="c1"># Specify directional mapping</span>
-<span class="c1"># N    NE    E    SE    S    SW    W    NW</span>
-<span class="n">dirmap</span> <span class="o">=</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
-<span class="c1"># Compute flow directions</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Compute flow directions...&quot;</span><span class="p">)</span>
-<span class="n">fdir</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">flowdir</span><span class="p">(</span><span class="n">inflated_dem</span><span class="p">,</span> <span class="n">dirmap</span><span class="o">=</span><span class="n">dirmap</span><span class="p">)</span>
-<span class="c1"># catch = grid.catchment(x=x, y=y, fdir=fdir, dirmap=dirmap, xytype=&#39;coordinate&#39;)</span>
-<span class="c1"># Compute accumulation</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Compute accumulation...&quot;</span><span class="p">)</span>
-<span class="n">acc</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">accumulation</span><span class="p">(</span><span class="n">fdir</span><span class="p">)</span>
-<span class="c1"># Snap pour point to high accumulation cell</span>
-<span class="n">x_snap</span><span class="p">,</span> <span class="n">y_snap</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">snap_to_mask</span><span class="p">(</span><span class="n">acc</span> <span class="o">&gt;</span> <span class="mi">1000</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
-<span class="c1"># Delineate the catchment</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Delineate the catchment...&quot;</span><span class="p">)</span>
-<span class="n">catch</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">catchment</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">x_snap</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y_snap</span><span class="p">,</span> <span class="n">fdir</span><span class="o">=</span><span class="n">fdir</span><span class="p">,</span> <span class="n">xytype</span><span class="o">=</span><span class="s1">&#39;coordinate&#39;</span><span class="p">)</span>
-<span class="c1"># Clip the DEM to the catchment</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Clip the DEM to the catchment...&quot;</span><span class="p">)</span>
-<span class="n">grid</span><span class="o">.</span><span class="n">clip_to</span><span class="p">(</span><span class="n">catch</span><span class="p">)</span>
-<span class="n">clipped_catch</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">catch</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Processing completed.&quot;</span><span class="p">)</span>
+<span class="n">download_dem_webservice</span><span class="p">(</span>
+    <span class="n">geometry</span><span class="o">=</span><span class="n">watershed_gdf</span><span class="p">,</span>
+    <span class="n">asset_id</span><span class="o">=</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">output_path</span><span class="o">=</span><span class="n">filename</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Fill depressions in DEM...
-Resolve flats in DEM...
-Compute flow directions...
-Compute accumulation...
-Delineate the catchment...
-Clip the DEM to the catchment...
-Processing completed.
-CPU times: user 17.4 s, sys: 737 ms, total: 18.1 s
-Wall time: 15.4 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ DEM successfully downloaded from the MATILDA web service.
+Saved to: output/dem_gee.tif
+File size: 0.4 MB
+Elapsed time: 3.4 s
 </pre></div>
 </div>
 </div>
 </div>
-<p>Now let’s have a look at the catchment area.</p>
+<p>We will now plot the downloaded elevation model alongside the delineated catchment boundary, the upstream river network, and the outlet point.</p>
+<p>This visual check helps confirm that:</p>
+<ul class="simple">
+<li><p>the downloaded DEM covers the full catchment,</p></li>
+<li><p>the watershed boundary is plausible,</p></li>
+<li><p>the outlet point is correctly located, and</p></li>
+<li><p>the river network matches the topographic setting.</p></li>
+</ul>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -864,49 +554,70 @@ Wall time: 15.4 s
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define a function to plot the digital elevation model</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">plotFigure</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">):</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">extent</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">rasterio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rasterio.mask</span><span class="w"> </span><span class="kn">import</span> <span class="n">mask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rasterio.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">show</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 
-<span class="n">demView</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">dem</span><span class="p">,</span> <span class="n">nodata</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-<span class="n">plotFigure</span><span class="p">(</span><span class="n">demView</span><span class="p">,</span> <span class="s1">&#39;Elevation in Meters&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;terrain&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">figures_folder</span> <span class="o">+</span> <span class="s1">&#39;NB1_DEM_Catchment.png&#39;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">rasterio</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">src</span><span class="p">:</span>
+    <span class="n">watershed_plot</span> <span class="o">=</span> <span class="n">watershed_gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+    <span class="n">rivers_plot</span> <span class="o">=</span> <span class="n">rivers_gdf</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+
+    <span class="n">outlet_gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span>
+        <span class="n">geometry</span><span class="o">=</span><span class="n">gpd</span><span class="o">.</span><span class="n">points_from_xy</span><span class="p">([</span><span class="n">x</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span><span class="p">]),</span>
+        <span class="n">crs</span><span class="o">=</span><span class="s2">&quot;EPSG:4326&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+
+    <span class="n">dem_clip</span><span class="p">,</span> <span class="n">dem_transform</span> <span class="o">=</span> <span class="n">mask</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">watershed_plot</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span> <span class="n">crop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">dem_plot</span> <span class="o">=</span> <span class="n">dem_clip</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">src</span><span class="o">.</span><span class="n">nodata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">dem_plot</span><span class="p">[</span><span class="n">dem_plot</span> <span class="o">==</span> <span class="n">src</span><span class="o">.</span><span class="n">nodata</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dem_plot</span><span class="p">[</span><span class="n">dem_plot</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+    <span class="n">dem_image</span> <span class="o">=</span> <span class="n">show</span><span class="p">(</span><span class="n">dem_plot</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">dem_transform</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">rivers_plot</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+    <span class="n">rivers_plot</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkblue&quot;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">outlet_gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">legend_elements</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkblue&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Upstream rivers&quot;</span><span class="p">),</span>
+    <span class="n">Line2D</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;None&quot;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Outlet point&quot;</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">legend_elements</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Downloaded DEM clipped to the catchment&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Longitude&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Latitude&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">&quot;equal&quot;</span><span class="p">)</span>
+
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">dem_image</span><span class="o">.</span><span class="n">get_images</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Elevation (m)&quot;</span><span class="p">)</span>
+
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><img alt="_images/78d3818562cba883a25447a586876f8bdb898f32f23406f35f92b9de6978058b.png" src="_images/78d3818562cba883a25447a586876f8bdb898f32f23406f35f92b9de6978058b.png" />
+<img alt="_images/e29a4eeae4202308e556f19c88e71c85f18fbde5c75f7566be6bb22dd6325d53.png" src="_images/e29a4eeae4202308e556f19c88e71c85f18fbde5c75f7566be6bb22dd6325d53.png" />
 </div>
 </div>
-<p>For the following steps, we need the catchment outline in polygon form. Thus, we will <strong>convert the raster to a polygon</strong> and save both to the output folder in a <strong>geopackage</strong>. We can calculate the important <strong>catchment statistics</strong> needed for the glacio-hydrological model in Notebook 4 from these files.</p>
+<p>For the following steps, we store the delineated catchment outline in a <strong>GeoPackage</strong> together with the elevation data derived from the DEM.</p>
+<p>We also calculate basic elevation statistics from the clipped DEM:</p>
+<ul class="simple">
+<li><p>minimum elevation</p></li>
+<li><p>maximum elevation</p></li>
+<li><p>mean catchment elevation</p></li>
+</ul>
+<p>These statistics will later be used for the glacio-hydrological model setup in Notebook 4.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -914,134 +625,43 @@ Wall time: 15.4 s
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">shapely.geometry</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polygon</span><span class="p">,</span> <span class="n">shape</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">shapely.ops</span><span class="w"> </span><span class="kn">import</span> <span class="n">transform</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyproj</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="c1"># Create shapefile and save it</span>
-<span class="n">shapes</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">polygonize</span><span class="p">()</span>
+<span class="c1"># Save catchment polygon to GeoPackage</span>
+<span class="n">layer_name</span> <span class="o">=</span> <span class="s2">&quot;catchment_orig&quot;</span>
 
-<span class="n">schema</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s1">&#39;geometry&#39;</span><span class="p">:</span> <span class="s1">&#39;Polygon&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;properties&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;LABEL&#39;</span><span class="p">:</span> <span class="s1">&#39;float:16&#39;</span><span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">catchment_shape</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">layer_name</span> <span class="o">=</span> <span class="s1">&#39;catchment_orig&#39;</span>
-<span class="k">with</span> <span class="n">fiona</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">output_gpkg</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span>
-                <span class="c1"># driver=&#39;ESRI Shapefile&#39;,#</span>
-                <span class="n">driver</span><span class="o">=</span><span class="s1">&#39;GPKG&#39;</span><span class="p">,</span>
-                <span class="n">layer</span><span class="o">=</span><span class="n">layer_name</span><span class="p">,</span>
-                <span class="n">crs</span><span class="o">=</span><span class="n">grid</span><span class="o">.</span><span class="n">crs</span><span class="o">.</span><span class="n">srs</span><span class="p">,</span>
-                <span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">)</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
-    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">shape</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">shapes</span><span class="p">:</span>
-        <span class="n">catchment_shape</span> <span class="o">=</span> <span class="n">shape</span>
-        <span class="n">rec</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;geometry&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shape</span>
-        <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;properties&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;LABEL&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">value</span><span class="p">)}</span>
-        <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="n">c</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rec</span><span class="p">)</span>
-        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="n">watershed_gdf</span><span class="o">.</span><span class="n">to_file</span><span class="p">(</span>
+    <span class="n">output_gpkg</span><span class="p">,</span>
+    <span class="n">layer</span><span class="o">=</span><span class="n">layer_name</span><span class="p">,</span>
+    <span class="n">driver</span><span class="o">=</span><span class="s2">&quot;GPKG&quot;</span>
+<span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Layer &#39;</span><span class="si">{</span><span class="n">layer_name</span><span class="si">}</span><span class="s2">&#39; added to GeoPackage &#39;</span><span class="si">{</span><span class="n">output_gpkg</span><span class="si">}</span><span class="s2">&#39;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="n">catchment_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">demView</span><span class="p">)),</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">demView</span><span class="p">))]</span>
-<span class="n">ele_cat</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">demView</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Catchment elevation ranges from </span><span class="si">{</span><span class="n">catchment_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> m to </span><span class="si">{</span><span class="n">catchment_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> m.a.s.l.&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean catchment elevation is </span><span class="si">{</span><span class="n">ele_cat</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m.a.s.l.&quot;</span><span class="p">)</span>
+<span class="c1"># Calculate elevation statistics from clipped DEM</span>
+<span class="n">dem_values</span> <span class="o">=</span> <span class="n">dem_plot</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">dem_plot</span><span class="p">)]</span>
+
+<span class="n">ele_min</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">dem_values</span><span class="p">))</span>
+<span class="n">ele_max</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">dem_values</span><span class="p">))</span>
+<span class="n">ele_mean</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">dem_values</span><span class="p">))</span>
+
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Catchment elevation ranges from </span><span class="si">{</span><span class="n">ele_min</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> m to </span><span class="si">{</span><span class="n">ele_max</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> m a.s.l.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean catchment elevation is </span><span class="si">{</span><span class="n">ele_mean</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m a.s.l.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Layer &#39;catchment_orig&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
 
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Layer &#39;catchment_orig&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
-
-Catchment elevation ranges from 1971 m to 4791 m.a.s.l.
-Mean catchment elevation is 3297.18 m.a.s.l.
+Catchment elevation ranges from 1972 m to 4792 m a.s.l.
+Mean catchment elevation is 3273.10 m a.s.l.
 </pre></div>
 </div>
 </div>
 </div>
-<p>We can also add the catchment polygon to the interactive map. This sends it to GEE and allows us to use a GEE function to calculate its area. Please scroll up to see the results on the map.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">catchment</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">Geometry</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">catchment_shape</span><span class="p">[</span><span class="s1">&#39;coordinates&#39;</span><span class="p">])</span>
-<span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">addLayer</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="p">{},</span> <span class="s1">&#39;Catchment&#39;</span><span class="p">)</span>
-
-<span class="n">catchment_area</span> <span class="o">=</span> <span class="n">catchment</span><span class="o">.</span><span class="n">area</span><span class="p">()</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Catchment area is </span><span class="si">{</span><span class="n">catchment_area</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> km²&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Catchment area is 295.91 km²
-</pre></div>
-</div>
-</div>
-</div>
-<div class="alert alert-block alert-warning">
-<b>Note:</b>
- Please make sure to leave some buffer between the catchment outline and the applied bounding box (&rarr; <a href='#map'>Jump to map</a>). If you run into problems, please extent the box and repeat the DEM download and catchment delineation (&rarr; use <a href='#rp01'>Restart Point #1</a>).</div>
-<p>Example:</p>
-<ol class="arabic simple">
-<li><p>The automatically created box for the pouring point (in gray) is not sufficient to cover the entire catchment area → cropped at the eastern edge.</p></li>
-<li><p>Manually drawn box (in blue) has been added to ensure that the catchment is not cropped → buffer remains on all edges</p></li>
-</ol>
-<p><img alt="Example for Cropped Catchment" src="_images/gee_catchment_extent.png" /></p>
 </section>
-<hr class="docutils" />
 <section id="determine-glaciers-in-catchment-area">
 <h2>Determine glaciers in catchment area<a class="headerlink" href="#determine-glaciers-in-catchment-area" title="Link to this heading">#</a></h2>
 <p>To acquire outlines of all glaciers in the catchment we will use the Randolph Glacier Inventory version 6 (RGI 6.0). <em>While RGI version 7 has been released, there are no fully compatible ice thickness datasets yet.</em></p>
@@ -1077,29 +697,7 @@ Mean catchment elevation is 3297.18 m.a.s.l.
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output text_html"><div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1299,30 +897,8 @@ Mean catchment elevation is 3297.18 m.a.s.l.
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UTM zone &#39;44&#39;, band &#39;T&#39;
-Catchment area (projected) is 296.53 km²
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>UTM zone &#39;44&#39;, band &#39;T&#39;
+Catchment area (projected) is 302.68 km²
 </pre></div>
 </div>
 </div>
@@ -1355,29 +931,7 @@ Catchment area (projected) is 296.53 km²
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Catchment belongs to RGI region 13 (Asia, Central)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Catchment belongs to RGI region 13 (Asia, Central)
 </pre></div>
 </div>
 </div>
@@ -1391,10 +945,15 @@ Catchment area (projected) is 296.53 km²
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">resourcespace</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResourceSpace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_webservice_config</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
 <span class="c1"># use guest credentials to access media server</span>
-<span class="n">api_base_url</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;api_base_url&#39;</span><span class="p">]</span>
-<span class="n">private_key</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;private_key&#39;</span><span class="p">]</span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
+<span class="n">hu_cfg</span> <span class="o">=</span> <span class="n">load_webservice_config</span><span class="p">(</span><span class="n">section</span><span class="o">=</span><span class="s2">&quot;HU&quot;</span><span class="p">)</span>
+
+<span class="n">api_base_url</span> <span class="o">=</span> <span class="n">hu_cfg</span><span class="p">[</span><span class="s2">&quot;MEDIA_API_URL&quot;</span><span class="p">]</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">hu_cfg</span><span class="p">[</span><span class="s2">&quot;MEDIA_PRIVATE_KEY&quot;</span><span class="p">]</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">hu_cfg</span><span class="p">[</span><span class="s2">&quot;MEDIA_USER&quot;</span><span class="p">]</span>
 
 <span class="n">myrepository</span> <span class="o">=</span> <span class="n">ResourceSpace</span><span class="p">(</span><span class="n">api_base_url</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">private_key</span><span class="p">)</span>
 
@@ -1408,35 +967,13 @@ Catchment area (projected) is 296.53 km²
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Listing files ...&quot;</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">rgi_refs</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No files found. Please check remote repository.&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No files found. Please check remote repository.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accessed remote repository
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Accessed remote repository
 Listing files ...
 </pre></div>
 </div>
@@ -1488,10 +1025,10 @@ Listing files ...
     </tr>
     <tr>
       <th>3</th>
-      <td>27363</td>
-      <td>46424343</td>
+      <td>27354</td>
+      <td>4525438</td>
       <td>zip</td>
-      <td>rgi60_14</td>
+      <td>rgi60_08</td>
     </tr>
     <tr>
       <th>4</th>
@@ -1502,10 +1039,10 @@ Listing files ...
     </tr>
     <tr>
       <th>5</th>
-      <td>27354</td>
-      <td>4525438</td>
+      <td>27363</td>
+      <td>46424343</td>
       <td>zip</td>
-      <td>rgi60_08</td>
+      <td>rgi60_14</td>
     </tr>
     <tr>
       <th>6</th>
@@ -1530,17 +1067,17 @@ Listing files ...
     </tr>
     <tr>
       <th>9</th>
-      <td>27355</td>
-      <td>4084847</td>
-      <td>zip</td>
-      <td>rgi60_09</td>
-    </tr>
-    <tr>
-      <th>10</th>
       <td>27368</td>
       <td>15050599</td>
       <td>zip</td>
       <td>rgi60_19</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>27355</td>
+      <td>4084847</td>
+      <td>zip</td>
+      <td>rgi60_09</td>
     </tr>
     <tr>
       <th>11</th>
@@ -1572,31 +1109,31 @@ Listing files ...
     </tr>
     <tr>
       <th>15</th>
-      <td>27360</td>
-      <td>15918156</td>
-      <td>zip</td>
-      <td>rgi60_15</td>
-    </tr>
-    <tr>
-      <th>16</th>
       <td>27361</td>
       <td>4076485</td>
       <td>zip</td>
       <td>rgi60_16</td>
     </tr>
     <tr>
-      <th>17</th>
-      <td>27353</td>
-      <td>20937343</td>
+      <th>16</th>
+      <td>27360</td>
+      <td>15918156</td>
       <td>zip</td>
-      <td>rgi60_02</td>
+      <td>rgi60_15</td>
     </tr>
     <tr>
-      <th>18</th>
+      <th>17</th>
       <td>27357</td>
       <td>2220673</td>
       <td>zip</td>
       <td>rgi60_12</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>27353</td>
+      <td>20937343</td>
+      <td>zip</td>
+      <td>rgi60_02</td>
     </tr>
     <tr>
       <th>19</th>
@@ -1669,29 +1206,7 @@ Listing files ...
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found RGI archive(s) for region 13:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found RGI archive(s) for region 13:
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -1730,8 +1245,8 @@ Listing files ...
 </table>
 </div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>5 files extracted to: output/RGI
 Loaded: output/RGI/13_rgi60_CentralAsia.shp
-CPU times: user 1.74 s, sys: 417 ms, total: 2.16 s
-Wall time: 5.02 s
+CPU times: user 1.47 s, sys: 389 ms, total: 1.86 s
+Wall time: 9.6 s
 </pre></div>
 </div>
 </div>
@@ -1758,29 +1273,7 @@ Wall time: 5.02 s
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Perform spatial join...
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Perform spatial join...
 51 outlines loaded from RGI Region 13
 </pre></div>
 </div>
@@ -1794,46 +1287,24 @@ Wall time: 5.02 s
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># intersects selects too many. calculate percentage of glacier area that is within catchment</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># calculate percentage of each glacier area that lies within the catchment</span>
 <span class="n">rgi_catchment</span><span class="p">[</span><span class="s1">&#39;rgi_area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rgi_catchment</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">crs</span><span class="p">)</span><span class="o">.</span><span class="n">area</span>
 
-<span class="n">gdf_joined</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="n">rgi_catchment</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;union&#39;</span><span class="p">)</span>
+<span class="n">gdf_joined</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="n">rgi_catchment</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;intersection&#39;</span><span class="p">)</span>
 <span class="n">gdf_joined</span><span class="p">[</span><span class="s1">&#39;area_joined&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf_joined</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="n">crs</span><span class="p">)</span><span class="o">.</span><span class="n">area</span>
 <span class="n">gdf_joined</span><span class="p">[</span><span class="s1">&#39;share_of_area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">((</span><span class="n">gdf_joined</span><span class="p">[</span><span class="s1">&#39;area_joined&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">gdf_joined</span><span class="p">[</span><span class="s1">&#39;rgi_area&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
 
 <span class="n">results</span> <span class="o">=</span> <span class="p">(</span><span class="n">gdf_joined</span>
-           <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;RGIId&#39;</span><span class="p">,</span> <span class="s1">&#39;LABEL_1&#39;</span><span class="p">])</span>
+           <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;RGIId&#39;</span><span class="p">,</span> <span class="n">as_index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
            <span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="s1">&#39;share_of_area&#39;</span><span class="p">:</span> <span class="s1">&#39;sum&#39;</span><span class="p">}))</span>
 
-<span class="n">display</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;share_of_area&#39;</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;share_of_area&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output text_html"><div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1851,270 +1322,265 @@ Wall time: 5.02 s
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th></th>
-      <th>share_of_area</th>
-    </tr>
-    <tr>
       <th>RGIId</th>
-      <th>LABEL_1</th>
-      <th></th>
+      <th>share_of_area</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>RGI60-13.06378</th>
-      <th>1.0</th>
+      <th>25</th>
+      <td>RGI60-13.06378</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06367</th>
-      <th>1.0</th>
+      <th>43</th>
+      <td>RGI60-13.07718</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06381</th>
-      <th>1.0</th>
+      <th>28</th>
+      <td>RGI60-13.06381</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06380</th>
-      <th>1.0</th>
+      <th>27</th>
+      <td>RGI60-13.06380</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06379</th>
-      <th>1.0</th>
+      <th>26</th>
+      <td>RGI60-13.06379</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06377</th>
-      <th>1.0</th>
+      <th>24</th>
+      <td>RGI60-13.06377</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06376</th>
-      <th>1.0</th>
+      <th>23</th>
+      <td>RGI60-13.06376</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06375</th>
-      <th>1.0</th>
+      <th>22</th>
+      <td>RGI60-13.06375</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06374</th>
-      <th>1.0</th>
+      <th>21</th>
+      <td>RGI60-13.06374</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06373</th>
-      <th>1.0</th>
+      <th>20</th>
+      <td>RGI60-13.06373</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06372</th>
-      <th>1.0</th>
+      <th>19</th>
+      <td>RGI60-13.06372</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06371</th>
-      <th>1.0</th>
+      <th>18</th>
+      <td>RGI60-13.06371</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06370</th>
-      <th>1.0</th>
+      <th>17</th>
+      <td>RGI60-13.06370</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06368</th>
-      <th>1.0</th>
+      <th>16</th>
+      <td>RGI60-13.06369</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06369</th>
-      <th>1.0</th>
+      <th>15</th>
+      <td>RGI60-13.06368</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06366</th>
-      <th>1.0</th>
+      <th>14</th>
+      <td>RGI60-13.06367</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06357</th>
-      <th>1.0</th>
+      <th>13</th>
+      <td>RGI60-13.06366</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06365</th>
-      <th>1.0</th>
+      <th>12</th>
+      <td>RGI60-13.06365</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06364</th>
-      <th>1.0</th>
+      <th>11</th>
+      <td>RGI60-13.06364</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06363</th>
-      <th>1.0</th>
+      <th>10</th>
+      <td>RGI60-13.06363</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06362</th>
-      <th>1.0</th>
+      <th>9</th>
+      <td>RGI60-13.06362</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06361</th>
-      <th>1.0</th>
+      <th>8</th>
+      <td>RGI60-13.06361</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06360</th>
-      <th>1.0</th>
+      <th>7</th>
+      <td>RGI60-13.06360</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06355</th>
-      <th>1.0</th>
+      <th>5</th>
+      <td>RGI60-13.06358</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06358</th>
-      <th>1.0</th>
+      <th>4</th>
+      <td>RGI60-13.06357</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06356</th>
-      <th>1.0</th>
+      <th>3</th>
+      <td>RGI60-13.06356</td>
       <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.07926</th>
-      <th>1.0</th>
-      <td>99.96</td>
+      <th>2</th>
+      <td>RGI60-13.06355</td>
+      <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.07719</th>
-      <th>1.0</th>
-      <td>99.93</td>
+      <th>44</th>
+      <td>RGI60-13.07719</td>
+      <td>100.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.07927</th>
-      <th>1.0</th>
-      <td>99.90</td>
+      <th>47</th>
+      <td>RGI60-13.07926</td>
+      <td>99.97</td>
     </tr>
     <tr>
-      <th>RGI60-13.07930</th>
-      <th>1.0</th>
-      <td>99.70</td>
+      <th>48</th>
+      <td>RGI60-13.07927</td>
+      <td>99.92</td>
     </tr>
     <tr>
-      <th>RGI60-13.06359</th>
-      <th>1.0</th>
-      <td>99.51</td>
+      <th>6</th>
+      <td>RGI60-13.06359</td>
+      <td>99.76</td>
     </tr>
     <tr>
-      <th>RGI60-13.06382</th>
-      <th>1.0</th>
-      <td>99.00</td>
+      <th>50</th>
+      <td>RGI60-13.07931</td>
+      <td>98.82</td>
     </tr>
     <tr>
-      <th>RGI60-13.07931</th>
-      <th>1.0</th>
-      <td>98.95</td>
+      <th>49</th>
+      <td>RGI60-13.07930</td>
+      <td>98.32</td>
     </tr>
     <tr>
-      <th>RGI60-13.07718</th>
-      <th>1.0</th>
-      <td>97.94</td>
+      <th>29</th>
+      <td>RGI60-13.06382</td>
+      <td>97.67</td>
     </tr>
     <tr>
-      <th>RGI60-13.06425</th>
-      <th>1.0</th>
-      <td>93.59</td>
+      <th>37</th>
+      <td>RGI60-13.06425</td>
+      <td>97.16</td>
     </tr>
     <tr>
-      <th>RGI60-13.07717</th>
-      <th>1.0</th>
-      <td>88.23</td>
+      <th>42</th>
+      <td>RGI60-13.07717</td>
+      <td>92.93</td>
     </tr>
     <tr>
-      <th>RGI60-13.06354</th>
-      <th>1.0</th>
-      <td>74.77</td>
+      <th>0</th>
+      <td>RGI60-13.06353</td>
+      <td>78.82</td>
     </tr>
     <tr>
-      <th>RGI60-13.06353</th>
-      <th>1.0</th>
-      <td>71.53</td>
+      <th>1</th>
+      <td>RGI60-13.06354</td>
+      <td>72.91</td>
     </tr>
     <tr>
-      <th>RGI60-13.06451</th>
-      <th>1.0</th>
-      <td>5.83</td>
+      <th>39</th>
+      <td>RGI60-13.06451</td>
+      <td>5.93</td>
     </tr>
     <tr>
-      <th>RGI60-13.06452</th>
-      <th>1.0</th>
-      <td>4.50</td>
+      <th>40</th>
+      <td>RGI60-13.06452</td>
+      <td>4.57</td>
     </tr>
     <tr>
-      <th>RGI60-13.06397</th>
-      <th>1.0</th>
-      <td>2.77</td>
+      <th>34</th>
+      <td>RGI60-13.06397</td>
+      <td>2.91</td>
     </tr>
     <tr>
-      <th>RGI60-13.07891</th>
-      <th>1.0</th>
-      <td>2.40</td>
+      <th>32</th>
+      <td>RGI60-13.06395</td>
+      <td>2.70</td>
     </tr>
     <tr>
-      <th>RGI60-13.06421</th>
-      <th>1.0</th>
+      <th>45</th>
+      <td>RGI60-13.07891</td>
+      <td>2.41</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>RGI60-13.06396</td>
       <td>2.00</td>
     </tr>
     <tr>
-      <th>RGI60-13.06396</th>
-      <th>1.0</th>
-      <td>1.49</td>
+      <th>30</th>
+      <td>RGI60-13.06386</td>
+      <td>1.95</td>
     </tr>
     <tr>
-      <th>RGI60-13.06395</th>
-      <th>1.0</th>
-      <td>0.75</td>
+      <th>35</th>
+      <td>RGI60-13.06421</td>
+      <td>1.68</td>
     </tr>
     <tr>
-      <th>RGI60-13.06424</th>
-      <th>1.0</th>
-      <td>0.73</td>
+      <th>36</th>
+      <td>RGI60-13.06424</td>
+      <td>0.82</td>
     </tr>
     <tr>
-      <th>RGI60-13.06426</th>
-      <th>1.0</th>
-      <td>0.60</td>
+      <th>46</th>
+      <td>RGI60-13.07925</td>
+      <td>0.65</td>
     </tr>
     <tr>
-      <th>RGI60-13.07925</th>
-      <th>1.0</th>
+      <th>38</th>
+      <td>RGI60-13.06426</td>
       <td>0.47</td>
     </tr>
     <tr>
-      <th>RGI60-13.06386</th>
-      <th>1.0</th>
-      <td>0.31</td>
+      <th>41</th>
+      <td>RGI60-13.06454</td>
+      <td>0.28</td>
     </tr>
     <tr>
-      <th>RGI60-13.06454</th>
-      <th>1.0</th>
-      <td>0.16</td>
-    </tr>
-    <tr>
-      <th>RGI60-13.06387</th>
-      <th>1.0</th>
-      <td>0.13</td>
+      <th>31</th>
+      <td>RGI60-13.06387</td>
+      <td>0.22</td>
     </tr>
   </tbody>
 </table>
@@ -2135,9 +1601,12 @@ Wall time: 5.02 s
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rgi_catchment_merge</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">rgi_catchment</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">&quot;RGIId&quot;</span><span class="p">)</span>
 <span class="n">rgi_in_catchment</span> <span class="o">=</span> <span class="n">rgi_catchment_merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rgi_catchment_merge</span><span class="p">[</span><span class="s1">&#39;share_of_area&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">50</span><span class="p">]</span>
 <span class="n">rgi_out_catchment</span> <span class="o">=</span> <span class="n">rgi_catchment_merge</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">rgi_catchment_merge</span><span class="p">[</span><span class="s1">&#39;share_of_area&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">]</span>
+
 <span class="n">catchment_new</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="n">rgi_out_catchment</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;difference&#39;</span><span class="p">)</span>
 <span class="n">catchment_new</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">overlay</span><span class="p">(</span><span class="n">catchment_new</span><span class="p">,</span> <span class="n">rgi_in_catchment</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;union&#39;</span><span class="p">)</span>
-<span class="n">catchment_new</span> <span class="o">=</span> <span class="n">catchment_new</span><span class="o">.</span><span class="n">dissolve</span><span class="p">()[[</span><span class="s1">&#39;LABEL_1&#39;</span><span class="p">,</span> <span class="s1">&#39;geometry&#39;</span><span class="p">]]</span>
+<span class="n">catchment_new</span> <span class="o">=</span> <span class="n">catchment_new</span><span class="o">.</span><span class="n">dissolve</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">catchment_new</span><span class="p">[</span><span class="s2">&quot;LABEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">catchment_new</span> <span class="o">=</span> <span class="n">catchment_new</span><span class="p">[[</span><span class="s2">&quot;LABEL&quot;</span><span class="p">,</span> <span class="s2">&quot;geometry&quot;</span><span class="p">]]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Total number of determined glacier outlines: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rgi_catchment_merge</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Number of included glacier outlines (overlap &gt;= 50%): </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rgi_in_catchment</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -2147,29 +1616,7 @@ Wall time: 5.02 s
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of determined glacier outlines: 51
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total number of determined glacier outlines: 51
 Number of included glacier outlines (overlap &gt;= 50%): 38
 Number of excluded glacier outlines (overlap &lt; 50%): 13
 </pre></div>
@@ -2197,29 +1644,7 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output text_html"><div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -2248,14 +1673,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <th>Area</th>
       <th>Zmin</th>
       <th>...</th>
-      <th>Form</th>
-      <th>TermType</th>
       <th>Surging</th>
       <th>Linkages</th>
       <th>Name</th>
       <th>geometry</th>
       <th>index_right</th>
-      <th>LABEL</th>
+      <th>area_km2</th>
+      <th>outlet_lat</th>
+      <th>outlet_lng</th>
       <th>rgi_area</th>
       <th>share_of_area</th>
     </tr>
@@ -2274,16 +1699,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.122</td>
       <td>3827</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.2473 42.22858, 78.24725 42.22858,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.224364e+05</td>
-      <td>71.53</td>
+      <td>78.82</td>
     </tr>
     <tr>
       <th>1</th>
@@ -2298,16 +1723,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.269</td>
       <td>3788</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.25962 42.21159, 78.25962 42.21161...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.689387e+05</td>
-      <td>74.77</td>
+      <td>72.91</td>
     </tr>
     <tr>
       <th>2</th>
@@ -2322,14 +1747,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.177</td>
       <td>3640</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.25481 42.2114, 78.25437 42.21124,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.772685e+05</td>
       <td>100.00</td>
     </tr>
@@ -2346,14 +1771,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.397</td>
       <td>3665</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.24325 42.20383, 78.24278 42.20365...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>3.976880e+05</td>
       <td>100.00</td>
     </tr>
@@ -2370,14 +1795,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.053</td>
       <td>3870</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.2596 42.20812, 78.25958 42.20812,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>5.305518e+04</td>
       <td>100.00</td>
     </tr>
@@ -2394,14 +1819,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.082</td>
       <td>3893</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.28462 42.18393, 78.28461 42.18394...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>8.178833e+04</td>
       <td>100.00</td>
     </tr>
@@ -2418,16 +1843,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>4.201</td>
       <td>3362</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>1</td>
       <td>Karabatkak Glacier</td>
       <td>POLYGON ((78.30373 42.14478, 78.30374 42.1449,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>4.202605e+06</td>
-      <td>99.51</td>
+      <td>99.76</td>
     </tr>
     <tr>
       <th>7</th>
@@ -2442,14 +1867,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.253</td>
       <td>3689</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.2866 42.14613, 78.2866 42.14613, ...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.530299e+05</td>
       <td>100.00</td>
     </tr>
@@ -2466,14 +1891,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>2.046</td>
       <td>3328</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.27549 42.13342, 78.27502 42.13358...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.047230e+06</td>
       <td>100.00</td>
     </tr>
@@ -2490,14 +1915,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.140</td>
       <td>3912</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.25779 42.1406, 78.25783 42.14063,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.402120e+05</td>
       <td>100.00</td>
     </tr>
@@ -2514,14 +1939,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.120</td>
       <td>3586</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.25477 42.15317, 78.25478 42.15319...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.198357e+05</td>
       <td>100.00</td>
     </tr>
@@ -2538,14 +1963,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.488</td>
       <td>3763</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.24228 42.15276, 78.24179 42.15291...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>4.878905e+05</td>
       <td>100.00</td>
     </tr>
@@ -2562,14 +1987,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.455</td>
       <td>3772</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.24121 42.14288, 78.24115 42.14316...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>4.554036e+05</td>
       <td>100.00</td>
     </tr>
@@ -2586,14 +2011,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.064</td>
       <td>4091</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.25781 42.14643, 78.25795 42.14627...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>6.394580e+04</td>
       <td>100.00</td>
     </tr>
@@ -2610,14 +2035,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.838</td>
       <td>3886</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.27334 42.13093, 78.27335 42.13092...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>8.380628e+05</td>
       <td>100.00</td>
     </tr>
@@ -2634,14 +2059,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.130</td>
       <td>3783</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.24502 42.1209, 78.24501 42.12111,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.303180e+05</td>
       <td>100.00</td>
     </tr>
@@ -2658,14 +2083,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>1.530</td>
       <td>3542</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.22665 42.09609, 78.22619 42.09593...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.530797e+06</td>
       <td>100.00</td>
     </tr>
@@ -2682,14 +2107,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.051</td>
       <td>3715</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.17538 42.09485, 78.17582 42.0949,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>5.125522e+04</td>
       <td>100.00</td>
     </tr>
@@ -2706,14 +2131,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.079</td>
       <td>4111</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.17566 42.08282, 78.17543 42.08271...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>7.865735e+04</td>
       <td>100.00</td>
     </tr>
@@ -2730,14 +2155,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>1.188</td>
       <td>3717</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.18269 42.08684, 78.18287 42.08685...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.189120e+06</td>
       <td>100.00</td>
     </tr>
@@ -2754,14 +2179,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.053</td>
       <td>3711</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.16486 42.09286, 78.16512 42.09265...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>5.341084e+04</td>
       <td>100.00</td>
     </tr>
@@ -2778,14 +2203,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.242</td>
       <td>3821</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.16123 42.07615, 78.16121 42.07647...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.422097e+05</td>
       <td>100.00</td>
     </tr>
@@ -2802,14 +2227,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.210</td>
       <td>3954</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.16569 42.08133, 78.16569 42.08144...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.103233e+05</td>
       <td>100.00</td>
     </tr>
@@ -2826,14 +2251,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.312</td>
       <td>3789</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.14342 42.09126, 78.14307 42.0911,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>3.125316e+05</td>
       <td>100.00</td>
     </tr>
@@ -2850,14 +2275,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.262</td>
       <td>3833</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.13993 42.09554, 78.13922 42.09586...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.623176e+05</td>
       <td>100.00</td>
     </tr>
@@ -2874,14 +2299,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.104</td>
       <td>3917</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.14482 42.10282, 78.14487 42.10251...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.044770e+05</td>
       <td>100.00</td>
     </tr>
@@ -2898,14 +2323,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.202</td>
       <td>3816</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.14606 42.10367, 78.14607 42.1037,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.018695e+05</td>
       <td>100.00</td>
     </tr>
@@ -2922,14 +2347,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.557</td>
       <td>3619</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.16573 42.12234, 78.16524 42.12175...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>5.575186e+05</td>
       <td>100.00</td>
     </tr>
@@ -2946,14 +2371,14 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.461</td>
       <td>3615</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.15813 42.18126, 78.15832 42.18113...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>4.607761e+05</td>
       <td>100.00</td>
     </tr>
@@ -2970,16 +2395,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.162</td>
       <td>3664</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.14286 42.18766, 78.14289 42.18785...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.618856e+05</td>
-      <td>99.00</td>
+      <td>97.67</td>
     </tr>
     <tr>
       <th>37</th>
@@ -2994,16 +2419,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>2.110</td>
       <td>3626</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.13917 42.05947, 78.13898 42.05981...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.111295e+06</td>
-      <td>93.59</td>
+      <td>97.16</td>
     </tr>
     <tr>
       <th>42</th>
@@ -3018,16 +2443,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.115</td>
       <td>4295</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.15995 42.06078, 78.16006 42.06067...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.149899e+05</td>
-      <td>88.23</td>
+      <td>92.93</td>
     </tr>
     <tr>
       <th>43</th>
@@ -3042,16 +2467,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>0.137</td>
       <td>3996</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.16032 42.06117, 78.16003 42.06088...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.365792e+05</td>
-      <td>97.94</td>
+      <td>100.00</td>
     </tr>
     <tr>
       <th>44</th>
@@ -3066,16 +2491,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>1.541</td>
       <td>3673</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.17268 42.07346, 78.17306 42.073, ...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>1.542085e+06</td>
-      <td>99.93</td>
+      <td>100.00</td>
     </tr>
     <tr>
       <th>47</th>
@@ -3090,16 +2515,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>2.825</td>
       <td>3580</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.28974 42.11692, 78.28933 42.1166,...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.825799e+06</td>
-      <td>99.96</td>
+      <td>99.97</td>
     </tr>
     <tr>
       <th>48</th>
@@ -3114,16 +2539,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>2.422</td>
       <td>3517</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.28017 42.11207, 78.28018 42.11191...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>2.423234e+06</td>
-      <td>99.90</td>
+      <td>99.92</td>
     </tr>
     <tr>
       <th>49</th>
@@ -3138,16 +2563,16 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>3.804</td>
       <td>3499</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.19163 42.07564, 78.19154 42.07561...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>3.805955e+06</td>
-      <td>99.70</td>
+      <td>98.32</td>
     </tr>
     <tr>
       <th>50</th>
@@ -3162,20 +2587,20 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
       <td>3.611</td>
       <td>3397</td>
       <td>...</td>
-      <td>0</td>
-      <td>0</td>
       <td>9</td>
       <td>9</td>
       <td>None</td>
       <td>POLYGON ((78.20858 42.09121, 78.20871 42.09088...</td>
       <td>0</td>
-      <td>1.0</td>
+      <td>303</td>
+      <td>42.3</td>
+      <td>78.091</td>
       <td>3.612619e+06</td>
-      <td>98.95</td>
+      <td>98.82</td>
     </tr>
   </tbody>
 </table>
-<p>38 rows × 27 columns</p>
+<p>38 rows × 29 columns</p>
 </div></div></div>
 </div>
 <p>With the updated catchment outline we can now determine the <strong>final area of the catchment</strong> and the <strong>part covered by glaciers</strong>.</p>
@@ -3201,29 +2626,7 @@ Number of excluded glacier outlines (overlap &lt; 50%): 13
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>New catchment area is 295.67 km²
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>New catchment area is 301.77 km²
 Glacierized catchment area is 31.83 km²
 </pre></div>
 </div>
@@ -3250,83 +2653,14 @@ Glacierized catchment area is 31.83 km²
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Layer &#39;rgi_in&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Layer &#39;rgi_in&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
 Layer &#39;rgi_out&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
 Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpkg&#39;
 </pre></div>
 </div>
 </div>
 </div>
-<p>…and can also be added to the interactive map…</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c_new</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">geopandas_to_ee</span><span class="p">(</span><span class="n">catchment_new</span><span class="p">)</span>
-<span class="n">rgi</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">geopandas_to_ee</span><span class="p">(</span><span class="n">rgi_in_catchment</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">addLayer</span><span class="p">(</span><span class="n">c_new</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;orange&#39;</span><span class="p">},</span> <span class="s2">&quot;Catchment New&quot;</span><span class="p">)</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">addLayer</span><span class="p">(</span><span class="n">rgi</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;white&#39;</span><span class="p">},</span> <span class="s2">&quot;RGI60&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;New layers added.&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>New layers added.
-</pre></div>
-</div>
-</div>
-</div>
-<p>…or combined in a simple plot.</p>
+<p>… and can be combined in a simple plot.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -3346,29 +2680,7 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><img alt="_images/c320ede23bf8b66ac7e0f2e7fbfee4ffb2fd101bfbdf35fed8b39a6ef27bf566.png" src="_images/c320ede23bf8b66ac7e0f2e7fbfee4ffb2fd101bfbdf35fed8b39a6ef27bf566.png" />
+<img alt="_images/5484f759ad3ce2e0091a67beeb26a04fbc056b565d2fd9eee63533931196ba76.png" src="_images/5484f759ad3ce2e0091a67beeb26a04fbc056b565d2fd9eee63533931196ba76.png" />
 </div>
 </div>
 <p>After adding the new catchment area to GEE, we can easily calculate the mean catchment elevation in meters above sea level.</p>
@@ -3379,37 +2691,16 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ele_cat</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">reduceRegion</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Reducer</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
-                             <span class="n">geometry</span><span class="o">=</span><span class="n">c_new</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()[</span><span class="n">dem_config</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">mean_elevation_from_raster</span>
+
+<span class="n">ele_cat</span> <span class="o">=</span> <span class="n">mean_elevation_from_raster</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">catchment_new</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mean catchment elevation (adjusted) is </span><span class="si">{</span><span class="n">ele_cat</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> m a.s.l.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean catchment elevation (adjusted) is 3293.49 m a.s.l.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mean catchment elevation (adjusted) is 3268.99 m a.s.l.
 </pre></div>
 </div>
 </div>
@@ -3466,29 +2757,7 @@ Layer &#39;catchment_new&#39; added to GeoPackage &#39;output/catchment_data.gpk
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Thickness archives:	[&#39;ice_thickness_RGI60-13_7&#39;, &#39;ice_thickness_RGI60-13_8&#39;]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Thickness archives:	[&#39;ice_thickness_RGI60-13_7&#39;, &#39;ice_thickness_RGI60-13_8&#39;]
 DEM archives:		[&#39;dem_surface_DEM_RGI60-13_7&#39;, &#39;dem_surface_DEM_RGI60-13_8&#39;]
 </pre></div>
 </div>
@@ -3503,55 +2772,39 @@ DEM archives:		[&#39;dem_surface_DEM_RGI60-13_7&#39;, &#39;dem_surface_DEM_RGI60
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">resourcespace</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResourceSpace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_webservice_config</span>
 
 <span class="c1"># use guest credentials to access media server</span>
-<span class="n">api_base_url</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;api_base_url&#39;</span><span class="p">]</span>
-<span class="n">private_key</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;private_key&#39;</span><span class="p">]</span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
+<span class="n">hu_cfg</span> <span class="o">=</span> <span class="n">load_webservice_config</span><span class="p">(</span><span class="n">section</span><span class="o">=</span><span class="s2">&quot;HU&quot;</span><span class="p">)</span>
+
+<span class="n">api_base_url</span> <span class="o">=</span> <span class="n">hu_cfg</span><span class="p">[</span><span class="s2">&quot;MEDIA_API_URL&quot;</span><span class="p">]</span>
+<span class="n">private_key</span> <span class="o">=</span> <span class="n">hu_cfg</span><span class="p">[</span><span class="s2">&quot;MEDIA_PRIVATE_KEY&quot;</span><span class="p">]</span>
+<span class="n">user</span> <span class="o">=</span> <span class="n">hu_cfg</span><span class="p">[</span><span class="s2">&quot;MEDIA_USER&quot;</span><span class="p">]</span>
 
 <span class="n">myrepository</span> <span class="o">=</span> <span class="n">ResourceSpace</span><span class="p">(</span><span class="n">api_base_url</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">private_key</span><span class="p">)</span>
 
 <span class="c1"># get resource IDs for each .zip file</span>
 <span class="n">refs_thickness</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">myrepository</span><span class="o">.</span><span class="n">get_collection_resources</span><span class="p">(</span><span class="mi">12</span><span class="p">))[</span>
-    <span class="p">[</span><span class="s1">&#39;ref&#39;</span><span class="p">,</span> <span class="s1">&#39;file_size&#39;</span><span class="p">,</span> <span class="s1">&#39;file_extension&#39;</span><span class="p">,</span> <span class="s1">&#39;field8&#39;</span><span class="p">]]</span>
-<span class="n">refs_dem</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">myrepository</span><span class="o">.</span><span class="n">get_collection_resources</span><span class="p">(</span><span class="mi">21</span><span class="p">))[[</span><span class="s1">&#39;ref&#39;</span><span class="p">,</span> <span class="s1">&#39;file_size&#39;</span><span class="p">,</span> <span class="s1">&#39;file_extension&#39;</span><span class="p">,</span> <span class="s1">&#39;field8&#39;</span><span class="p">]]</span>
+    <span class="p">[</span><span class="s1">&#39;ref&#39;</span><span class="p">,</span> <span class="s1">&#39;file_size&#39;</span><span class="p">,</span> <span class="s1">&#39;file_extension&#39;</span><span class="p">,</span> <span class="s1">&#39;field8&#39;</span><span class="p">]</span>
+<span class="p">]</span>
+<span class="n">refs_dem</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">myrepository</span><span class="o">.</span><span class="n">get_collection_resources</span><span class="p">(</span><span class="mi">21</span><span class="p">))[</span>
+    <span class="p">[</span><span class="s1">&#39;ref&#39;</span><span class="p">,</span> <span class="s1">&#39;file_size&#39;</span><span class="p">,</span> <span class="s1">&#39;file_extension&#39;</span><span class="p">,</span> <span class="s1">&#39;field8&#39;</span><span class="p">]</span>
+<span class="p">]</span>
 
-<span class="c1"># reduce list of resources two required zip files</span>
+<span class="c1"># reduce list of resources to the required zip files</span>
 <span class="n">refs_thickness</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">zips_thickness</span><span class="p">,</span> <span class="n">refs_thickness</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;thickness&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;field8&#39;</span><span class="p">)</span>
 <span class="n">refs_dem</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">zips_dem</span><span class="p">,</span> <span class="n">refs_dem</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;dem&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;field8&#39;</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Thickness archive references:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Thickness archive references:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">refs_thickness</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;DEM archive references:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;DEM archive references:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">refs_dem</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Thickness archive references:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Thickness archive references:
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -3683,31 +2936,9 @@ DEM archives:		[&#39;dem_surface_DEM_RGI60-13_7&#39;, &#39;dem_surface_DEM_RGI60
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38 files have been extracted (ice thickness)
-CPU times: user 81.7 ms, sys: 21 ms, total: 103 ms
-Wall time: 1.6 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38 files have been extracted (ice thickness)
+CPU times: user 114 ms, sys: 20 ms, total: 134 ms
+Wall time: 1.77 s
 </pre></div>
 </div>
 </div>
@@ -3744,31 +2975,9 @@ Wall time: 1.6 s
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38 files have been extracted (DEM)
-CPU times: user 138 ms, sys: 40.6 ms, total: 178 ms
-Wall time: 3.95 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>38 files have been extracted (DEM)
+CPU times: user 148 ms, sys: 27 ms, total: 175 ms
+Wall time: 2.38 s
 </pre></div>
 </div>
 </div>
@@ -3794,29 +3003,7 @@ Wall time: 3.95 s
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of files matches the number of glaciers within catchment: 38
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Number of files matches the number of glaciers within catchment: 38
 </pre></div>
 </div>
 </div>
@@ -3834,6 +3021,7 @@ Wall time: 3.95 s
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">osgeo</span><span class="w"> </span><span class="kn">import</span> <span class="n">gdal</span>
+<span class="n">gdal</span><span class="o">.</span><span class="n">UseExceptions</span><span class="p">()</span>
 
 <span class="n">df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
 <span class="k">if</span> <span class="n">cnt_thickness</span> <span class="o">!=</span> <span class="n">cnt_dem</span><span class="p">:</span>
@@ -3850,7 +3038,7 @@ Wall time: 3.95 s
             <span class="c1"># Read arrays</span>
             <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">file_list</span><span class="p">:</span>
                 <span class="n">src</span> <span class="o">=</span> <span class="n">gdal</span><span class="o">.</span><span class="n">Open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-                <span class="n">geotransform</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">GetGeoTransform</span><span class="p">()</span>  <span class="c1"># Could be done more elegantly outside the for loop</span>
+                <span class="n">geotransform</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">GetGeoTransform</span><span class="p">()</span>
                 <span class="n">projection</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">GetProjectionRef</span><span class="p">()</span>
                 <span class="n">array_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">src</span><span class="o">.</span><span class="n">ReadAsArray</span><span class="p">())</span>
                 <span class="n">pixelSizeX</span> <span class="o">=</span> <span class="n">geotransform</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -3872,29 +3060,7 @@ Wall time: 3.95 s
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ice thickness and elevations rasters stacked
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Ice thickness and elevations rasters stacked
 Value pairs created
 </pre></div>
 </div>
@@ -3914,23 +3080,28 @@ Value pairs created
     <span class="n">df_all</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># get min/max altitude considering catchment and all glaciers</span>
-    <span class="n">alt_min</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">catchment_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">df_all</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="n">alt_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">catchment_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">df_all</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="mi">10</span>
+    <span class="n">alt_min</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">ele_min</span><span class="p">,</span> <span class="n">df_all</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">alt_max</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ele_max</span><span class="p">,</span> <span class="n">df_all</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="mi">10</span>
 
-    <span class="c1"># create bins in 10m steps</span>
+    <span class="c1"># create bins in 10 m steps</span>
     <span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">alt_min</span><span class="p">,</span> <span class="n">df_all</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
 
     <span class="c1"># aggregate per bin and do some math</span>
-    <span class="n">df_agg</span> <span class="o">=</span> <span class="n">df_all</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df_all</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="p">))[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">df_agg</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_all</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df_all</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">],</span> <span class="n">bins</span><span class="p">),</span> <span class="n">observed</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="s1">&#39;thickness&#39;</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="p">)</span>
     <span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;Elevation&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">left</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
     <span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;Area&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">pixelSizeX</span> <span class="o">*</span> <span class="n">pixelSizeY</span> <span class="o">/</span> <span class="n">catchment_new</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;area&#39;</span><span class="p">]</span>
     <span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;WE&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.908</span> <span class="o">*</span> <span class="mi">1000</span>
     <span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;EleZone&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;Elevation&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="nb">int</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mi">100</span><span class="p">))</span>
 
     <span class="c1"># delete empty elevation bands but keep at least one entry per elevation zone</span>
-    <span class="n">df_agg</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">df_agg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span>
-                        <span class="n">df_agg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="s1">&#39;EleZone&#39;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)]</span>
-                       <span class="p">)</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+    <span class="n">df_agg</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span>
+        <span class="n">df_agg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="n">df_agg</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_agg</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">([</span><span class="s1">&#39;EleZone&#39;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
+    <span class="p">])</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
 
     <span class="n">df_agg</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">,</span> <span class="s1">&#39;mean&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">df_agg</span> <span class="o">=</span> <span class="n">df_agg</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
@@ -3942,29 +3113,7 @@ Value pairs created
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Glacier profile for catchment created!
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Glacier profile for catchment created!
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -4044,7 +3193,7 @@ Value pairs created
     <tr>
       <th>277</th>
       <td>4740</td>
-      <td>0.000013</td>
+      <td>0.000012</td>
       <td>14450.217773</td>
       <td>4700</td>
     </tr>
@@ -4104,29 +3253,7 @@ Value pairs created
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output text_html"><div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -4239,29 +3366,7 @@ Value pairs created
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><img alt="_images/a27f2f3de13e2d4db9e85104229257156ba5b96519c402242ff92669dd495d1c.png" src="_images/a27f2f3de13e2d4db9e85104229257156ba5b96519c402242ff92669dd495d1c.png" />
+<img alt="_images/a27f2f3de13e2d4db9e85104229257156ba5b96519c402242ff92669dd495d1c.png" src="_images/a27f2f3de13e2d4db9e85104229257156ba5b96519c402242ff92669dd495d1c.png" />
 </div>
 </div>
 <p>Finally, we calculate the average glacier elevation in meters above sea level.</p>
@@ -4279,29 +3384,7 @@ Value pairs created
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average glacier elevation in the catchment: 4001.88 m a.s.l.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Average glacier elevation in the catchment: 4001.88 m a.s.l.
 </pre></div>
 </div>
 </div>
@@ -4342,29 +3425,7 @@ Value pairs created
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Settings saved to file.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Settings saved to file.
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -4395,11 +3456,11 @@ Value pairs created
   <tbody>
     <tr>
       <th>area_cat</th>
-      <td>295.674842</td>
+      <td>301.765549</td>
     </tr>
     <tr>
       <th>ele_cat</th>
-      <td>3293.491688</td>
+      <td>3268.993340</td>
     </tr>
     <tr>
       <th>area_glac</th>
@@ -4411,7 +3472,7 @@ Value pairs created
     </tr>
     <tr>
       <th>lat</th>
-      <td>42.182800</td>
+      <td>42.185418</td>
     </tr>
   </tbody>
 </table>
@@ -4442,29 +3503,7 @@ Value pairs created
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output folder can be download now (file output_download.zip)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output folder can be download now (file output_download.zip)
 </pre></div>
 </div>
 </div>
@@ -4481,30 +3520,6 @@ Value pairs created
 </div>
 </div>
 </details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div></div>
 </div>
 </section>
 </section>
@@ -4573,8 +3588,8 @@ Value pairs created
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#start-gee-and-download-dem">Start GEE and download DEM</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#catchment-deliniation">Catchment deliniation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#delineate-catchment-from-the-outlet-point">Delineate catchment from the outlet point</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-digital-elevation-model-dem">Download the digital elevation model (DEM)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#determine-glaciers-in-catchment-area">Determine glaciers in catchment area</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#interim-summary">Interim Summary:</a></li>
 </ul>
