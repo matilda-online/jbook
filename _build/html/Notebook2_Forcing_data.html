@@ -354,9 +354,12 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-the-date-range">Set the date range</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5l-geopotential-height">ERA5L Geopotential height</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5-land-temperature-and-precipitation-data">ERA5-Land Temperature and Precipitation Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5-land-reference-elevation">ERA5-Land reference elevation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5-land-temperature-and-precipitation-data">ERA5-Land temperature and precipitation data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#select-the-date-range">Select the date range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-era5-land-data">Download ERA5-Land data</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#store-data-for-next-steps">Store data for next steps</a></li>
 </ul>
             </nav>
@@ -371,23 +374,23 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="climate-forcing-data">
 <h1>Climate forcing data<a class="headerlink" href="#climate-forcing-data" title="Link to this heading">#</a></h1>
-<p>Now that we have all the static data, we can focus on the <strong>climate variables</strong>. In this notebook we will…</p>
+<p>Now that we have all the <strong>static catchment data</strong>, we can turn to the <strong>climate forcing</strong> needed for MATILDA.</p>
+<p>In this notebook we will…</p>
 <ol class="arabic simple">
-<li><p>…download <strong>ERA5 land reanalysis data</strong> aggregated to our catchment,</p></li>
-<li><p>…and determine the <strong>reference altitude</strong> of the data from the geopotential height.</p></li>
+<li><p>request the <strong>reference elevation</strong> of the forcing data,</p></li>
+<li><p>request <strong>ERA5-Land temperature and precipitation</strong> for the catchment,</p></li>
+<li><p>inspect the returned time series,</p></li>
+<li><p>and store the results for the next workflow steps.</p></li>
 </ol>
-<p>For data preprocessing and download we will again use the <strong>Google Earth Engine</strong> (GEE) to offload as much as possible to external servers. ERA5-Land is the latest reanalysis dataset from the European Center for Medium-Range Weather Forecast (<a class="reference external" href="https://www.ecmwf.int/en/era5-land">ECMWF</a>), available from 1950 to near real-time. The GEE data catalog summarizes…</p>
-<blockquote>
-<div><p>ERA5-Land is a reanalysis dataset providing a consistent view of the evolution of land variables over several decades at an enhanced resolution compared to ERA5. ERA5-Land has been produced by replaying the land component of the ECMWF ERA5 climate reanalysis. Reanalysis combines model data with observations from across the world into a globally complete and consistent dataset using the laws of physics. Reanalysis produces data that goes several decades back in time, providing an accurate description of the climate of the past.</p>
-<p>Source: <a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_DAILY_RAW#description">GEE Data Catalog</a></p>
-</div></blockquote>
-<p>To get started we read some settings from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file again:</p>
+<p>🌦️ The aim is not only to obtain the data, but also to make each step easy to follow. Even when code cells are hidden in the final Jupyter Book, the printed outputs and figures should still show a clear workflow.</p>
+<p>To get started, we read the settings from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> file again.</p>
+<p>We will need:</p>
 <ul class="simple">
-<li><p><strong>cloud project</strong> name for the GEE access</p></li>
-<li><p><strong>input/output folders</strong> for data imports and downloads</p></li>
-<li><p><strong>filenames</strong> (DEM, GeoPackage)</p></li>
-<li><p>include future <strong>projections</strong> or not</p></li>
-<li><p>show/hide <strong>interactive map</strong> in notebooks</p></li>
+<li><p>paths for <strong>input</strong>, <strong>output</strong>, and <strong>figures</strong>,</p></li>
+<li><p>the name of the output <strong>GeoPackage</strong> from Notebook 1,</p></li>
+<li><p>whether <strong>projections</strong> are enabled,</p></li>
+<li><p>whether a refreshed <strong>ZIP archive</strong> should be created,</p></li>
+<li><p>and the <strong>MATILDA-Webservice URL</strong> plus <strong>API key</strong> for the requests.</p></li>
 </ul>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
@@ -397,33 +400,39 @@ document.write(`
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>     <span class="c1"># Suppress Deprecation Warnings</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="ne">UserWarning</span><span class="p">)</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="c1"># read local config.ini file</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
-<span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;config.ini&#39;</span><span class="p">)</span>
+<span class="n">config</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s2">&quot;config.ini&quot;</span><span class="p">)</span>
 
-<span class="c1"># get file config from config.ini</span>
-<span class="n">cloud_project</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;CLOUD_PROJECT&#39;</span><span class="p">]</span>
-<span class="n">dir_input</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_INPUT&#39;</span><span class="p">]</span>
-<span class="n">dir_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_OUTPUT&#39;</span><span class="p">]</span>
-<span class="n">dir_figures</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_FIGURES&#39;</span><span class="p">]</span>
-<span class="n">output_gpkg</span> <span class="o">=</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;GPKG_NAME&#39;</span><span class="p">]</span>
-<span class="n">scenarios</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span> <span class="s1">&#39;PROJECTIONS&#39;</span><span class="p">)</span>
-<span class="n">show_map</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span><span class="s1">&#39;SHOW_MAP&#39;</span><span class="p">)</span>
-<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">]</span>
+<span class="n">dir_input</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;FILE_SETTINGS&quot;</span><span class="p">][</span><span class="s2">&quot;DIR_INPUT&quot;</span><span class="p">]</span>
+<span class="n">dir_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;FILE_SETTINGS&quot;</span><span class="p">][</span><span class="s2">&quot;DIR_OUTPUT&quot;</span><span class="p">]</span>
+<span class="n">dir_figures</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;FILE_SETTINGS&quot;</span><span class="p">][</span><span class="s2">&quot;DIR_FIGURES&quot;</span><span class="p">]</span>
+<span class="n">output_gpkg</span> <span class="o">=</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;FILE_SETTINGS&quot;</span><span class="p">][</span><span class="s2">&quot;GPKG_NAME&quot;</span><span class="p">]</span>
+<span class="n">scenarios</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;CONFIG&quot;</span><span class="p">,</span> <span class="s2">&quot;PROJECTIONS&quot;</span><span class="p">)</span>
+<span class="n">show_map</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;CONFIG&quot;</span><span class="p">,</span> <span class="s2">&quot;SHOW_MAP&quot;</span><span class="p">)</span>
+<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s2">&quot;CONFIG&quot;</span><span class="p">,</span> <span class="s2">&quot;ZIP_OUTPUT&quot;</span><span class="p">)</span>
 
-<span class="c1"># get style for matplotlib plots</span>
-<span class="n">plt_style</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;PLOT_STYLE&#39;</span><span class="p">])</span>
+<span class="n">plt_style</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;CONFIG&quot;</span><span class="p">][</span><span class="s2">&quot;PLOT_STYLE&quot;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output GeoPackage: </span><span class="si">{</span><span class="n">output_gpkg</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Figure directory:  </span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output GeoPackage: output/catchment_data.gpkg
+Figure directory:  output/figures/
+</pre></div>
 </div>
-<p>…and <strong>initialize</strong> the GEE API.</p>
+</div>
+</div>
+<p>If you have decided to back up your output files, you can now load them.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -431,23 +440,24 @@ document.write(`
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ee</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">authenticate_and_initialize_ee</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">zipfile</span>
 
-<span class="n">authenticate_and_initialize_ee</span><span class="p">(</span><span class="n">cloud_project</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="s2">&quot;output_download.zip&quot;</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
+        <span class="n">z</span><span class="o">.</span><span class="n">extractall</span><span class="p">(</span><span class="n">dir_output</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Extracted &quot;output_download.zip&quot; to &quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>--- Attempting Earth Engine Setup for project: matilda-edu ---
-1. Trying to initialize with existing credentials...
-✅ Earth Engine successfully initialized with existing credentials for project: matilda-edu
-</pre></div>
 </div>
-</div>
-</div>
-<p>We can now load the catchment outline from the previous notebook and convert it to a <code class="docutils literal notranslate"><span class="pre">ee.FeatureCollection</span></code> to use it in GEE.</p>
+<p>Next, we load the <strong>catchment geometry</strong> from Notebook 1.</p>
+<p>This geometry is the spatial reference for all following requests:</p>
+<ul class="simple">
+<li><p>the <strong>reference elevation</strong> is calculated for this catchment,</p></li>
+<li><p>and the <strong>ERA5-Land time series</strong> are aggregated to exactly this area.</p></li>
+</ul>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -456,124 +466,22 @@ document.write(`
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">geopandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gpd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">geemap</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="n">catchment_new</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">output_gpkg</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s1">&#39;catchment_new&#39;</span><span class="p">)</span>
-<span class="n">catchment</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">geopandas_to_ee</span><span class="p">(</span><span class="n">catchment_new</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-</div>
-<section id="set-the-date-range">
-<h2>Set the date range<a class="headerlink" href="#set-the-date-range" title="Link to this heading">#</a></h2>
-<p>If you are only interested in modeling the past, set <code class="docutils literal notranslate"><span class="pre">PROJECTIONS=False</span></code> in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> to only download reanalysis data for your defined modeling period. Otherwise, all available historical data (since 1979) is downloaded to provide the best possible basis for bias adjustment of the climate scenario data.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">scenarios</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-    <span class="n">date_range</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;1979-01-01&#39;</span><span class="p">,</span> <span class="s1">&#39;2025-01-01&#39;</span><span class="p">]</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">date_range</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;DATE_RANGE&#39;</span><span class="p">])</span>
+<span class="n">catchment_new</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">output_gpkg</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="s2">&quot;catchment_new&quot;</span><span class="p">)</span>
+<span class="n">catchment_geojson</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">catchment_new</span><span class="o">.</span><span class="n">to_json</span><span class="p">())</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;The selected date range is </span><span class="si">{</span><span class="n">date_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">date_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded catchment layer with </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">catchment_new</span><span class="p">)</span><span class="si">}</span><span class="s2"> feature(s).&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Catchment CRS: </span><span class="si">{</span><span class="n">catchment_new</span><span class="o">.</span><span class="n">crs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">catchment_new</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The selected date range is 1979-01-01 to 2025-01-01
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-<hr class="docutils" />
-<section id="era5l-geopotential-height">
-<h2>ERA5L Geopotential height<a class="headerlink" href="#era5l-geopotential-height" title="Link to this heading">#</a></h2>
-<p>The <strong>reference surface elevation</strong> of ERA5-Land grid cells cannot be obtained directly, but must be calculated from the <strong>geopotential</strong>.</p>
-<blockquote>
-<div><p>This parameter is the gravitational potential energy of a unit mass, at a particular location, relative to mean sea level. It is also the amount of work that would have to be done, against the force of gravity, to lift a unit mass to that location from mean sea level.</p>
-<p>The geopotential height can be calculated by dividing the geopotential by the Earth’s gravitational acceleration, g (=9.80665 m s-2). The geopotential height plays an important role in synoptic meteorology (analysis of weather patterns). Charts of geopotential height plotted at constant pressure levels (e.g., 300, 500 or 850 hPa) can be used to identify weather systems such as cyclones, anticyclones, troughs and ridges.</p>
-<p>At the surface of the Earth, this parameter shows the variations in geopotential (height) of the surface, and is often referred to as the orography.</p>
-<p>Source: <a class="reference external" href="https://codes.ecmwf.int/grib/param-db/?id=129">ECMWF Parameter Database</a></p>
-</div></blockquote>
-<p>Since the ERA5 geopotential height is not available in the GEE Data Catalog, we downloaded it using the ECMWF Copernicus Data Store (<a class="reference external" href="https://cds.climate.copernicus.eu/#!/home">CDS</a>) API, converted it to <code class="docutils literal notranslate"><span class="pre">.ncdf</span></code> format, and reuploaded it. Therefore, the file has to be accessed in a similar way to the ice thickness data in Notebook 1.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">resourcespace</span><span class="w"> </span><span class="kn">import</span> <span class="n">ResourceSpace</span>
-
-<span class="c1"># use guest credentials to access media server </span>
-<span class="n">api_base_url</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;api_base_url&#39;</span><span class="p">]</span>
-<span class="n">private_key</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;private_key&#39;</span><span class="p">]</span>
-<span class="n">user</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;MEDIA_SERVER&#39;</span><span class="p">][</span><span class="s1">&#39;user&#39;</span><span class="p">]</span>
-
-<span class="n">myrepository</span> <span class="o">=</span> <span class="n">ResourceSpace</span><span class="p">(</span><span class="n">api_base_url</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">private_key</span><span class="p">)</span>
-
-<span class="c1"># get resource IDs for each .zip file</span>
-<span class="n">refs_era5l</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">myrepository</span><span class="o">.</span><span class="n">get_collection_resources</span><span class="p">(</span><span class="mi">128</span><span class="p">))[[</span><span class="s1">&#39;ref&#39;</span><span class="p">,</span> <span class="s1">&#39;file_size&#39;</span><span class="p">,</span> <span class="s1">&#39;file_extension&#39;</span><span class="p">,</span> <span class="s1">&#39;field8&#39;</span><span class="p">]]</span>
-<span class="n">ref_geopot</span> <span class="o">=</span> <span class="n">refs_era5l</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">refs_era5l</span><span class="p">[</span><span class="s1">&#39;field8&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;ERA5_land_Z_geopotential&#39;</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dataset file and reference on media server:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">ref_geopot</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dataset file and reference on media server:
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Loaded catchment layer with 1 feature(s).
+Catchment CRS: EPSG:4326
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -594,25 +502,32 @@ document.write(`
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ref</th>
-      <th>file_size</th>
-      <th>file_extension</th>
-      <th>field8</th>
+      <th>LABEL</th>
+      <th>area</th>
+      <th>geometry</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
-      <td>27215</td>
-      <td>8062521</td>
-      <td>zip</td>
-      <td>ERA5_land_Z_geopotential</td>
+      <td>1</td>
+      <td>3.017655e+08</td>
+      <td>MULTIPOLYGON (((78.14784 42.05075, 78.14734 42...</td>
     </tr>
   </tbody>
 </table>
 </div></div></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">.ncdf</span></code> file is then unzipped and loaded as <code class="docutils literal notranslate"><span class="pre">xarray</span></code> dataset for further processing.</p>
+<section id="era5-land-reference-elevation">
+<h2>ERA5-Land reference elevation<a class="headerlink" href="#era5-land-reference-elevation" title="Link to this heading">#</a></h2>
+<p>ERA5-Land provides the atmospheric forcing variables we need, but for a lumped hydrological model we also need one representative <strong>reference elevation</strong> of the forcing data.</p>
+<p>This elevation is derived from the <strong>surface geopotential</strong>:</p>
+<blockquote>
+<div><p>The geopotential height can be calculated by dividing the geopotential by the Earth’s gravitational acceleration,
+(g = 9.80665; m; s^{-2}).</p>
+</div></blockquote>
+<p>In practical terms, this gives us a representative elevation for the catchment-wide forcing data — similar in spirit to the elevation of a weather station.</p>
+<p>✨ In the notebook, we simply request this value from the MATILDA-Webservice and inspect the result.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -620,282 +535,20 @@ document.write(`
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">zipfile</span><span class="w"> </span><span class="kn">import</span> <span class="n">ZipFile</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_geopotential_webservice</span>
 
-<span class="n">content</span> <span class="o">=</span> <span class="n">myrepository</span><span class="o">.</span><span class="n">get_resource_file</span><span class="p">(</span><span class="n">ref_geopot</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;ref&#39;</span><span class="p">])</span>
-<span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">zipObj</span><span class="p">:</span>
-    <span class="c1"># Get a list of all archived file names from the zip</span>
-    <span class="n">filename</span> <span class="o">=</span> <span class="n">zipObj</span><span class="o">.</span><span class="n">namelist</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Reading file &quot;</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s1">&quot;...&#39;</span><span class="p">)</span>
-    <span class="n">file_bytes</span> <span class="o">=</span> <span class="n">zipObj</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-
-<span class="c1"># Open the file-like object as an xarray dataset</span>
-<span class="n">ds</span> <span class="o">=</span> <span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">file_bytes</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Dataset contains </span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;long_name&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> in </span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">]</span><span class="si">}</span><span class="s1"> as variable </span><span class="se">\&#39;</span><span class="si">{</span><span class="n">ds</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s2">&quot;GRIB_cfVarName&quot;</span><span class="p">]</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">geopot_data</span> <span class="o">=</span> <span class="n">get_geopotential_webservice</span><span class="p">(</span><span class="n">catchment_new</span><span class="p">)</span>
+<span class="n">mean_val</span> <span class="o">=</span> <span class="n">geopot_data</span><span class="p">[</span><span class="s2">&quot;geopotential_mean&quot;</span><span class="p">]</span>
+<span class="n">ele_dat</span> <span class="o">=</span> <span class="n">geopot_data</span><span class="p">[</span><span class="s2">&quot;elevation_m&quot;</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Reading file &quot;ERA5_land_Z_geopotential.nc&quot;...
-Dataset contains Geopotential in m**2 s**-2 as variable &#39;z&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<p>The original dataset covers the entire globe, so we crop it to the catchment area plus a 1° buffer zone.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># get catchment bounding box with buffer</span>
-<span class="n">bounds</span> <span class="o">=</span> <span class="n">catchment_new</span><span class="o">.</span><span class="n">total_bounds</span>
-<span class="n">min_lon</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">min_lat</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
-<span class="n">max_lon</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-<span class="n">max_lat</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
-
-<span class="n">cropped_ds</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">lat</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">min_lat</span><span class="p">,</span><span class="n">max_lat</span><span class="p">),</span> <span class="n">lon</span><span class="o">=</span><span class="nb">slice</span><span class="p">(</span><span class="n">min_lon</span><span class="p">,</span><span class="n">max_lon</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;xr.Dataset cropped to bbox[</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">min_lon</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">min_lat</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">max_lon</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">max_lat</span><span class="p">)</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>xr.Dataset cropped to bbox[77.06, 41.05, 79.33, 43]
-</pre></div>
-</div>
-</div>
-</div>
-<p>To load <code class="docutils literal notranslate"><span class="pre">xarray</span></code> data into GEE a little workaround is needed. Credits to <a class="reference external" href="https://github.com/lopezvoliver/geemap/blob/netcdf_to_ee/geemap/common.py#L1776">Oliver Lopez</a> for this solution.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># function to load nc file into GEE</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">netcdf_to_ee</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="n">ds</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
-
-    <span class="n">lon_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">lat_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
-
-    <span class="n">dim_lon</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ediff1d</span><span class="p">(</span><span class="n">lon_data</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-    <span class="n">dim_lat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ediff1d</span><span class="p">(</span><span class="n">lat_data</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dim_lon</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dim_lat</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The netCDF file is not a regular longitude/latitude grid&quot;</span><span class="p">)</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Converting xarray to numpy array...&quot;</span><span class="p">)</span>
-    <span class="n">data_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">data_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">data_np</span><span class="p">)</span>
-
-    <span class="c1"># Figure out if we need to roll the data or not</span>
-    <span class="c1"># (see https://github.com/giswqs/geemap/issues/285#issuecomment-791385176)</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">lon_data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">180</span><span class="p">:</span>
-        <span class="n">data_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">data_np</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">west_lon</span> <span class="o">=</span> <span class="n">lon_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">180</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">west_lon</span> <span class="o">=</span> <span class="n">lon_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Saving data extent and origin...&quot;</span><span class="p">)</span>
-    <span class="n">transform</span> <span class="o">=</span> <span class="p">[</span><span class="n">dim_lon</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">west_lon</span><span class="p">)</span> <span class="o">-</span> <span class="n">dim_lon</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dim_lat</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat_data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="n">dim_lat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mi">2</span><span class="p">]</span>
-    
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Converting numpy array to ee.Array...&quot;</span><span class="p">)</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">numpy_to_ee</span><span class="p">(</span>
-        <span class="n">data_np</span><span class="p">,</span> <span class="s2">&quot;EPSG:4326&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">transform</span><span class="p">,</span> <span class="n">band_names</span><span class="o">=</span><span class="s1">&#39;z&#39;</span>
-    <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done!&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">image</span><span class="p">,</span> <span class="n">data_np</span><span class="p">,</span> <span class="n">transform</span>
-
-
-<span class="n">image</span><span class="p">,</span> <span class="n">data_np</span><span class="p">,</span> <span class="n">transform</span> <span class="o">=</span> <span class="n">netcdf_to_ee</span><span class="p">(</span><span class="n">cropped_ds</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Converting xarray to numpy array...
-Saving data extent and origin...
-Converting numpy array to ee.Array...
-Done!
-</pre></div>
-</div>
-</div>
-</div>
-<p>If mapping is enabled in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code> you can now display the <strong>geopotential</strong> data in the <strong>GEE map</strong>. <a id="map"></a></p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">geemap.colormaps</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cm</span>
-
-<span class="k">if</span> <span class="n">show_map</span><span class="p">:</span>
-    <span class="n">Map</span> <span class="o">=</span> <span class="n">geemap</span><span class="o">.</span><span class="n">Map</span><span class="p">()</span>
-    <span class="c1"># add geopotential as layer</span>
-    <span class="n">vis_params</span> <span class="o">=</span>  <span class="p">{</span><span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">data_np</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">data_np</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="s1">&#39;palette&#39;</span><span class="p">:</span> <span class="n">cm</span><span class="o">.</span><span class="n">palettes</span><span class="o">.</span><span class="n">terrain</span><span class="p">,</span> <span class="s1">&#39;opacity&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">}</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">addLayer</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">vis_params</span><span class="p">,</span> <span class="s2">&quot;ERA5L geopotential&quot;</span><span class="p">)</span>
-    
-    <span class="c1"># add catchment</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">addLayer</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;darkgrey&#39;</span><span class="p">},</span> <span class="s2">&quot;Catchment&quot;</span><span class="p">)</span>
-    <span class="n">Map</span><span class="o">.</span><span class="n">centerObject</span><span class="p">(</span><span class="n">catchment</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
-    <span class="n">display</span><span class="p">(</span><span class="n">Map</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Map view disabled in config.ini&quot;</span><span class="p">)</span>        
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><script type="application/vnd.jupyter.widget-view+json">{"model_id": "dc6f59cf44c8412ab7e53a03f79f4dd6", "version_major": 2, "version_minor": 0}</script></div>
-</div>
-<p>Since our workflow will use a <strong>lumped model</strong>, we will use <strong>area-weighted catchment-wide averages</strong> of our forcing data. Thus, we also aggregate the geopotential based on the grid cell fractions in the catchment and convert it to <strong>geopotential height in meters above sea level</strong>. This represents the <strong>reference altitude of our forcing data</strong>, just as the elevation of a weather station would.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># execute reducer</span>
-<span class="nb">dict</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">reduceRegion</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Reducer</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
-                          <span class="n">geometry</span><span class="o">=</span><span class="n">catchment</span><span class="p">,</span>
-                          <span class="n">crs</span><span class="o">=</span><span class="s1">&#39;EPSG:4326&#39;</span><span class="p">,</span>
-                          <span class="n">crsTransform</span><span class="o">=</span><span class="n">transform</span><span class="p">)</span>
-
-<span class="c1"># get mean value and print</span>
-<span class="n">mean_val</span> <span class="o">=</span> <span class="nb">dict</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span>
-<span class="n">ele_dat</span> <span class="o">=</span> <span class="n">mean_val</span> <span class="o">/</span> <span class="mf">9.80665</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Geopotential mean:</span><span class="se">\t</span><span class="si">{</span><span class="n">mean_val</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> m2 s-2</span><span class="se">\n</span><span class="s1">Elevation:</span><span class="se">\t\t</span><span class="s1"> </span><span class="si">{</span><span class="n">ele_dat</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> m a.s.l.&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Geopotential mean:	32711.74 m2 s-2
-Elevation:		 3335.67 m a.s.l.
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ Reference elevation successfully retrieved.
+Geopotential mean:	32556.80 m2 s-2
+Reference elevation:	3319.87 m a.s.l.
+Elapsed time:		1.0 s
 </pre></div>
 </div>
 </div>
@@ -903,13 +556,55 @@ Elevation:		 3335.67 m a.s.l.
 </section>
 <hr class="docutils" />
 <section id="era5-land-temperature-and-precipitation-data">
-<h2>ERA5-Land Temperature and Precipitation Data<a class="headerlink" href="#era5-land-temperature-and-precipitation-data" title="Link to this heading">#</a></h2>
-<p>Our model only requires <strong>temperature and precipitation</strong> as inputs. We will download both time series from the <strong>ERA5-Land Daily Aggregated - ECMWF Climate Reanalysis</strong> <code class="docutils literal notranslate"><span class="pre">ECMWF/ERA5_LAND/DAILY_RAW</span></code> dataset in the <a href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_DAILY_RAW#bands">Google Earth Engine Data Catalog</a></p>
+<h2>ERA5-Land temperature and precipitation data<a class="headerlink" href="#era5-land-temperature-and-precipitation-data" title="Link to this heading">#</a></h2>
+<section id="select-the-date-range">
+<h3>Select the date range<a class="headerlink" href="#select-the-date-range" title="Link to this heading">#</a></h3>
+<p>The selected time period depends on whether the workflow should prepare <strong>only past forcing data</strong> or also support later <strong>scenario processing</strong>.</p>
+<ul class="simple">
+<li><p>If <code class="docutils literal notranslate"><span class="pre">PROJECTIONS=False</span></code>, the date range is taken directly from the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code>.</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">PROJECTIONS=True</span></code>, the workflow requests the historical period from <strong>1979 onward</strong> to provide a broader baseline for later bias adjustment.</p></li>
+</ul>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">scenarios</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">date_range</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;1979-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;2026-01-01&quot;</span><span class="p">]</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">date_range</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;CONFIG&quot;</span><span class="p">][</span><span class="s2">&quot;DATE_RANGE&quot;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The selected date range is </span><span class="si">{</span><span class="n">date_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">date_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The selected date range is 1979-01-01 to 2026-01-01
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="download-era5-land-data">
+<h3>Download ERA5-Land data<a class="headerlink" href="#download-era5-land-data" title="Link to this heading">#</a></h3>
+<p>For the MATILDA model, the key meteorological inputs are:</p>
+<ul class="simple">
+<li><p><strong>air temperature</strong></p></li>
+<li><p><strong>precipitation</strong></p></li>
+</ul>
+<p>We request both as <strong>catchment-aggregated daily time series</strong> for the selected period.</p>
+<p>The returned values are then converted into a compact <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code>:</p>
+<ul class="simple">
+<li><p>temperature from <strong>Kelvin</strong> to <strong>°C</strong>,</p></li>
+<li><p>precipitation from <strong>meters</strong> to <strong>millimeters</strong>.</p></li>
+</ul>
 <blockquote>
-<div><p>The asset is a daily aggregate of ECMWF ERA5 Land hourly assets. […] Daily aggregates have been pre-calculated to facilitate many applications requiring easy and fast access to the data.</p>
-<p>Source: <a class="reference external" href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_DAILY_RAW#description">GEE Data Catalog</a></p>
+<div><p>💡 <strong>How are the ERA5-Land data aggregated?</strong><br />
+The ERA5-Land data has an approximate spatial resolution of 9 km. Depending on the size of your catchment area, the data may cover many or just a few grid cells. The web service calculates one area-weighted, catchment-wide average for each day. This means each cell is weighted according to its overlap with the catchment area.</p>
 </div></blockquote>
-<p>On the server side, we simply create an <code class="docutils literal notranslate"><span class="pre">ee.ImageCollection</span></code> with the desired bands (temperature and precipitation) and date range. To calculate area-weighted aggregates we apply the <code class="docutils literal notranslate"><span class="pre">ee.Reducer</span></code> function.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -917,141 +612,22 @@ Elevation:		 3335.67 m a.s.l.
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.geetools</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_climate_data_webservice</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">setProperty</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
-    <span class="nb">dict</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">reduceRegion</span><span class="p">(</span><span class="n">ee</span><span class="o">.</span><span class="n">Reducer</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">catchment</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
-
-
-<span class="n">collection</span> <span class="o">=</span> <span class="n">ee</span><span class="o">.</span><span class="n">ImageCollection</span><span class="p">(</span><span class="s1">&#39;ECMWF/ERA5_LAND/DAILY_RAW&#39;</span><span class="p">)</span>\
-    <span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s1">&#39;temperature_2m&#39;</span><span class="p">,</span><span class="s1">&#39;total_precipitation_sum&#39;</span><span class="p">)</span>\
-    <span class="o">.</span><span class="n">filterDate</span><span class="p">(</span><span class="n">date_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">date_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-<span class="n">withMean</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">setProperty</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">get_climate_data_webservice</span><span class="p">(</span><span class="n">catchment_new</span><span class="p">,</span> <span class="n">date_range</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div></div>
-</div>
-<p>We can then aggregate the results into arrays, download them with <code class="docutils literal notranslate"><span class="pre">.getInfo()</span></code> and store them as dataframe columns. Depending on the selected date range and server traffic this can take up to a few minutes.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get timestamps...&quot;</span><span class="p">)</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">withMean</span><span class="o">.</span><span class="n">aggregate_array</span><span class="p">(</span><span class="s1">&#39;system:time_start&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get temperature values...&quot;</span><span class="p">)</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">withMean</span><span class="o">.</span><span class="n">aggregate_array</span><span class="p">(</span><span class="s1">&#39;temperature_2m&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;temp_c&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;temp&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mf">273.15</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get precipitation values...&quot;</span><span class="p">)</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;prec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">withMean</span><span class="o">.</span><span class="n">aggregate_array</span><span class="p">(</span><span class="s1">&#39;total_precipitation_sum&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">getInfo</span><span class="p">()</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">&#39;prec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;prec&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>✅ ERA5-Land forcing data successfully retrieved.
+Date range: 1979-01-01 to 2025-12-31
+Number of daily records: 17167
+Elapsed time: 15.5 s
 </pre></div>
 </div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Get timestamps...
-Get temperature values...
-Get precipitation values...
-CPU times: user 269 ms, sys: 1.84 ms, total: 270 ms
-Wall time: 3min 5s
-</pre></div>
-</div>
-</div>
-</div>
-<p>The constructed data frame now looks like this:</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output text_html"><div>
+<div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -1069,7 +645,6 @@ Wall time: 3min 5s
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>ts</th>
       <th>dt</th>
       <th>temp</th>
       <th>temp_c</th>
@@ -1079,98 +654,50 @@ Wall time: 3min 5s
   <tbody>
     <tr>
       <th>0</th>
-      <td>283996800000</td>
-      <td>1979-01-01 01:00:00</td>
-      <td>257.392996</td>
-      <td>-15.757004</td>
-      <td>0.027381</td>
+      <td>1979-01-01</td>
+      <td>257.521054</td>
+      <td>-15.628946</td>
+      <td>0.026909</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>284083200000</td>
-      <td>1979-01-02 01:00:00</td>
-      <td>256.435964</td>
-      <td>-16.714036</td>
-      <td>0.004825</td>
+      <td>1979-01-02</td>
+      <td>256.569882</td>
+      <td>-16.580118</td>
+      <td>0.004765</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>284169600000</td>
-      <td>1979-01-03 01:00:00</td>
-      <td>257.867342</td>
-      <td>-15.282658</td>
-      <td>0.001601</td>
+      <td>1979-01-03</td>
+      <td>257.998206</td>
+      <td>-15.151794</td>
+      <td>0.001595</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>284256000000</td>
-      <td>1979-01-04 01:00:00</td>
-      <td>258.322419</td>
-      <td>-14.827581</td>
-      <td>0.283469</td>
+      <td>1979-01-04</td>
+      <td>258.441277</td>
+      <td>-14.708723</td>
+      <td>0.279193</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>284342400000</td>
-      <td>1979-01-05 01:00:00</td>
-      <td>258.056697</td>
-      <td>-15.093303</td>
-      <td>0.108583</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>16797</th>
-      <td>1735257600000</td>
-      <td>2024-12-27 01:00:00</td>
-      <td>263.114958</td>
-      <td>-10.035042</td>
-      <td>0.026132</td>
-    </tr>
-    <tr>
-      <th>16798</th>
-      <td>1735344000000</td>
-      <td>2024-12-28 01:00:00</td>
-      <td>259.717669</td>
-      <td>-13.432331</td>
-      <td>0.000925</td>
-    </tr>
-    <tr>
-      <th>16799</th>
-      <td>1735430400000</td>
-      <td>2024-12-29 01:00:00</td>
-      <td>261.213752</td>
-      <td>-11.936248</td>
-      <td>0.005297</td>
-    </tr>
-    <tr>
-      <th>16800</th>
-      <td>1735516800000</td>
-      <td>2024-12-30 01:00:00</td>
-      <td>263.517126</td>
-      <td>-9.632874</td>
-      <td>1.158257</td>
-    </tr>
-    <tr>
-      <th>16801</th>
-      <td>1735603200000</td>
-      <td>2024-12-31 01:00:00</td>
-      <td>259.652770</td>
-      <td>-13.497230</td>
-      <td>1.049000</td>
+      <td>1979-01-05</td>
+      <td>258.189412</td>
+      <td>-14.960588</td>
+      <td>0.106927</td>
     </tr>
   </tbody>
 </table>
-<p>16802 rows × 5 columns</p>
 </div></div></div>
 </div>
-<p>Let’s <strong>plot</strong> the full time series.</p>
+<p>The first rows already show the structure of the forcing data:</p>
+<ul class="simple">
+<li><p>a timestamp,</p></li>
+<li><p>the original temperature,</p></li>
+<li><p>the converted temperature in °C,</p></li>
+<li><p>precipitation converted to mm per day.</p></li>
+</ul>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1178,58 +705,147 @@ Wall time: 3min 5s
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.dates</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mdates</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">summary_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;variable&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;Temperature&quot;</span><span class="p">,</span> <span class="s2">&quot;Precipitation&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;minimum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;temp_c&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;prec&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()],</span>
+        <span class="s2">&quot;mean&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;temp_c&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;prec&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()],</span>
+        <span class="s2">&quot;maximum&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;temp_c&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;prec&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span>
+        <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;°C&quot;</span><span class="p">,</span> <span class="s2">&quot;mm d-1&quot;</span><span class="p">],</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Quick summary statistics of the forcing data:&quot;</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">summary_df</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Quick summary statistics of the forcing data:
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>variable</th>
+      <th>minimum</th>
+      <th>mean</th>
+      <th>maximum</th>
+      <th>unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Temperature</td>
+      <td>-26.441147</td>
+      <td>-4.236060</td>
+      <td>15.152431</td>
+      <td>°C</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Precipitation</td>
+      <td>-0.000024</td>
+      <td>3.618221</td>
+      <td>61.645001</td>
+      <td>mm d-1</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>A time series plot provides a first impression of the seasonal signal and the variability of both variables.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;dt&quot;</span><span class="p">,</span> <span class="s2">&quot;temp_c&quot;</span><span class="p">,</span> <span class="s2">&quot;prec&quot;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>              dt     temp_c      prec
+0     1979-01-01 -15.628946  0.026909
+1     1979-01-02 -16.580118  0.004765
+2     1979-01-03 -15.151794  0.001595
+3     1979-01-04 -14.708723  0.279193
+4     1979-01-05 -14.960588  0.106927
+...          ...        ...       ...
+17162 2025-12-27 -15.847240  0.013149
+17163 2025-12-28 -13.449476  0.238839
+17164 2025-12-29 -15.657843  0.552368
+17165 2025-12-30 -14.646669  0.050462
+17166 2025-12-31 -10.610861  1.756811
+
+[17167 rows x 3 columns]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.dates</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mdates</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">scienceplots</span>
 
-<span class="c1"># set style from config</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="n">plt_style</span><span class="p">)</span>
 
-<span class="n">axes</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;ts&#39;</span><span class="p">,</span><span class="s1">&#39;temp&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span> <span class="n">subplots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span>
-                                               <span class="n">title</span><span class="o">=</span><span class="s1">&#39;ERA5-Land Data for Target Catchment&#39;</span><span class="p">,</span>
-                                               <span class="n">color</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;temp_c&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;prec&quot;</span><span class="p">:</span> <span class="s2">&quot;darkblue&quot;</span><span class="p">})</span>
-<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Temperature [°C]&quot;</span><span class="p">)</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">&quot;dt&quot;</span><span class="p">,</span> <span class="s2">&quot;temp_c&quot;</span><span class="p">,</span> <span class="s2">&quot;prec&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;dt&quot;</span><span class="p">,</span>
+    <span class="n">subplots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;ERA5-Land data for target catchment&quot;</span><span class="p">,</span>
+    <span class="n">color</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;temp_c&quot;</span><span class="p">:</span> <span class="s2">&quot;#A24600&quot;</span><span class="p">,</span> <span class="s2">&quot;prec&quot;</span><span class="p">:</span> <span class="s2">&quot;#005A9C&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Temperature [$^\circ$C]&quot;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Precipitation [mm]&quot;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Date&quot;</span><span class="p">)</span>
 <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_minor_locator</span><span class="p">(</span><span class="n">mdates</span><span class="o">.</span><span class="n">YearLocator</span><span class="p">())</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">date_range</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">dir_figures</span><span class="o">+</span><span class="s1">&#39;NB2_ERA5_Temp_Prec.png&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">dir_figures</span> <span class="o">+</span> <span class="s2">&quot;NB2_ERA5_Temp_Prec.png&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saved overview plot to &quot;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s1">NB2_ERA5_Temp_Prec.png&quot;.&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><img alt="_images/171638d4de30f2619ff4e4a17949735295d0307f4d41262c1e43b8cb023dc30e.png" src="_images/171638d4de30f2619ff4e4a17949735295d0307f4d41262c1e43b8cb023dc30e.png" />
+<img alt="_images/f0a528d302ef606f54e43e6e80ba5d0e34ad4377832d842e3ea60a4a7d1ff825.png" src="_images/f0a528d302ef606f54e43e6e80ba5d0e34ad4377832d842e3ea60a4a7d1ff825.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved overview plot to &quot;output/figures/NB2_ERA5_Temp_Prec.png&quot;.
+</pre></div>
 </div>
 </div>
-</section>
-<section id="store-data-for-next-steps">
-<h2>Store data for next steps<a class="headerlink" href="#store-data-for-next-steps" title="Link to this heading">#</a></h2>
-<p>To continue in the workflow, we write the ERA5 data to a <code class="docutils literal notranslate"><span class="pre">.csv</span></code> file…</p>
+</div>
+<p>For long time series, a short close-up can be useful as well 🔎</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1237,37 +853,52 @@ Wall time: 3min 5s
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;ERA5L.csv&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_mean_annual_cycle</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">clim</span> <span class="o">=</span> <span class="n">plot_mean_annual_cycle</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">dir_figures</span> <span class="o">+</span> <span class="s2">&quot;NB2_ERA5_Temp_Prec_clim.png&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Saved climatology plot to &quot;</span><span class="si">{</span><span class="n">dir_figures</span><span class="si">}</span><span class="s1">NB2_ERA5_Temp_Prec_clim.png&quot;.&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div></div>
+<img alt="_images/fb4fc223a2d4605278cc28db3ac88d57bed034ec975fd5c07bfb3e05a98e3195.png" src="_images/fb4fc223a2d4605278cc28db3ac88d57bed034ec975fd5c07bfb3e05a98e3195.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Saved climatology plot to &quot;output/figures/NB2_ERA5_Temp_Prec_clim.png&quot;.
+</pre></div>
 </div>
-<p>…and update the <code class="docutils literal notranslate"><span class="pre">settings.yml</span></code> file with the reference altitude of the ERA5-Land data (<code class="docutils literal notranslate"><span class="pre">ele_dat</span></code>) and refresh <code class="docutils literal notranslate"><span class="pre">output_download.zip</span></code> with newly acquired data.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="store-data-for-next-steps">
+<h2>Store data for next steps<a class="headerlink" href="#store-data-for-next-steps" title="Link to this heading">#</a></h2>
+<p>To continue in the workflow, we store two outputs:</p>
+<ul class="simple">
+<li><p>the <strong>ERA5-Land forcing time series</strong> as <code class="docutils literal notranslate"><span class="pre">ERA5L.csv</span></code>,</p></li>
+<li><p>and the <strong>reference elevation</strong> in <code class="docutils literal notranslate"><span class="pre">settings.yml</span></code> as <code class="docutils literal notranslate"><span class="pre">ele_dat</span></code>.</p></li>
+</ul>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">era5l_path</span> <span class="o">=</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="s2">&quot;ERA5L.csv&quot;</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">era5l_path</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;ERA5-Land forcing data written to &quot;</span><span class="si">{</span><span class="n">era5l_path</span><span class="si">}</span><span class="s1">&quot;.&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ERA5-Land forcing data written to &quot;output/ERA5L.csv&quot;.
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1276,48 +907,21 @@ Wall time: 3min 5s
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_yaml</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
-<span class="c1"># update settings file</span>
-<span class="n">update_yaml</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;settings.yml&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;ele_dat&#39;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">ele_dat</span><span class="p">)})</span>
-
-<span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
-    <span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="s1">&#39;output_download&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder can be download now (file output_download.zip)&#39;</span><span class="p">)</span>
+<span class="n">update_yaml</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s2">&quot;settings.yml&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ele_dat&quot;</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">ele_dat</span><span class="p">)})</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Updated &quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s1">settings.yml&quot; with ele_dat = </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">ele_dat</span><span class="p">)</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data successfully written to YAML at output/settings.yml
-Output folder can be download now (file output_download.zip)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data successfully written to YAML at output/settings.yml
+Updated &quot;output/settings.yml&quot; with ele_dat = 3319.87.
 </pre></div>
 </div>
 </div>
 </div>
+<p>Finally, if requested in the <code class="docutils literal notranslate"><span class="pre">config.ini</span></code>, we refresh <code class="docutils literal notranslate"><span class="pre">output_download.zip</span></code> so that all newly generated output files can be downloaded together.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -1325,37 +929,24 @@ Output folder can be download now (file output_download.zip)
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">reset</span> -f
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="s2">&quot;output_download&quot;</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder refreshed and available as &quot;output_download.zip&quot;.&#39;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ZIP output disabled in config.ini&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output text_html">
-            <style>
-                .geemap-dark {
-                    --jp-widgets-color: white;
-                    --jp-widgets-label-color: white;
-                    --jp-ui-font-color1: white;
-                    --jp-layout-color2: #454545;
-                    background-color: #383838;
-                }
-
-                .geemap-dark .jupyter-button {
-                    --jp-layout-color3: #383838;
-                }
-
-                .geemap-colab {
-                    background-color: var(--colab-primary-surface-color, white);
-                }
-
-                .geemap-colab .jupyter-button {
-                    --jp-layout-color3: var(--colab-primary-surface-color, white);
-                }
-            </style>
-            </div></div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ZIP output disabled in config.ini
+</pre></div>
 </div>
-<p>You can now continue with <a class="reference internal" href="Notebook3_CMIP6.html"><span class="std std-doc">Notebook 3</span></a>.</p>
+</div>
+</div>
+<p>✅ Notebook 2 is complete. You can now continue with <a class="reference internal" href="Notebook3_CMIP6.html"><span class="std std-doc">Notebook 3</span></a>.</p>
 </section>
 </section>
 
@@ -1423,9 +1014,12 @@ Output folder can be download now (file output_download.zip)
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-the-date-range">Set the date range</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5l-geopotential-height">ERA5L Geopotential height</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5-land-temperature-and-precipitation-data">ERA5-Land Temperature and Precipitation Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5-land-reference-elevation">ERA5-Land reference elevation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#era5-land-temperature-and-precipitation-data">ERA5-Land temperature and precipitation data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#select-the-date-range">Select the date range</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-era5-land-data">Download ERA5-Land data</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#store-data-for-next-steps">Store data for next steps</a></li>
 </ul>
   </nav></div>
