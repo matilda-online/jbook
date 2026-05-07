@@ -38,6 +38,6 @@ sphinx:
           icon: "fa-brands fa-github"
           type: fontawesome
         - name: Launch MATILDA in Binder
-          url: https://mybinder.org/v2/gh/phiscu/matilda_edu/no_outputs?urlpath=lab/tree/matilda_binder_landing_page.md
+          url: https://mybinder.org/v2/gh/phiscu/matilda_edu/f0872c0?urlpath=lab%2Ftree%2Fmatilda_binder_landing_page.md
           icon: "fa-solid fa-rocket"
           type: fontawesome
