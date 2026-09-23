@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -369,7 +369,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-soil-and-routing-routine-calibration">Step 4: Soil and routing routine calibration</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-matilda-with-calibrated-parameters">Run MATILDA with calibrated parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-matilda-with-example-calibrated-parameters">Run MATILDA with example calibrated parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sensitivity-analysis-with-fast">Sensitivity Analysis with FAST</a></li>
 </ul>
             </nav>
@@ -403,7 +403,7 @@ document.write(`
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">update_yaml</span><span class="p">,</span> <span class="n">read_yaml</span><span class="p">,</span> <span class="n">write_yaml</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">release_memory</span><span class="p">,</span> <span class="n">refresh_output_archive</span><span class="p">,</span> <span class="n">update_yaml</span><span class="p">,</span> <span class="n">read_yaml</span><span class="p">,</span> <span class="n">write_yaml</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
 
@@ -415,7 +415,7 @@ document.write(`
 <span class="n">dir_input</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_INPUT&#39;</span><span class="p">]</span>
 <span class="n">dir_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_OUTPUT&#39;</span><span class="p">]</span>
 <span class="n">date_range</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;CALIBRATION_PERIOD&#39;</span><span class="p">])</span>
-<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">]</span>
+<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span> <span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;MATILDA will be calibrated on the period &#39;</span> <span class="o">+</span> <span class="n">date_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; to &#39;</span> <span class="o">+</span> <span class="n">date_range</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
@@ -749,7 +749,10 @@ glacier_profile:      Elevation      Area          WE  EleZone
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">matilda.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">matilda_simulation</span>
 
+<span class="c1"># The default run illustrates the workflow; later cells do not reuse its output.</span>
 <span class="n">output_matilda</span> <span class="o">=</span> <span class="n">matilda_simulation</span><span class="p">(</span><span class="n">era5</span><span class="p">,</span> <span class="n">obs</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">output_matilda</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -920,7 +923,7 @@ End of the MATILDA simulation
 <li><p>remote sensing estimates of <strong>glacier surface mass balance</strong> (<strong>SMB</strong>) and …</p></li>
 <li><p>…<strong>snow water equivalent</strong> (<strong>SWE</strong>) estimates from a dedicated snow reanalysis product.</p></li>
 </ul>
-<p>Unfortunately, both default datasets are <strong>limited to High Mountain Asia (HMA)</strong>. For study sites in other areas, please consult other sources and manually add the target values for calibration in the appropriate code cells. We are happy to include additional datasets as long as they are available online and can be integrated into the workflow.</p>
+<p>The glacier mass balance data cover all RGI regions. The default SWE dataset is <strong>limited to High Mountain Asia (HMA)</strong>. For study sites outside HMA, provide a suitable SWE dataset or adapt the snow calibration target.</p>
 <div class="alert alert-block alert-info">
 <b>Note:</b> Statistical parameter optimization (SPOT) algorithms require a high number of model runs, especially for large parameter sets. <i>mybinder.org</i> offers a maximum of two cores per user. One MATILDA calibration run for 20 years takes roughly 3s on one core. Therefore, large optimization runs in an online environment will be slow and may require you to leave the respective browser tab in the foreground for hours. To speed things up, you can either:
 <div style="margin-left: 20px; margin-top: 12px;">
@@ -931,10 +934,10 @@ End of the MATILDA simulation
 <p>For now, we will demonstrate how to use the SPOT features and then <strong>continue with a parameter set from a large HPC optimization run</strong>. If you need help implementing the routine on your HPC, consult the <a class="reference external" href="https://spotpy.readthedocs.io/en/latest/Advanced_hints/#mpi-parallel-computing">SPOTPY documentation</a> and <a class="reference external" href="https://github.com/phiscu/matilda_edu/issues/new">contact us</a> if you encounter problems.</p>
 <section id="glacier-surface-mass-balance-data">
 <h3>Glacier surface mass balance data<a class="headerlink" href="#glacier-surface-mass-balance-data" title="Link to this heading">#</a></h3>
-<p>There are various sources of SMB records but only remote sensing estimates provide data for (almost) all glaciers in the target catchment. <a class="reference external" href="https://doi.org/10.3389/feart.2019.00363">Shean et. al. 2020 </a> calculated geodetic mass balances for all glaciers in High Mountain Asia from 2000 to 2018. For this example (and all other catchments in HMA), we can use their data set so derive an average annual mass balance in the calibration period.</p>
+<p>There are various sources of SMB records, but remote sensing estimates cover glaciers across the world. <a class="reference external" href="https://doi.org/10.1038/s41586-021-03436-z">Hugonnet et al. (2021)</a> provide global geodetic mass balances (<a class="reference external" href="https://doi.org/10.6096/13">data</a>). The supplied tables, labelled <code class="docutils literal notranslate"><span class="pre">2000_2020</span></code>, contain one file per RGI region. Each file reports annual mass balance (<code class="docutils literal notranslate"><span class="pre">B</span></code>) and uncertainty (<code class="docutils literal notranslate"><span class="pre">errB</span></code>) in m w.e. a⁻¹. The <code class="docutils literal notranslate"><span class="pre">ID</span></code> column distinguishes measured glacier values (<code class="docutils literal notranslate"><span class="pre">1</span></code>) from regional mean substitutes (<code class="docutils literal notranslate"><span class="pre">2</span></code>).</p>
 <div class="alert alert-block alert-info">
-<b>Note:</b> As all remote sensing estimates the used dataset has significant uncertainties. A comparison to other datasets and the impact on the modeling results are discussed in the associated publication. </div>
-<p>We pick all individual mass balance records that match the glacier IDs in our catchment and calculate the catchment-wide mean. In addition, we use the uncertainty estimate provided in the dataset to derive an uncertainty range.</p>
+<b>Note:</b> Remote sensing mass balances have uncertainties. The uncertainty range below is illustrative: it uses the mean of the reported uncertainties, not a statistical uncertainty estimate for the catchment mean. </div>
+<p>We read only the RGI regions represented in our catchment, match their glacier IDs, and calculate the unweighted mean across matched glaciers, as in the original example. We convert both the balance and uncertainty from m to mm w.e. a⁻¹.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -943,17 +946,24 @@ End of the MATILDA simulation
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_hugonnet_mass_balances</span>
 
-<span class="n">mass_balances</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">dir_input</span> <span class="o">+</span> <span class="s1">&#39;/hma_mb_20190215_0815_rmse.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RGIId&#39;</span><span class="p">,</span> <span class="s1">&#39;mb_mwea&#39;</span><span class="p">,</span> <span class="s1">&#39;mb_mwea_sigma&#39;</span><span class="p">])</span>
-<span class="n">ids</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;/RGI/Glaciers_in_catchment.csv&#39;</span><span class="p">)</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;/RGI/Glaciers_in_catchment.csv&#39;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;RGIId&#39;</span><span class="p">:</span> <span class="s1">&#39;string&#39;</span><span class="p">})</span>
+<span class="n">ids</span><span class="p">[</span><span class="s1">&#39;RGIId&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ids</span><span class="p">[</span><span class="s1">&#39;RGIId&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^RGI60-&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">mass_balances</span> <span class="o">=</span> <span class="n">read_hugonnet_mass_balances</span><span class="p">(</span><span class="n">ids</span><span class="p">[</span><span class="s1">&#39;RGIId&#39;</span><span class="p">],</span> <span class="n">dir_input</span> <span class="o">+</span> <span class="s1">&#39;Hugonnet_etal&#39;</span><span class="p">)</span>
 
 <span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">mass_balances</span><span class="p">,</span> <span class="n">ids</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;RGIId&#39;</span><span class="p">)</span>
-<span class="n">mean_mb</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="s1">&#39;mb_mwea&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>   <span class="c1"># Mean catchment MB in mm w.e.</span>
-<span class="n">mean_sigma</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="s1">&#39;mb_mwea_sigma&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">mean_mb</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># Mean uncertainty of catchment MB in mm w.e.</span>
+<span class="k">if</span> <span class="n">merged</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No catchment glaciers matched the Hugonnet mass balance tables&#39;</span><span class="p">)</span>
+
+<span class="n">mean_mb</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>       <span class="c1"># Mean glacier MB in mm w.e. a-1</span>
+<span class="n">mean_sigma</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="s1">&#39;errB&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="c1"># Mean reported uncertainty in mm w.e. a-1</span>
 
 <span class="n">target_mb</span> <span class="o">=</span> <span class="p">[</span><span class="n">mean_mb</span> <span class="o">-</span> <span class="n">mean_sigma</span><span class="p">,</span> <span class="n">mean_mb</span> <span class="o">+</span> <span class="n">mean_sigma</span><span class="p">]</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Target glacier mass balance for calibration: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_mb</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; +-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_sigma</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;mm w.e.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Matched </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">merged</span><span class="p">)</span><span class="si">}</span><span class="s1"> of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ids</span><span class="p">)</span><span class="si">}</span><span class="s1"> catchment glaciers.&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Regional mean substitutes: </span><span class="si">{</span><span class="p">(</span><span class="n">merged</span><span class="p">[</span><span class="s1">&#39;ID&#39;</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Target glacier mass balance for calibration: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_mb</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; +-&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">mean_sigma</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; mm w.e. a-1&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1177,6 +1187,8 @@ Run number 4 has the highest objectivefunction with: 0.0883
 <span class="c1"># Rounding all values for readability</span>
 <span class="n">rounded_parameters</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">best_parameterset</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">rounded_parameters</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">best_summary</span><span class="p">,</span> <span class="n">best_parameterset</span><span class="p">,</span> <span class="n">rounded_parameters</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1222,6 +1234,8 @@ Run number 4 has the highest objectivefunction with: 0.0883
 			<span class="n">fix_param</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SFCF&#39;</span><span class="p">,</span> <span class="s1">&#39;CET&#39;</span><span class="p">,</span> <span class="s1">&#39;FC&#39;</span><span class="p">,</span> <span class="s1">&#39;K0&#39;</span><span class="p">,</span> <span class="s1">&#39;K1&#39;</span><span class="p">,</span> <span class="s1">&#39;K2&#39;</span><span class="p">,</span> <span class="s1">&#39;MAXBAS&#39;</span><span class="p">,</span> <span class="s1">&#39;PERC&#39;</span><span class="p">,</span> <span class="s1">&#39;UZL&#39;</span><span class="p">,</span> <span class="s1">&#39;CWH&#39;</span><span class="p">,</span> <span class="s1">&#39;AG&#39;</span><span class="p">,</span> <span class="s1">&#39;LP&#39;</span><span class="p">,</span> <span class="s1">&#39;CFR&#39;</span><span class="p">],</span>    <span class="c1"># fixed on defaults</span>
 			<span class="n">fix_val</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;SFCF&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;CET&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>                                                                            <span class="c1"># fixed on specific values</span>
 		       <span class="p">)</span>
+<span class="k">del</span> <span class="n">step1_summary</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1358,6 +1372,9 @@ Run number 2 has the highest objectivefunction with: 0.4458
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1391,6 +1408,8 @@ Run number 2 has the highest objectivefunction with: 0.4458
 
 <span class="n">table_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">table_step1_samples</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Mean&#39;</span><span class="p">,</span> <span class="s1">&#39;Stdv&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">step1_samples</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">table_df</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
+<span class="k">del</span> <span class="n">step1_samples</span><span class="p">,</span> <span class="n">table_step1_samples</span><span class="p">,</span> <span class="n">table_df</span><span class="p">,</span> <span class="n">stats_dict</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1425,7 +1444,7 @@ CFMAX_rel   1.57514  0.25046
 <span class="n">psample_settings</span><span class="p">[</span><span class="s1">&#39;dbname&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;calib_step2&#39;</span>
 
 <span class="c1"># Running LHS with only three open parameters</span>
-<span class="n">step1_summary</span> <span class="o">=</span> <span class="n">psample</span><span class="p">(</span>
+<span class="n">step2_summary</span> <span class="o">=</span> <span class="n">psample</span><span class="p">(</span>
                 <span class="n">df</span><span class="o">=</span><span class="n">era5</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">obs</span><span class="p">,</span> <span class="o">**</span><span class="n">psample_settings</span><span class="p">,</span>
 		        <span class="n">fix_param</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PCORR&#39;</span><span class="p">,</span> <span class="s1">&#39;SFCF&#39;</span><span class="p">,</span> <span class="s1">&#39;CET&#39;</span><span class="p">,</span> <span class="s1">&#39;lr_temp&#39;</span><span class="p">,</span> <span class="s1">&#39;lr_prec&#39;</span><span class="p">,</span> <span class="s1">&#39;K0&#39;</span><span class="p">,</span> <span class="s1">&#39;LP&#39;</span><span class="p">,</span> <span class="s1">&#39;MAXBAS&#39;</span><span class="p">,</span> <span class="s1">&#39;CFMAX_rel&#39;</span><span class="p">,</span> <span class="s1">&#39;CFR&#39;</span><span class="p">,</span> <span class="s1">&#39;FC&#39;</span><span class="p">,</span> <span class="s1">&#39;K1&#39;</span><span class="p">,</span> <span class="s1">&#39;K2&#39;</span><span class="p">,</span> <span class="s1">&#39;PERC&#39;</span><span class="p">,</span> <span class="s1">&#39;UZL&#39;</span><span class="p">,</span> <span class="s1">&#39;CWH&#39;</span><span class="p">,</span> <span class="s1">&#39;AG&#39;</span><span class="p">,</span> <span class="s1">&#39;BETA&#39;</span><span class="p">],</span>
 		        <span class="n">fix_val</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;PCORR&#39;</span><span class="p">:</span> <span class="mf">0.58</span><span class="p">,</span> <span class="s1">&#39;SFCF&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;CET&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;lr_temp&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0061</span><span class="p">,</span> <span class="s1">&#39;lr_prec&#39;</span><span class="p">:</span> <span class="mf">0.0015</span><span class="p">,</span> <span class="s1">&#39;CFR&#39;</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">},</span>
@@ -1456,6 +1475,8 @@ CFMAX_rel   1.57514  0.25046
     <span class="n">axs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">mean_val</span> <span class="o">+</span> <span class="n">std_val</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mean + SD&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span>
 
 <span class="c1"># Calculate mean and standard deviation for each parameter</span>
 <span class="n">stats_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -1477,6 +1498,8 @@ CFMAX_rel   1.57514  0.25046
 <span class="c1"># Show calibrated values</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Calibrated values:&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">table_df</span><span class="p">[</span><span class="mi">3</span><span class="p">:])</span>
+<span class="k">del</span> <span class="n">step2_summary</span><span class="p">,</span> <span class="n">step2_samples</span><span class="p">,</span> <span class="n">table_step2_samples</span><span class="p">,</span> <span class="n">table_df</span><span class="p">,</span> <span class="n">stats_dict</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1578,6 +1601,8 @@ CFMAX_snow  4.81501  2.74856
 <span class="c1"># Use the range of values that meet the target SMB range as bound for the next calibration steps</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Calibrated values:&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;CFMAX_rel lower bound: </span><span class="si">{</span><span class="n">step3_samples</span><span class="p">[</span><span class="s1">&#39;CFMAX_rel&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">CFMAX_rel upper bound: </span><span class="si">{</span><span class="n">step3_samples</span><span class="p">[</span><span class="s1">&#39;CFMAX_rel&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">step3_summary</span><span class="p">,</span> <span class="n">step3_samples</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1691,6 +1716,8 @@ CFMAX_rel upper bound: 1.9060645
                     <span class="n">CFMAX_rel_lo</span><span class="o">=</span><span class="mf">1.2000372</span><span class="p">,</span>
                     <span class="n">CFMAX_rel_up</span><span class="o">=</span><span class="mf">1.5314099</span>
 <span class="p">)</span>
+<span class="k">del</span> <span class="n">step4_summary</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1819,6 +1846,9 @@ Run number 27 has the highest objectivefunction with: 0.5624
 
 <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1858,6 +1888,8 @@ Run number 27 has the highest objectivefunction with: 0.5624
 
 <span class="c1"># Show the plot</span>
 <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">fig</span><span class="p">,</span> <span class="n">custom_text</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1928,6 +1960,8 @@ if (outputEl) {{
 
 <span class="c1"># Print the dictionary</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">best</span><span class="p">,</span> <span class="n">par_columns</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">step4_samples</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -1942,9 +1976,9 @@ if (outputEl) {{
 <p>This incremental calibration allows linking the parameters to the processes simulated instead of randomly fitting them to match the measured discharge. However, uncertainties in the calibration data still allow for a wide range of potential scenarios. For a detailed discussion please refer to the associated publication.</p>
 </section>
 </section>
-<section id="run-matilda-with-calibrated-parameters">
-<h2>Run MATILDA with calibrated parameters<a class="headerlink" href="#run-matilda-with-calibrated-parameters" title="Link to this heading">#</a></h2>
-<p>The following parameter set was computed applying the mentioned calibration strategy on an HPC cluster with large sample sizes for every step.
+<section id="run-matilda-with-example-calibrated-parameters">
+<h2>Run MATILDA with example calibrated parameters<a class="headerlink" href="#run-matilda-with-example-calibrated-parameters" title="Link to this heading">#</a></h2>
+<p>The following parameter set is included as a demonstration example.
 <a id="param"></a></p>
 <div class="cell tag_hide-input docutils container">
 <details class="admonition hide above-input">
@@ -2012,7 +2046,7 @@ AG: 0.54930484
 </div>
 </div>
 </div>
-<p>Properly calibrated, the model shows a much better results.</p>
+<p>This illustrative parameter set gives a much better result for the example catchment.</p>
 <div class="cell tag_output_scroll tag_hide-input docutils container">
 <details class="admonition hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -2231,6 +2265,9 @@ if (outputEl) {{
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output_matilda</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="k">del</span> <span class="n">output_matilda</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s1">&#39;all&#39;</span><span class="p">)</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2722,7 +2759,7 @@ AG_up: 0.54930484
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_settings</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rep&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>                             <span class="c1"># Number of model runs. For advice check the documentation of the algorithms.</span>
                 <span class="s1">&#39;glacier_only&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>                 <span class="c1"># True when calibrating a entirely glacierized catchment</span>
                 <span class="s1">&#39;obj_dir&#39;</span><span class="p">:</span> <span class="s1">&#39;maximize&#39;</span><span class="p">,</span>                 <span class="c1"># should your objective funtion be maximized (e.g. NSE) or minimized (e.g. RMSE)</span>
-                <span class="s1">&#39;target_mb&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">156</span><span class="p">,</span>                     <span class="c1"># Average annual glacier mass balance to target at</span>
+                <span class="s1">&#39;target_mb&#39;</span><span class="p">:</span> <span class="n">mean_mb</span><span class="p">,</span>                  <span class="c1"># Average annual glacier mass balance from Hugonnet et al.</span>
                 <span class="s1">&#39;dbformat&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>                      <span class="c1"># Write the results to a file (&#39;csv&#39;, &#39;hdf5&#39;, &#39;ram&#39;, &#39;sql&#39;)</span>
                 <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>                        <span class="c1"># Choose where to store the files</span>
                 <span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;lhs&#39;</span><span class="p">,</span>                    <span class="c1"># Choose algorithm (for parallelization: mc, lhs, fast, rope, sceua or demcz)</span>
@@ -2734,6 +2771,8 @@ AG_up: 0.54930484
 <span class="n">psample_settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_settings</span><span class="p">)</span>
 
 <span class="n">best_summary</span> <span class="o">=</span> <span class="n">psample</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">era5</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">obs</span><span class="p">,</span> <span class="o">**</span><span class="n">psample_settings</span><span class="p">,</span> <span class="o">**</span><span class="n">fixed_param_bounds</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">best_summary</span>
+<span class="n">release_memory</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -2818,6 +2857,11 @@ Run number 2 has the highest objectivefunction with: 0.5715
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">write_yaml</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">dir_output</span> <span class="o">+</span> <span class="s1">&#39;parameters.yml&#39;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Parameter set stored in &#39;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">parameters.yml&#39;&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
+    <span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
+    <span class="n">refresh_output_archive</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder can be download now (file output_download.zip)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2825,29 +2869,6 @@ Run number 2 has the highest objectivefunction with: 0.5715
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Data successfully written to YAML at output/parameters.yml
 Parameter set stored in &#39;output/parameters.yml&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
-
-<span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
-    <span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="s1">&#39;output_download&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder can be download now (file output_download.zip)&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Output folder can be download now (file output_download.zip)
 </pre></div>
 </div>
 </div>
@@ -2946,7 +2967,7 @@ Parameter set stored in &#39;output/parameters.yml&#39;
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-4-soil-and-routing-routine-calibration">Step 4: Soil and routing routine calibration</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-matilda-with-calibrated-parameters">Run MATILDA with calibrated parameters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-matilda-with-example-calibrated-parameters">Run MATILDA with example calibrated parameters</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sensitivity-analysis-with-fast">Sensitivity Analysis with FAST</a></li>
 </ul>
   </nav></div>

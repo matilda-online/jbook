@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -394,16 +394,26 @@ document.write(`
 <span class="c1"># get directories from config.ini</span>
 <span class="n">dir_input</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_INPUT&#39;</span><span class="p">]</span>
 <span class="n">dir_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;DIR_OUTPUT&#39;</span><span class="p">]</span>
-<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">]</span>
+<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span> <span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">)</span>
 
 <span class="c1"># set the file format for storage</span>
 <span class="n">compact_files</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span><span class="s1">&#39;COMPACT_FILES&#39;</span><span class="p">)</span>
 
 <span class="c1"># get the number of available cores</span>
 <span class="n">num_cores</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;NUM_CORES&#39;</span><span class="p">])</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">configure_arrow_memory_pool</span><span class="p">,</span> <span class="n">runtime_profile</span>
+<span class="n">profile</span> <span class="o">=</span> <span class="n">runtime_profile</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">profile</span><span class="p">[</span><span class="s1">&#39;compact_files&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">compact_files</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="s1">&#39;compact_files&#39;</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">profile</span><span class="p">[</span><span class="s1">&#39;num_cores&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">num_cores</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="s1">&#39;num_cores&#39;</span><span class="p">]</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Input path: &#39;</span><span class="si">{</span><span class="n">dir_input</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output path: &#39;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Runtime profile: </span><span class="si">{</span><span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (compact files: </span><span class="si">{</span><span class="n">compact_files</span><span class="si">}</span><span class="s2">, cores: </span><span class="si">{</span><span class="n">num_cores</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">profile</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Binder&#39;</span> <span class="ow">and</span> <span class="n">compact_files</span><span class="p">:</span>
+    <span class="n">configure_arrow_memory_pool</span><span class="p">(</span><span class="n">profile</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -447,14 +457,14 @@ Output path: &#39;output/&#39;
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Settings for MATILDA scenario runs:
 
-area_cat: 300.6637184185051
-area_glac: 31.829413146586116
-ele_cat: 3271.895648388366
-ele_dat: 3324.5555520312164
+area_cat: 301.7655486319052
+area_glac: 31.829413146585885
+ele_cat: 3268.9933400180107
+ele_dat: 3319.869912768475
 ele_glac: 4001.8798828125
 elev_rescaling: True
 freq: M
-lat: 42.18511742495568
+lat: 42.18541776097684
 plot_type: all
 set_up_end: 1999-12-31
 set_up_start: 1998-01-01
@@ -522,9 +532,12 @@ Forcing data loaded.
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">dict_to_parquet</span><span class="p">,</span> <span class="n">dict_to_pickle</span><span class="p">,</span> <span class="n">create_scenario_dict</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">dict_to_parquet</span><span class="p">,</span> <span class="n">dict_to_pickle</span><span class="p">,</span> <span class="n">create_scenario_dict</span><span class="p">,</span> <span class="n">release_memory</span>
 
 <span class="n">scenarios</span> <span class="o">=</span> <span class="n">create_scenario_dict</span><span class="p">(</span><span class="n">tas</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+
+<span class="k">del</span> <span class="n">tas</span><span class="p">,</span> <span class="n">pr</span>
+<span class="n">release_memory</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Storing MATILDA scenario input dataframes on disk...&quot;</span><span class="p">)</span>
 
@@ -554,8 +567,7 @@ Forcing data loaded.
 <p class="expanded admonition-title">Hide code cell source</p>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatildaBulkProcessor</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">MatildaBulkProcessor</span><span class="p">,</span> <span class="n">refresh_output_archive</span>
 
 <span class="c1"># Create an instance of the MatildaBulkProcessor class</span>
 <span class="n">matilda_bulk</span> <span class="o">=</span> <span class="n">MatildaBulkProcessor</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="n">matilda_settings</span><span class="p">,</span> <span class="n">param_dict</span><span class="p">)</span>
@@ -566,6 +578,9 @@ Forcing data loaded.
 <span class="k">else</span><span class="p">:</span>
     <span class="n">matilda_scenarios</span> <span class="o">=</span> <span class="n">matilda_bulk</span><span class="o">.</span><span class="n">run_multi_process</span><span class="p">(</span><span class="n">num_cores</span><span class="o">=</span><span class="n">num_cores</span><span class="p">)</span>
 
+<span class="k">del</span> <span class="n">matilda_bulk</span><span class="p">,</span> <span class="n">scenarios</span>
+<span class="n">release_memory</span><span class="p">()</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Storing MATILDA scenario outputs on disk...&quot;</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">compact_files</span><span class="p">:</span>
@@ -573,16 +588,19 @@ Forcing data loaded.
 <span class="k">else</span><span class="p">:</span>
     <span class="n">dict_to_pickle</span><span class="p">(</span><span class="n">matilda_scenarios</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dir_output</span><span class="si">}</span><span class="s2">cmip6/adjusted/matilda_scenarios.pickle&quot;</span><span class="p">)</span>
 
+<span class="k">del</span> <span class="n">matilda_scenarios</span>
+<span class="n">release_memory</span><span class="p">()</span>
+
 <span class="k">if</span> <span class="n">zip_output</span><span class="p">:</span>
     <span class="c1"># refresh `output_download.zip` with data retrieved within this notebook</span>
-    <span class="n">shutil</span><span class="o">.</span><span class="n">make_archive</span><span class="p">(</span><span class="s1">&#39;output_download&#39;</span><span class="p">,</span> <span class="s1">&#39;zip&#39;</span><span class="p">,</span> <span class="s1">&#39;output&#39;</span><span class="p">)</span>
+    <span class="n">refresh_output_archive</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Output folder can be download now (file output_download.zip)&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </details>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Scenarios SSP2 and SSP5: 100%|██████████| 2/2 [03:23&lt;00:00, 101.82s/it]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Scenarios SSP2 and SSP5: 100%|███████████████████| 2/2 [04:06&lt;00:00, 123.04s/it]
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Storing MATILDA scenario outputs on disk...

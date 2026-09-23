@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -562,39 +562,6 @@ TIMESTAMP
 <section id="interactive-plotting-application">
 <h2>Interactive plotting application<a class="headerlink" href="#interactive-plotting-application" title="Link to this heading">#</a></h2>
 <p>To make the full dataset more accessible, we can integrate these figures into an <strong>interactive application</strong> using <a class="reference external" href="https://dash.plotly.com/"><code class="docutils literal notranslate"><span class="pre">ploty.Dash</span></code></a>. This launches a <code class="docutils literal notranslate"><span class="pre">Dash</span></code> server that updates the figures as you select variables and frequencies in the <strong>dropdown menus</strong>. To compare time series, you can align multiple figures in the same application. The demo application aligns four figures showing <em>total runoff, total precipitation</em>, <em>runoff_from_glaciers</em>, and <em>glacier area</em> by default directly in the output cell. If you want to display the complete application in a separate Jupyter tab, set <code class="docutils literal notranslate"><span class="pre">display_mode='tab'</span></code>.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.helpers</span><span class="w"> </span><span class="kn">import</span> <span class="n">adjust_jupyter_config</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dash</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dash</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jupyter_server</span><span class="w"> </span><span class="kn">import</span> <span class="n">serverapp</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">matilda_dash</span>
-
-<span class="c1"># retrieve server information to find out whether it&#39;s running locally or on mybinder.org server</span>
-<span class="c1">#adjust_jupyter_config()</span>
-
-<span class="n">app1</span> <span class="o">=</span> <span class="n">Dash</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="n">matilda_dash</span><span class="p">(</span><span class="n">app1</span><span class="p">,</span><span class="n">dic</span><span class="o">=</span><span class="n">matilda_scenarios</span><span class="p">,</span> <span class="n">fig_count</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">display_mode</span><span class="o">=</span><span class="s1">&#39;inLine&#39;</span><span class="p">)</span>
-
-<span class="n">port</span> <span class="o">=</span> <span class="mi">8051</span>
-<span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="n">serverapp</span><span class="o">.</span><span class="n">list_running_servers</span><span class="p">())</span> <span class="o">==</span> <span class="p">[]:</span>
-    <span class="n">app1</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">jupyter_mode</span><span class="o">=</span><span class="s2">&quot;external&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">app1</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dash app running on http://127.0.0.1:8051/
-</pre></div>
-</div>
-</div>
-</div>
 <!-- <img src="dashboard_1_output.gif" width="1050" loop autoplay> -->
 <figure class="align-default">
 <a class="reference internal image-reference" href="_images/dashboard_1_output.gif"><img alt="_images/dashboard_1_output.gif" src="_images/dashboard_1_output.gif" style="width: 100%;" />
@@ -659,36 +626,6 @@ SSP5: 100%|██████████| 31/31 [00:09&lt;00:00,  3.13it/s]
 </div>
 </div>
 <p>Now, we create another <strong>interactive application</strong> to visualize the calculated indicators.</p>
-<div class="cell tag_hide-input docutils container">
-<details class="admonition hide above-input">
-<summary aria-label="Toggle hidden content">
-<p class="collapsed admonition-title">Show code cell source</p>
-<p class="expanded admonition-title">Hide code cell source</p>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">tools.plots</span><span class="w"> </span><span class="kn">import</span> <span class="n">matilda_indicators_dash</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dash</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dash</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jupyter_server</span><span class="w"> </span><span class="kn">import</span> <span class="n">serverapp</span>
-
-
-<span class="n">app2</span> <span class="o">=</span> <span class="n">Dash</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="n">matilda_indicators_dash</span><span class="p">(</span><span class="n">app2</span><span class="p">,</span> <span class="n">matilda_indicators</span><span class="p">)</span>
-
-<span class="n">port</span> <span class="o">=</span> <span class="mi">8052</span>
-<span class="k">if</span> <span class="nb">list</span><span class="p">(</span><span class="n">serverapp</span><span class="o">.</span><span class="n">list_running_servers</span><span class="p">())</span> <span class="o">==</span> <span class="p">[]:</span>
-    <span class="n">app2</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">jupyter_mode</span><span class="o">=</span><span class="s2">&quot;external&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">app2</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</details>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Dash app running on http://127.0.0.1:8052/
-</pre></div>
-</div>
-</div>
-</div>
 <!-- <img src="dashboard_2_output.gif" width="1050" loop autoplay> -->
 <figure class="align-default">
 <a class="reference internal image-reference" href="_images/dashboard_2_output.gif"><img alt="_images/dashboard_2_output.gif" src="_images/dashboard_2_output.gif" style="width: 100%;" />

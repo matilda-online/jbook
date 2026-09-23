@@ -32,7 +32,7 @@
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
@@ -421,7 +421,7 @@ document.write(`
 <span class="n">output_gpkg</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;GPKG_NAME&#39;</span><span class="p">]</span>
 <span class="n">catchment_file</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;CATCHMENT_FILENAME&#39;</span><span class="p">]</span>
 <span class="n">rivers_file</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;FILE_SETTINGS&#39;</span><span class="p">][</span><span class="s1">&#39;RIVERS_FILENAME&#39;</span><span class="p">]</span>
-<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">]</span>
+<span class="n">zip_output</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">getboolean</span><span class="p">(</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">,</span> <span class="s1">&#39;ZIP_OUTPUT&#39;</span><span class="p">)</span>
 
 <span class="n">dem_config</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;DEM&#39;</span><span class="p">])</span>
 <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;CONFIG&#39;</span><span class="p">][</span><span class="s1">&#39;COORDS&#39;</span><span class="p">])</span>
